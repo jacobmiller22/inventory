@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, writeFile } from "fs/promises";
 import {
   TLocationID,
   TInventoryID,
@@ -10,27 +10,48 @@ import {
   isType,
   isInventoryLocation,
   isInventoryItem,
-} from '../../interfaces/Inventory';
-import { DB_PATH, ALL_FILE, LOCATIONS_FILE, TYPES_FILE } from '../../consts';
+} from "../../types/Inventory";
+import { DB_PATH, ALL_FILE, LOCATIONS_FILE, TYPES_FILE } from "../../consts";
 //@ts-ignore
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 
 interface IDataController {
   // Inventory
   getInventory: () => Promise<IInventoryItemMap>;
-  getInventoryItem: (inventory_id: TInventoryID) => Promise<IInventoryItem | null>;
-  createInventoryItem: (newItem: IInventoryItem) => Promise<TInventoryID | null>;
-  updateInventoryItem: (i_id: TInventoryID, newItem: IInventoryItem) => Promise<TInventoryID | null>;
-  searchInventoryItem: (field: string, value: string | number | TInventoryID | TLocationID) => Promise<any>;
+  getInventoryItem: (
+    inventory_id: TInventoryID
+  ) => Promise<IInventoryItem | null>;
+  createInventoryItem: (
+    newItem: IInventoryItem
+  ) => Promise<TInventoryID | null>;
+  updateInventoryItem: (
+    i_id: TInventoryID,
+    newItem: IInventoryItem
+  ) => Promise<TInventoryID | null>;
+  searchInventoryItem: (
+    field: string,
+    value: string | number | TInventoryID | TLocationID
+  ) => Promise<any>;
   // Locations
   getLocations: () => Promise<IInventoryLocationMap>;
   getLocation: (location_id: TLocationID) => Promise<IInventoryLocation | null>;
   getInventoryLocation: (location_id: TLocationID) => Promise<IInventoryItem[]>;
-  createInventoryLocation: (location: IInventoryLocation) => Promise<TLocationID | null>;
-  updateInventoryLocation: (location_id: TLocationID, newLocation: IInventoryLocation) => Promise<TLocationID | null>;
+  createInventoryLocation: (
+    location: IInventoryLocation
+  ) => Promise<TLocationID | null>;
+  updateInventoryLocation: (
+    location_id: TLocationID,
+    newLocation: IInventoryLocation
+  ) => Promise<TLocationID | null>;
   searchInventoryItemByLocation: () => Promise<any>;
-  addItemToLocation: (location_id: TLocationID, item_id: TInventoryID) => Promise<TLocationID | null>;
-  deleteItemFromLocation: (location_id: TLocationID, item_id: TInventoryID) => Promise<TLocationID | null>;
+  addItemToLocation: (
+    location_id: TLocationID,
+    item_id: TInventoryID
+  ) => Promise<TLocationID | null>;
+  deleteItemFromLocation: (
+    location_id: TLocationID,
+    item_id: TInventoryID
+  ) => Promise<TLocationID | null>;
 
   // Types
   getTypes: () => Promise<TItemType[]>;
@@ -48,12 +69,14 @@ const DataController = (): IDataController => {
    * @returns A Promise that resolves to a map of all inventory items.
    */
   const getInventory = async (): Promise<IInventoryItemMap> => {
-    const all_string = await readFile(`${DB_PATH}/${ALL_FILE}`, 'utf8');
+    const all_string = await readFile(`${DB_PATH}/${ALL_FILE}`, "utf8");
     const all: IInventoryItemMap = JSON.parse(all_string);
     return all;
   };
 
-  const getInventoryItem = async (inventory_id: TInventoryID): Promise<IInventoryItem | null> => {
+  const getInventoryItem = async (
+    inventory_id: TInventoryID
+  ): Promise<IInventoryItem | null> => {
     const inventory = await getInventory();
 
     const item = inventory[inventory_id];
@@ -70,7 +93,9 @@ const DataController = (): IDataController => {
    * @param newItem The new item to be added to the inventory
    * @returns A promise that resolves to the new item's inventory_id, null if the item already exists, or if an error occurred.
    */
-  const createInventoryItem = async (newItem: IInventoryItem): Promise<TInventoryID | null> => {
+  const createInventoryItem = async (
+    newItem: IInventoryItem
+  ): Promise<TInventoryID | null> => {
     if (!isInventoryItem(newItem)) {
       // Fails validation
       return null;
@@ -85,11 +110,17 @@ const DataController = (): IDataController => {
       return null;
     }
 
-    const newAll = { ...all, [inventory_id]: { ...newItem, inventory_id: inventory_id } };
+    const newAll = {
+      ...all,
+      [inventory_id]: { ...newItem, inventory_id: inventory_id },
+    };
 
     writeFile(`${DB_PATH}/${ALL_FILE}`, JSON.stringify(newAll));
 
-    const id_verification = await addItemToLocation(newItem.location_id, inventory_id);
+    const id_verification = await addItemToLocation(
+      newItem.location_id,
+      inventory_id
+    );
 
     return id_verification;
   };
@@ -139,7 +170,10 @@ const DataController = (): IDataController => {
    * @returns A Promise that resolves to a map of all inventory locations.
    */
   const getLocations = async (): Promise<IInventoryLocationMap> => {
-    const locations_string: string = await readFile(`${DB_PATH}/${LOCATIONS_FILE}`, 'utf8');
+    const locations_string: string = await readFile(
+      `${DB_PATH}/${LOCATIONS_FILE}`,
+      "utf8"
+    );
     const locations: IInventoryLocationMap = JSON.parse(locations_string);
     return locations;
   };
@@ -149,8 +183,13 @@ const DataController = (): IDataController => {
    * @param location_id The id of the desired location
    * @returns A promise containing a location that was requested, or null if the location doesn't exist
    */
-  const getLocation = async (location_id: TInventoryID): Promise<IInventoryLocation | null> => {
-    const locations_string: string = await readFile(`${DB_PATH}/${LOCATIONS_FILE}`, 'utf8');
+  const getLocation = async (
+    location_id: TInventoryID
+  ): Promise<IInventoryLocation | null> => {
+    const locations_string: string = await readFile(
+      `${DB_PATH}/${LOCATIONS_FILE}`,
+      "utf8"
+    );
     const locations: IInventoryLocationMap = JSON.parse(locations_string);
 
     if (!locations[location_id]) {
@@ -168,16 +207,20 @@ const DataController = (): IDataController => {
    * @param location_id The id of the location to be retrieved
    * @returns An array containing of the InventoryItems in the location
    */
-  const getInventoryLocation = async (location_id: TLocationID): Promise<IInventoryItem[]> => {
+  const getInventoryLocation = async (
+    location_id: TLocationID
+  ): Promise<IInventoryItem[]> => {
     const locations: IInventoryLocationMap = await getLocations();
 
     const location = locations[location_id];
 
     const items = await getInventory();
 
-    const inventory_items: IInventoryItem[] = location.items.map((i_id: TInventoryID) => {
-      return items[i_id];
-    });
+    const inventory_items: IInventoryItem[] = location.items.map(
+      (i_id: TInventoryID) => {
+        return items[i_id];
+      }
+    );
 
     return inventory_items;
   };
@@ -189,7 +232,9 @@ const DataController = (): IDataController => {
    * @param location The location to be added to the database
    * @returns A promise that resolves to the location's location_id, null if the location already exists, or if an error occurred.
    */
-  const createInventoryLocation = async (location: IInventoryLocation): Promise<TLocationID | null> => {
+  const createInventoryLocation = async (
+    location: IInventoryLocation
+  ): Promise<TLocationID | null> => {
     if (!isInventoryLocation(location)) {
       // Fails validation
       return null;
@@ -250,7 +295,10 @@ const DataController = (): IDataController => {
    * @param item_id The id of the item to be added
    * @returns Returns a promise that resolves to the new location_id, null if the item exists at the new location already, or if an error occurred.
    */
-  const addItemToLocation = async (location_id: TLocationID, item_id: TInventoryID): Promise<TLocationID | null> => {
+  const addItemToLocation = async (
+    location_id: TLocationID,
+    item_id: TInventoryID
+  ): Promise<TLocationID | null> => {
     const locations: IInventoryLocationMap = await getLocations();
 
     if (locations[location_id].items.includes(item_id)) {
@@ -260,7 +308,10 @@ const DataController = (): IDataController => {
 
     const newLocations = {
       ...locations,
-      [location_id]: { ...locations[location_id], items: [...locations[location_id].items, item_id] },
+      [location_id]: {
+        ...locations[location_id],
+        items: [...locations[location_id].items, item_id],
+      },
     };
 
     writeFile(`${DB_PATH}/${LOCATIONS_FILE}`, JSON.stringify(newLocations));
@@ -289,7 +340,9 @@ const DataController = (): IDataController => {
       return null;
     }
 
-    const newItems = locations[location_id].items.filter((i_id: TInventoryID) => i_id !== item_id);
+    const newItems = locations[location_id].items.filter(
+      (i_id: TInventoryID) => i_id !== item_id
+    );
 
     const newLocations = {
       ...locations,
@@ -308,7 +361,10 @@ const DataController = (): IDataController => {
    * @returns A promise that resolves to a list of all the types of items in the database
    */
   const getTypes = async (): Promise<TItemType[]> => {
-    const types_string: string = await readFile(`${DB_PATH}/${TYPES_FILE}`, 'utf8');
+    const types_string: string = await readFile(
+      `${DB_PATH}/${TYPES_FILE}`,
+      "utf8"
+    );
     const types: string[] = JSON.parse(types_string);
     return types;
   };

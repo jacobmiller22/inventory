@@ -8,7 +8,7 @@ import {
   UserConfidential,
   UserConfidentialPending,
   UserPending,
-} from "../../interfaces/user";
+} from "../../types/user";
 
 type LoginArgs = {
   username: string;

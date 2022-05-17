@@ -1,7 +1,7 @@
 import authService from "@/services/auth";
-import { HttpStatus } from "@/interfaces/http";
-import { Middleware } from "@/interfaces";
-import { Role, UserPending } from "@/interfaces/user";
+import { HttpStatus } from "@/types/http";
+import { Middleware } from "@/types";
+import { Role, UserPending } from "@/types/user";
 
 const login: Middleware = async (req, res) => {
   const { username, password } = req.body;

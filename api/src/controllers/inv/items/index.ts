@@ -1,20 +1,18 @@
-/**
- *
- * The entry point to the route: 'server/v1/inventory/item/
- *
- */
 import type { Request, Response } from "express";
-import express from "express";
 import { DataController } from "@/controllers/index";
-import { IInventoryItem, TInventoryID } from "@/interfaces/Inventory";
+import { IInventoryItem, TInventoryID } from "@/types/Inventory";
+import itemsService from "@/services/items";
 
-const router = express();
+const getItems = async (req: Request, res: Response) => {
+  /** Get all Items */
 
-/**
- * @api {item} /v1/inventory/item/:item Get all details of an inventory item
- */
-router.get("/:item_id", async (req: Request, res: Response) => {
-  /** Create a new Item */
+  const items = await itemsService.getItems();
+
+  return res.status(200).json(items);
+};
+
+const getItem = async (req: Request, res: Response) => {
+  /** Get a n Item */
 
   const id: TInventoryID = req.params?.item_id as TInventoryID;
   // console.log(req);
@@ -28,12 +26,9 @@ router.get("/:item_id", async (req: Request, res: Response) => {
   }
 
   return res.status(200).json(item);
-});
+};
 
-/**
- * @api {post} /v1/inventory/ Create an inventory item
- */
-router.post("/", async (req: Request, res: Response) => {
+const createItem = async (req: Request, res: Response) => {
   /** Create a new Item */
 
   const new_item: IInventoryItem = req.body;
@@ -45,6 +40,6 @@ router.post("/", async (req: Request, res: Response) => {
   }
 
   return res.status(201).end();
-});
+};
 
-export default router;
+export default { getItems, getItem, createItem };

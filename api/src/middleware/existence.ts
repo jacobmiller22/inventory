@@ -2,8 +2,8 @@
  * Tools for verifying existence of objects and fields particularly on request objects.
  *
  */
-import { Middleware, ServiceResponse } from "@/interfaces";
-import { HttpStatus } from "@/interfaces/http";
+import { Middleware, ServiceResponse } from "@/types";
+import { HttpStatus } from "@/types/http";
 
 /**
  *

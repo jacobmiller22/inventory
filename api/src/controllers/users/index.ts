@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import validator from "validator";
-import { HttpStatus } from "@/interfaces/http";
-import { MinUser, Role, User, UserPending } from "@/interfaces/user";
+import { HttpStatus } from "@/types/http";
+import { MinUser, Role, User, UserPending } from "@/types/user";
 import usersService from "@/services/users";
 
 /**
@@ -47,10 +47,9 @@ const createUsers = async (req: Request, res: Response): Promise<void> => {
   }
 
   let sanitizedUsers: UserPending[] = [];
-  let i = -1;
+
   try {
-    sanitizedUsers = users.map((user: any) => {
-      i++;
+    sanitizedUsers = users.map((user: any, i: number) => {
       if (!user.email || !validator.isEmail(user.email)) {
         throw new Error(`Invalid email at index ${i}`);
       }

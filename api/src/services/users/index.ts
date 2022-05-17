@@ -7,7 +7,7 @@ import {
   UserConfidential,
   UserPending,
   UserUpdate,
-} from "../../interfaces/user";
+} from "../../types/user";
 import { User as UserModel } from "../../models";
 
 const getUser = async (userId: string): Promise<User | null> => {

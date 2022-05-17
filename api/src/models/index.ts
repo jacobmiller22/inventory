@@ -1,4 +1,6 @@
 export { default as User } from "./user.model";
+export { default as Location } from "./location.model";
+export { default as Item } from "./item.model";
 
 import mongoose from "mongoose";
 import config from "@/config.json";

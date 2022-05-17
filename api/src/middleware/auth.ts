@@ -2,8 +2,9 @@ import { expressjwt } from "express-jwt";
 import usersService from "@/services/users";
 import config from "@/config.json";
 import type { Request, Response, NextFunction } from "express";
-import { Role, User } from "@/interfaces/user";
-import { HttpStatus } from "@/interfaces/http";
+import { Role, User } from "@/types/user";
+import { HttpStatus } from "@/types/http";
+import { Middleware } from "@/types";
 
 // const STATIC_ROUTES: RegExp[] = [/^.*\.ico/, /^.*\.js*/, /^.*\.css/];
 
@@ -44,18 +45,30 @@ const isRevoked = async (
   done();
 };
 
+/**
+ * Wraps the given middleware by ensuring the jwt middleware is run beforehand, this is to ensure
+ * the use of wrapped middleware verifies the jwt token without needing to also specify it for every route.
+ * @param middleware a middleware function that will run after the auth middleware
+ * @returns
+ */
+const claimsWrapper = (middleware: Middleware) => {
+  return [requireAuth, middleware];
+};
+
 export const hasRole = (roles: Role[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  const middleware = (req: Request, res: Response, next: NextFunction) => {
     //@ts-expect-error
     const { roles: userRoles } = req.user;
     if (userRoles.some((role: Role) => roles.includes(role))) {
       next();
     }
   };
+
+  return claimsWrapper(middleware);
 };
 
 export const isSubject = () => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  const middleware = (req: Request, res: Response, next: NextFunction) => {
     //@ts-expect-error
     if (!req?.user) {
       res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });
@@ -71,10 +84,23 @@ export const isSubject = () => {
     next();
     return;
   };
+
+  return claimsWrapper(middleware);
 };
 
+/**
+ *
+ * Ensures that the jwt token is valid
+ *
+ * @param roles
+ * @returns
+ */
 export const hasRoleOrIsSubject = (roles: Role[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  const middleware = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     //@ts-expect-error
     if (!req?.user) {
       res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });
@@ -96,4 +122,6 @@ export const hasRoleOrIsSubject = (roles: Role[]) => {
     res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });
     return;
   };
+
+  return claimsWrapper(middleware);
 };

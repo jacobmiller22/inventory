@@ -14,7 +14,7 @@ import { requireAuth } from "@/middleware/auth";
 
 const router = express();
 
-router.get("/", requireAuth(), (req: Request, res: Response) => {
+router.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 

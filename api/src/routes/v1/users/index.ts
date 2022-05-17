@@ -7,7 +7,7 @@ const router = express();
 
 import userController from "@/controllers/users";
 import { hasRole, hasRoleOrIsSubject } from "@/middleware/auth";
-import { Role } from "@/interfaces/user";
+import { Role } from "@/types/user";
 import { verifyExistence } from "@/middleware/existence";
 
 /**

@@ -1,5 +1,5 @@
-import { ErrorMiddleware } from "@/interfaces";
-import { HttpStatus } from "@/interfaces/http";
+import { ErrorMiddleware } from "@/types";
+import { HttpStatus } from "@/types/http";
 
 const errorHandler: ErrorMiddleware = (err, req, res, next) => {
   if (typeof err === "string") {

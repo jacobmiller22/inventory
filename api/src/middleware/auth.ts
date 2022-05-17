@@ -18,31 +18,39 @@ import { Middleware } from "@/types";
 //   /^\/users\/?$/d,
 // ];
 
-export const requireAuth = () => {
+export const requireAuth = (): Middleware[] => {
   const secret = config.secret;
 
   return [
     //@ts-ignore
     new expressjwt({ secret, isRevoked, algorithms: ["HS256"] }),
-    (err: any, req: Request, res: Response, next: NextFunction) => {
+    async (err: any, req: Request, res: Response, next: NextFunction) => {
       res.status(err.status).json(err);
+      return;
     },
   ];
+};
+type DecodedToken = {
+  header: { alg: "HS256"; typ: "JWT" };
+  payload: { sub: string; roles: Role[]; iat: number; exp: number };
+  signature: string;
 };
 
 const isRevoked = async (
   req: Request,
-  payload: any,
-  done: (err?: any, revoked?: boolean) => void
-): Promise<void> => {
-  const user = await usersService.getUser(payload.sub);
+  decodedTok: DecodedToken
+): Promise<boolean> => {
+  if (!decodedTok?.payload) {
+    return true;
+  }
+
+  const user = await usersService.getUser(decodedTok.payload.sub);
 
   // revoke token if user no longer exists
   if (!user) {
-    done(null, true);
-    return;
+    return true;
   }
-  done();
+  return false;
 };
 
 /**
@@ -51,24 +59,47 @@ const isRevoked = async (
  * @param middleware a middleware function that will run after the auth middleware
  * @returns
  */
-const claimsWrapper = (middleware: Middleware) => {
-  return [requireAuth, middleware];
+const claimsWrapper = (middleware: Middleware): Middleware[] => {
+  return [...requireAuth(), middleware];
 };
 
 export const hasRole = (roles: Role[]) => {
-  const middleware = (req: Request, res: Response, next: NextFunction) => {
+  const middleware = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     //@ts-expect-error
-    const { roles: userRoles } = req.user;
-    if (userRoles.some((role: Role) => roles.includes(role))) {
-      next();
+    if (!req?.auth) {
+      res.status(HttpStatus.UNAUTHORIZED).json({
+        message: "Unauthorized",
+      });
+      return;
     }
+
+    //@ts-expect-error
+    const { roles: userRoles } = req.auth;
+    console.log("userRoles", userRoles);
+    console.log("roles", roles);
+    if (
+      userRoles.some((role: Role) => roles.includes(role.toLowerCase() as Role))
+    ) {
+      next();
+      return;
+    }
+    res.status(HttpStatus.FORBIDDEN).end();
+    return;
   };
 
   return claimsWrapper(middleware);
 };
 
 export const isSubject = () => {
-  const middleware = (req: Request, res: Response, next: NextFunction) => {
+  const middleware = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     //@ts-expect-error
     if (!req?.user) {
       res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });

@@ -10,6 +10,12 @@ export type Location = {
   items: ItemId[];
 };
 
-export const verifyLocationId = (id: LocationId): boolean => {
-  return true;
+export type LocationList = Omit<Location, "items">[];
+
+export const isValidLocationId = (id: any): boolean => {
+  if (typeof id !== "string" || id.length !== 18 || !id.startsWith("l_")) {
+    return false;
+  }
+
+  return validate.isUUID(id.slice(2));
 };

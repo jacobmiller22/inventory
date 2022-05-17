@@ -11,6 +11,8 @@ const router = express();
 
 router.get("/", invLocationsController.getLocations);
 
+router.get("/:locationId", invLocationsController.getLocation);
+
 router.post(
   "/",
   verifyExistence(["name", "description"]),

@@ -28,7 +28,7 @@ const getLocation = async (req: Request, res: Response) => {
   const locationId: any = req.params.locationId;
 
   if (!isValidLocationId(locationId)) {
-    return res.status(HttpStatus.BAD_REQUEST).end();
+    return res.status(HttpStatus.BAD_REQUEST).end("Invalid locationId");
   }
 
   const location = await locationsService.getLocation(locationId);
@@ -64,7 +64,7 @@ const updateLocation = async (req: Request, res: Response) => {
   const locationId: LocationId | any = req.params.locationId;
 
   if (!isValidLocationId(locationId)) {
-    return res.status(HttpStatus.BAD_REQUEST).end();
+    return res.status(HttpStatus.BAD_REQUEST).end("Invalid locationId");
   }
 
   let newLocation: Omit<Location, "locationId" | "items"> = {
@@ -102,6 +102,10 @@ const updateLocation = async (req: Request, res: Response) => {
 const deleteLocation = async (req: Request, res: Response) => {
   /** Delete a location */
   const locationId: LocationId = req.params.locationId;
+
+  if (!isValidLocationId(locationId)) {
+    return res.status(HttpStatus.BAD_REQUEST).end("Invalid locationId");
+  }
 
   const success = await locationsService.deleteLocation(locationId);
 

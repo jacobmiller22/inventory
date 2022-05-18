@@ -19,7 +19,7 @@ router.post(
   invLocationsController.createLocation
 );
 
-router.put("/", invLocationsController.updateLocation);
+router.put("/:locationId", invLocationsController.updateLocation);
 
 router.delete("/:locationId", invLocationsController.deleteLocation);
 

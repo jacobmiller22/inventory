@@ -4,11 +4,13 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
   _id: { type: String, required: true },
-  locationId: { type: String, required: true },
+  _location: { type: String, ref: "Location" },
   name: { type: String, unique: false, required: true },
-  quantity: { type: Number, required: true },
-  note: { type: String, unique: false, required: false },
-  type: { type: String, required: true },
+  description: { type: String, unique: false, required: false },
+  quantity: { type: Number, unique: false, required: true },
+  unit: { type: String, unique: false, required: true },
+  _tags: { type: [String], ref: "Tag", default: [] },
+  imgSrcs: { type: [String], unique: false, required: true, default: [] },
 });
 
 schema.set("toJSON", { virtuals: true });

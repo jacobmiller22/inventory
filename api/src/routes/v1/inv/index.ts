@@ -8,7 +8,7 @@ import invController from "@/controllers/inv";
 
 import itemRouter from "./items";
 import locationsRouter from "./locations";
-import typesRouter from "./types";
+import tagsRouter from "./tags";
 
 const router = express();
 
@@ -22,6 +22,6 @@ router.get("/", invController.getInventory);
  */
 router.use("/items", itemRouter);
 router.use("/locations", locationsRouter);
-router.use("/types", typesRouter);
+router.use("/tags", tagsRouter);
 
 export default router;

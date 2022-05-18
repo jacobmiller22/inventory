@@ -37,7 +37,12 @@ const updateLocation = async (
   id: LocationId,
   location: Omit<Partial<Location>, "locationId">
 ): Promise<boolean> => {
-  return false;
+  try {
+    await LocationModel.findByIdAndUpdate(id, location);
+    return true;
+  } catch (err) {
+    return false;
+  }
 };
 
 const deleteLocation = async (id: LocationId): Promise<boolean> => {

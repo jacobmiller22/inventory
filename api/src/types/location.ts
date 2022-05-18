@@ -13,7 +13,7 @@ export type Location = {
 export type LocationList = Omit<Location, "items">[];
 
 export const isValidLocationId = (id: any): boolean => {
-  if (typeof id !== "string" || id.length !== 18 || !id.startsWith("l_")) {
+  if (typeof id !== "string" || id.length !== 38 || !id.startsWith("l_")) {
     return false;
   }
 

@@ -1,11 +1,6 @@
 import type { Request, Response } from "express";
 import locationsService from "@/services/locations";
-import { DataController } from "@/controllers/index";
-import {
-  IInventoryLocation,
-  IInventoryLocationMap,
-  TLocationID,
-} from "@/types/Inventory";
+
 import {
   isValidLocationId,
   Location,

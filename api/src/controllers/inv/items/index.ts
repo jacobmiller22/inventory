@@ -1,6 +1,4 @@
 import type { Request, Response } from "express";
-import { DataController } from "@/controllers/index";
-import { IInventoryItem, TInventoryID } from "@/types/Inventory";
 import itemsService from "@/services/items";
 import { isValidItemId, Item, ItemId, ItemList } from "@/types/item";
 import { HttpStatus } from "@/types/http";

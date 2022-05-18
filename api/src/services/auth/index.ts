@@ -2,13 +2,7 @@ import usersService from "../users";
 import config from "../../config.json";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import {
-  MinUser,
-  User,
-  UserConfidential,
-  UserConfidentialPending,
-  UserPending,
-} from "../../types/user";
+import { MinUser, User, UserConfidential, UserPending } from "../../types/user";
 
 type LoginArgs = {
   username: string;

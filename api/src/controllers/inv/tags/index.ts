@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import { DataController } from "@/controllers/index";
-import { TItemType } from "@/types/Inventory";
 import { isValidTagId, Tag, TagId } from "@/types/tags";
 import tagService from "@/services/tags";
 import { HttpStatus } from "@/types/http";

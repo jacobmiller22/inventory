@@ -10,8 +10,6 @@ import v1InventoryRouter from "./v1/inv";
 import v1UsersRouter from "./v1/users";
 import authRouter from "./auth";
 
-import { requireAuth } from "@/middleware/auth";
-
 const router = express();
 
 router.get("/", (req: Request, res: Response) => {

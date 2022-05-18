@@ -4,18 +4,12 @@
  *
  */
 import express from "express";
-import invController from "@/controllers/inv";
 
 import itemRouter from "./items";
 import locationsRouter from "./locations";
 import tagsRouter from "./tags";
 
 const router = express();
-
-/**
- * @api {get} /v1/inventory/ Get the inventory
- */
-router.get("/", invController.getInventory);
 
 /**
  * Define further nested routes

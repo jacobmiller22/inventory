@@ -70,8 +70,6 @@ const updateItem = async (req: Request, res: Response) => {
     unit: req.body.unit,
     tags: req.body.tags,
   };
-  console.log("body", req.body);
-  console.log("newItem", newItem);
 
   if (newItem.locationId && !isValidLocationId(newItem.locationId)) {
     return res
@@ -122,8 +120,6 @@ const updateItem = async (req: Request, res: Response) => {
       .status(HttpStatus.BAD_REQUEST)
       .end("None of the given fields are valid");
   }
-
-  console.log("new item", newItem);
 
   const success = await itemsService.updateItem(itemId, newItem);
 

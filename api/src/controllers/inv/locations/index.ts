@@ -87,6 +87,12 @@ const updateLocation = async (req: Request, res: Response) => {
   /** Remove undefined values from newLocation object */
   newLocation = removeUndefined(newLocation);
 
+  if (Object.keys(newLocation).length === 0) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .end("None of the given fields are valid");
+  }
+
   const success = await locationsService.updateLocation(
     locationId,
     newLocation

@@ -2,7 +2,7 @@
  * Item Service
  */
 
-import { ItemId, Item } from "@/types/item";
+import { ItemId, Item, ItemRecord } from "@/types/item";
 import { Item as ItemModel } from "@/models";
 import { v4 as uuid } from "uuid";
 
@@ -18,7 +18,12 @@ const getItem = async (id: ItemId) => {
 
 const createItem = async (item: Omit<Item, "itemId">) => {
   const itemId = `i_${uuid()}`;
-  const newLocation = { ...item, _id: itemId };
+  let newLocation: any = { ...item, _id: itemId };
+
+  // Replace locationId with reference to _location
+
+  newLocation._location = newLocation.locationId;
+  delete newLocation["locationId"];
 
   try {
     await ItemModel.create(newLocation);

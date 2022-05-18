@@ -132,6 +132,8 @@ const deleteItem = async (req: Request, res: Response) => {
   /** Delete an item */
   const itemId: ItemId = req.params.itemId;
 
+  console.log("itemId", itemId);
+
   if (!isValidItemId(itemId)) {
     return res.status(HttpStatus.BAD_REQUEST).end("Invalid itemId");
   }

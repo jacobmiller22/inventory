@@ -4,7 +4,7 @@ import { Tag } from "./tags";
 
 export type ItemId = string;
 
-export type Item = {
+export interface Item {
   itemId: ItemId;
   locationId: LocationId;
   name: string;
@@ -13,9 +13,14 @@ export type Item = {
   unit: string;
   tags: Tag[];
   imgSrcs: string[];
-};
+}
 
 export type ItemList = Omit<Item, "">[];
+
+export interface ItemRecord extends Omit<Item, "locationId"> {
+  _id: ItemId;
+  _location: LocationId;
+}
 
 export const isValidItemId = (id: any): boolean => {
   if (typeof id !== "string" || id.length !== 38 || !id.startsWith("i_")) {

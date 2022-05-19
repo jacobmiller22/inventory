@@ -40,6 +40,7 @@ const getItem = async (id: ItemId): Promise<Item | null> => {
       "_tags",
       "_location",
       "imgSrcs",
+      "__v",
     ]);
 
   if (!item) {

@@ -1,10 +1,10 @@
 import { v4 as uuid } from "uuid";
-import { Tag, TagId } from "@/types/tags";
+import { Tag, TagDocument, TagId } from "@/types/tag";
 import { Tag as TagModel } from "@/models";
 
 const getTags = async (): Promise<Tag[]> => {
-  const tags = (await TagModel.find()) ?? [];
-  return tags;
+  const tags: TagDocument[] = (await TagModel.find()) ?? [];
+  return tags.map((tag: TagDocument) => tagDoc2Tag(tag));
 };
 
 const createTag = async (tag: Omit<Tag, "tagId">): Promise<TagId | null> => {
@@ -49,3 +49,9 @@ const isValidTag = (tag: any): boolean => {
 };
 
 export default { getTags, createTag, updateTag, deleteTag, isValidTag };
+
+const tagDoc2Tag = (tag: TagDocument) => {
+  const { _id, name } = tag;
+
+  return { tagId: _id, name };
+};

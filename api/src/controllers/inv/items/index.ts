@@ -4,7 +4,7 @@ import { isValidItemId, Item, ItemId, ItemList } from "@/types/item";
 import { HttpStatus } from "@/types/http";
 import { removeUndefined } from "@/lib/validators";
 import { isValidLocationId } from "@/types/location";
-import { isValidTagId } from "@/types/tags";
+import { isValidTagId } from "@/types/tag";
 
 const getItems = async (req: Request, res: Response) => {
   /** Get all locations */

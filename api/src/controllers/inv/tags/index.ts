@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { isValidTagId, Tag, TagId } from "@/types/tags";
+import { isValidTagId, Tag, TagId } from "@/types/tag";
 import tagService from "@/services/tags";
 import { HttpStatus } from "@/types/http";
 
@@ -21,7 +21,7 @@ const createTag = async (req: Request, res: Response) => {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
   }
 
-  return res.status(HttpStatus.OK).send(tagId);
+  return res.status(HttpStatus.OK).json(tagId);
 };
 
 const updateTag = async (req: Request, res: Response) => {

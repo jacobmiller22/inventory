@@ -1,6 +1,6 @@
 import validate from "validator";
 import { LocationId } from "./location";
-import { Tag } from "./tags";
+import { Tag } from "./tag";
 
 export type ItemId = string;
 

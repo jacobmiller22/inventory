@@ -1,6 +1,6 @@
 import Layout from "layouts/Main";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { IndexView } from "views";
+import { IndexView, NewItemView } from "views";
 
 const Router = () => {
   return (
@@ -11,6 +11,15 @@ const Router = () => {
           element={
             <Layout variant="light">
               <IndexView />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/items/new"
+          element={
+            <Layout variant="light">
+              <NewItemView />
             </Layout>
           }
         />

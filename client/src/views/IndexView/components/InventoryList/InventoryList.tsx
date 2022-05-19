@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 import theme from "theme";
+import { useNavigate } from "react-router-dom";
 /** Interfaces/types */
 
 /** components */
 import { DataGrid } from "@mui/x-data-grid";
 import { getItems } from "api/inv";
 import { Card, Toolbar, Button } from "@mui/material";
+import { Item, ItemId, MinItem } from "interfaces/item";
+import { Tag } from "interfaces/tag";
+import { AddButton, Spacer } from "components";
+import { newItemRoute } from "Router/routes/client";
 
 interface IInventoryListProps {}
 
+type RowItem = Omit<MinItem, "itemId"> & { id: ItemId };
+
 const InventoryList = ({}: IInventoryListProps) => {
-  const [rows, setRows] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const [rows, setRows] = useState<RowItem[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -25,7 +33,11 @@ const InventoryList = ({}: IInventoryListProps) => {
       sx={{ backgroundColor: theme.palette.background.default }}
     >
       <Toolbar>
-        <Button>Add</Button>
+        <Spacer />
+        <AddButton
+          variant="contained"
+          onClick={() => navigate(newItemRoute.path)}
+        />
       </Toolbar>
       <DataGrid
         sx={{ borderRadius: 0, borderInline: "none", borderBottom: "none" }}
@@ -51,12 +63,7 @@ const columns = [
     width: 250,
     editable: false,
   },
-  {
-    field: "description",
-    headerName: "Description",
-    width: 400,
-    editable: false,
-  },
+
   {
     field: "quantity",
     headerName: "Quantity",
@@ -71,20 +78,28 @@ const columns = [
     editable: false,
   },
   {
-    field: "location",
+    field: "locationId",
     headerName: "Location",
     width: 200,
     editable: false,
   },
+  {
+    field: "tags",
+    headerName: "Tags",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    width: 160,
+    valueGetter: (params: any) => params.row.tags.map((tag: Tag) => tag.name),
+  },
 ];
 
-const itemToRow = (item: any) => {
+const itemToRow = (item: MinItem): RowItem => {
   return {
-    id: item._id,
-    location: item._location,
+    id: item.itemId,
+    locationId: item.locationId,
     name: item.name,
-    description: item.description,
     quantity: item.quantity,
     unit: item.unit,
+    tags: item.tags,
   };
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Item, ItemId, MinItem } from "interfaces/item";
 import { LocationId, MinLocation } from "interfaces/location";
+import { Tag, TagId } from "interfaces/tag";
 
 const locationApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/locations`,
@@ -73,9 +74,17 @@ export const getItem = async (id: ItemId): Promise<Item | null> => {
 };
 
 export const createItem = async (
-  item: Omit<Item, "itemId">
+  item: Omit<MinItem & Item, "itemId" | "location">
 ): Promise<ItemId | null> => {
-  return null;
+  const res = await itemApi.post("/", item);
+
+  console.log(res);
+  const itemId: ItemId = res.data;
+
+  if (!itemId) {
+    return null;
+  }
+  return itemId;
 };
 
 export const updateItem = async (
@@ -86,5 +95,35 @@ export const updateItem = async (
 };
 
 export const deleteItem = async (id: ItemId): Promise<boolean> => {
+  return false;
+};
+
+const tagApi = axios.create({
+  baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/tags`,
+});
+
+export const getTags = async (): Promise<Tag[]> => {
+  const res = await tagApi.get("/");
+  console.log(res);
+
+  const items: Tag[] = res.data;
+
+  return items;
+};
+
+export const createTag = async (
+  item: Omit<Tag, "tagId">
+): Promise<TagId | null> => {
+  return null;
+};
+
+export const updateTag = async (
+  id: TagId,
+  fields: Partial<Omit<Tag, "tagId">>
+): Promise<boolean> => {
+  return false;
+};
+
+export const deleteTag = async (id: TagId): Promise<boolean> => {
   return false;
 };

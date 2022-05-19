@@ -2,6 +2,7 @@ import axios from "axios";
 import { Item, ItemId, MinItem } from "interfaces/item";
 import { LocationId, MinLocation } from "interfaces/location";
 import { Tag, TagId } from "interfaces/tag";
+import { HttpStatus } from "lib/http";
 
 const locationApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/locations`,
@@ -95,7 +96,21 @@ export const updateItem = async (
 };
 
 export const deleteItem = async (id: ItemId): Promise<boolean> => {
-  return false;
+  const res = await itemApi.delete(`/${id}`);
+
+  console.log(res);
+
+  return res.status !== HttpStatus.OK;
+};
+
+export const deleteItems = async (ids: ItemId[]): Promise<boolean> => {
+  // Temporary solution until bulk delete is available from API
+  await Promise.all(
+    ids.map(async (id: ItemId) => {
+      return await deleteItem(id);
+    })
+  );
+  return true;
 };
 
 const tagApi = axios.create({

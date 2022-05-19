@@ -27,6 +27,14 @@ export const light = {
   background: {
     paper: "#FEFEFE",
     default: "#f8f8f8",
-    // level2: "#f5f5f5",X
+    dark: "#eeeeee",
+    highlight: "rgba(0, 188, 212, 0.08)",
   },
 };
+
+export interface CustomPalette {
+  background: {
+    dark: string;
+    highlight: string;
+  };
+}

@@ -1,8 +1,8 @@
 import { createTheme, Palette } from "@mui/material";
-import { light } from "./palette";
+import { CustomPalette, light } from "./palette";
 
 export type Theme = {
-  palette: Palette;
+  palette: Palette & CustomPalette;
   layout: {
     contentWidth: string;
   };

@@ -2,31 +2,66 @@
  * Item Service
  */
 
-import { ItemId, Item, ItemRecord } from "@/types/item";
+import { ItemId, Item, ItemDocument, MinItem } from "@/types/item";
 import { Item as ItemModel } from "@/models";
 import { v4 as uuid } from "uuid";
+import { LocationDocument, LocationId, MinLocation } from "@/types/location";
+import { Tag, TagDocument, TagId } from "@/types/tag";
+import tagsService from "@/services/tags";
+import locationsService from "@/services/locations";
 
-const getItems = async () => {
-  const items = await ItemModel.find();
-  return items;
+const getItems = async (): Promise<any[]> => {
+  const items: ItemDocument<LocationId, TagDocument>[] =
+    await ItemModel.find().populate("_tags");
+
+  return items.map((item: ItemDocument<LocationId, TagDocument>) =>
+    //@ts-expect-error
+    itemDoc2MinItem(item.toObject())
+  );
 };
 
-const getItem = async (id: ItemId) => {
-  const location = await ItemModel.findById(id);
-  return location;
+const getItem = async (id: ItemId): Promise<Item | null> => {
+  const item: ItemDocument<LocationDocument | null, TagDocument> | null =
+    await ItemModel.findById(id)
+      .populate(["_tags", "_location"])
+      .select([
+        "_id",
+        "name",
+        "description",
+        "quantity",
+        "unit",
+        "_tags",
+        "_location",
+        "imgSrcs",
+      ]);
+
+  if (!item) {
+    return null;
+  }
+
+  //@ts-expect-error
+  return itemDoc2Item(item.toObject());
 };
 
-const createItem = async (item: Omit<Item, "itemId">) => {
+const createItem = async (
+  item: Omit<MinItem, "itemId" | "tags"> & {
+    tags: TagId[];
+    description: string;
+    imgSrcs: string[];
+  }
+) => {
   const itemId = `i_${uuid()}`;
-  let newLocation: any = { ...item, _id: itemId };
+  let newItem: any = { ...item, _id: itemId };
 
   // Replace locationId with reference to _location
 
-  newLocation._location = newLocation.locationId;
-  delete newLocation["locationId"];
+  newItem._location = newItem.locationId;
+  newItem._tags = newItem.tags;
+  delete newItem["locationId"];
+  delete newItem["tags"];
 
   try {
-    await ItemModel.create(newLocation);
+    await ItemModel.create(newItem);
     return itemId;
   } catch (err) {
     console.error("Error creating item", err);
@@ -52,10 +87,53 @@ const deleteItem = async (id: ItemId) => {
   }
 };
 
+const itemDoc2MinItem = (
+  item: ItemDocument<LocationId, TagDocument>
+): MinItem => {
+  const { _id, _location, name, quantity, unit, _tags } = item;
+
+  const tags = _tags.map((tag: TagDocument) => tagsService.tagDoc2Tag(tag));
+
+  return {
+    itemId: _id,
+    locationId: _location,
+    name,
+    quantity,
+    unit,
+    tags,
+  };
+};
+
+const itemDoc2Item = (
+  item: ItemDocument<LocationDocument | null, TagDocument>
+): Item => {
+  const minItem: MinItem = itemDoc2MinItem({
+    ...item,
+    _location: item._location?._id ?? "",
+  });
+
+  const { description, imgSrcs } = item;
+  const location = item._location
+    ? locationsService.locDoc2MinLoc(item._location)
+    : null;
+  let workingItem: Item & { locationId?: LocationId } = {
+    ...minItem,
+    description,
+    imgSrcs,
+    location,
+  };
+  // Remove the locationId from the MinItem
+  delete workingItem["locationId"];
+
+  return workingItem as Item;
+};
+
 export default {
   getItems,
   getItem,
   createItem,
   updateItem,
   deleteItem,
+  itemDoc2MinItem,
+  itemDoc2Item,
 };

@@ -48,10 +48,17 @@ const isValidTag = (tag: any): boolean => {
   return true;
 };
 
-export default { getTags, createTag, updateTag, deleteTag, isValidTag };
-
 const tagDoc2Tag = (tag: TagDocument) => {
   const { _id, name } = tag;
 
   return { tagId: _id, name };
+};
+
+export default {
+  getTags,
+  createTag,
+  updateTag,
+  deleteTag,
+  isValidTag,
+  tagDoc2Tag,
 };

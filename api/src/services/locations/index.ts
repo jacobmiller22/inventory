@@ -64,14 +64,6 @@ const deleteLocation = async (id: LocationId): Promise<boolean> => {
   }
 };
 
-export default {
-  getLocations,
-  getLocation,
-  createLocation,
-  updateLocation,
-  deleteLocation,
-};
-
 const locDoc2MinLoc = (loc: LocationDocument): MinLocation => {
   if (!loc) {
     throw "A nonnull LocationDocument must be passed to locRecord";
@@ -99,4 +91,13 @@ const locDoc2Loc = (loc: LocationDocument): Location => {
     description,
     items,
   };
+};
+
+export default {
+  getLocations,
+  getLocation,
+  createLocation,
+  updateLocation,
+  deleteLocation,
+  locDoc2MinLoc,
 };

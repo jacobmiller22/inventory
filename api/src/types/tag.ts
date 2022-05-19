@@ -9,6 +9,7 @@ export type Tag = {
 export type TagId = string;
 
 export interface TagDocument extends Document {
+  _id: TagId;
   name: string;
 }
 

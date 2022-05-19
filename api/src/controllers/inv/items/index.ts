@@ -1,17 +1,17 @@
 import type { Request, Response } from "express";
 import itemsService from "@/services/items";
-import { isValidItemId, Item, ItemId, ItemList } from "@/types/item";
+import { isValidItemId, Item, ItemId, MinItem } from "@/types/item";
 import { HttpStatus } from "@/types/http";
 import { removeUndefined } from "@/lib/validators";
 import { isValidLocationId } from "@/types/location";
-import { isValidTagId } from "@/types/tag";
+import { isValidTagId, TagId } from "@/types/tag";
 
 const getItems = async (req: Request, res: Response) => {
   /** Get all locations */
 
-  const locations: ItemList = await itemsService.getItems();
+  const items: MinItem[] = await itemsService.getItems();
 
-  return res.status(HttpStatus.OK).json(locations);
+  return res.status(HttpStatus.OK).json(items);
 };
 
 const getItem = async (req: Request, res: Response) => {
@@ -34,7 +34,11 @@ const getItem = async (req: Request, res: Response) => {
 const createItem = async (req: Request, res: Response) => {
   /** Create a new Item */
 
-  const item: Omit<Item, "itemId"> = {
+  const item: Omit<MinItem, "itemId" | "tags"> & {
+    tags: TagId[];
+    description: string;
+    imgSrcs: string[];
+  } = {
     locationId: req.body.locationId,
     name: req.body.name,
     description: req.body.name,
@@ -60,7 +64,7 @@ const updateItem = async (req: Request, res: Response) => {
     return res.status(HttpStatus.BAD_REQUEST).end("Invalid itemId");
   }
 
-  let newItem: Omit<Item, "itemId" | "imgSrcs"> = {
+  let newItem: Omit<MinItem, "itemId" | "imgSrcs"> & { description: string } = {
     locationId: req.body.locationId,
     name: req.body.name,
     description: req.body.description,

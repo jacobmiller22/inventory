@@ -1,25 +1,33 @@
 import validate from "validator";
-import { LocationId } from "./location";
-import { Tag } from "./tag";
+import { LocationId, MinLocation } from "./location";
+import { Document } from "./mongo";
+import { Tag, TagId } from "./tag";
 
 export type ItemId = string;
 
-export interface Item {
+export interface MinItem {
   itemId: ItemId;
   locationId: LocationId;
   name: string;
-  description: string;
   quantity: number;
   unit: string;
   tags: Tag[];
+}
+export interface Item extends Omit<MinItem, "locationId"> {
+  description: string;
   imgSrcs: string[];
+  location: MinLocation | null;
 }
 
-export type ItemList = Omit<Item, "">[];
-
-export interface ItemRecord extends Omit<Item, "locationId"> {
+export interface ItemDocument<L = LocationId, T = TagId> extends Document {
   _id: ItemId;
-  _location: LocationId;
+  _location: L;
+  name: string;
+  description: string;
+  quantity: 1;
+  unit: string;
+  _tags: T[];
+  imgSrcs: string[];
 }
 
 export const isValidItemId = (id: any): boolean => {

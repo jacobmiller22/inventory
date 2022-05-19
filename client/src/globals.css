@@ -1,0 +1,34 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 100%;
+  width: 100%;
+}
+
+#root > * {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+:root {
+  /** Consts */
+  --content-width: 1200px;
+  /* Theme */
+  --accent: #00bcd4;
+  --secondary-dark: #090d3e;
+}
+
+html,
+body,
+body > div:first-child,
+div#root,
+div#root > div {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}

@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content-light {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding-inline: 24px;
+}
+
+.content-full {
+  width: 100%;
+  margin: 0;
+}
+
+.toolbar {
+  margin-inline: auto;
+}

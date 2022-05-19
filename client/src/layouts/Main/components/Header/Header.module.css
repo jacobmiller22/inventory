@@ -1,0 +1,19 @@
+.accent {
+  color: var(--accent);
+}
+
+.content {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.brand {
+  cursor: pointer;
+}
+
+.toolbar {
+  max-width: var(--content-width);
+  margin-inline: auto;
+  width: 100%;
+}

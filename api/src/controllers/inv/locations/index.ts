@@ -26,7 +26,9 @@ const getLocation = async (req: Request, res: Response) => {
     return res.status(HttpStatus.BAD_REQUEST).end("Invalid locationId");
   }
 
-  const location = await locationsService.getLocation(locationId);
+  const location: Location | null = await locationsService.getLocation(
+    locationId
+  );
 
   if (!location) {
     return res.status(HttpStatus.NOT_FOUND).end();

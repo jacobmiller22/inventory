@@ -4,18 +4,28 @@
  *
  */
 
-import { LocationId, Location } from "@/types/location";
+import {
+  LocationId,
+  Location,
+  MinLocation,
+  LocationDocument,
+} from "@/types/location";
 import { Location as LocationModel } from "@/models";
 import { v4 as uuid } from "uuid";
 
-const getLocations = async (): Promise<Location[]> => {
-  const locations = await LocationModel.find();
-  return locations;
+const getLocations = async (): Promise<MinLocation[]> => {
+  const locations: LocationDocument[] = await LocationModel.find();
+  return locations.map((loc: LocationDocument) => locDoc2MinLoc(loc));
 };
 
-const getLocation = async (id: LocationId): Promise<Location> => {
-  const location = await LocationModel.findById(id);
-  return location;
+const getLocation = async (id: LocationId): Promise<Location | null> => {
+  const location: LocationDocument | null = await LocationModel.findById(id);
+
+  if (!location) {
+    return null;
+  }
+
+  return locDoc2Loc(location);
 };
 
 const createLocation = async (
@@ -60,4 +70,33 @@ export default {
   createLocation,
   updateLocation,
   deleteLocation,
+};
+
+const locDoc2MinLoc = (loc: LocationDocument): MinLocation => {
+  if (!loc) {
+    throw "A nonnull LocationDocument must be passed to locRecord";
+  }
+
+  const { _id, name, description } = loc ?? {};
+
+  return {
+    locationId: _id,
+    name,
+    description,
+  };
+};
+
+const locDoc2Loc = (loc: LocationDocument): Location => {
+  if (!loc) {
+    throw "A nonnull LocationDocument must be passed to locRecord";
+  }
+
+  const { _id, name, description, items } = loc ?? {};
+
+  return {
+    locationId: _id,
+    name,
+    description,
+    items,
+  };
 };

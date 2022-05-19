@@ -14,18 +14,24 @@ import { Location as LocationModel } from "@/models";
 import { v4 as uuid } from "uuid";
 
 const getLocations = async (): Promise<MinLocation[]> => {
-  const locations: LocationDocument[] = await LocationModel.find();
-  return locations.map((loc: LocationDocument) => locDoc2MinLoc(loc));
+  const locations: (LocationDocument & { toObject: () => LocationDocument })[] =
+    await LocationModel.find();
+  return locations.map(
+    (loc: LocationDocument & { toObject: () => LocationDocument }) =>
+      locDoc2MinLoc(loc.toObject())
+  );
 };
 
 const getLocation = async (id: LocationId): Promise<Location | null> => {
-  const location: LocationDocument | null = await LocationModel.findById(id);
+  const location:
+    | (LocationDocument & { toObject: () => LocationDocument })
+    | null = await LocationModel.findById(id);
 
   if (!location) {
     return null;
   }
 
-  return locDoc2Loc(location);
+  return locDoc2Loc(location.toObject());
 };
 
 const createLocation = async (

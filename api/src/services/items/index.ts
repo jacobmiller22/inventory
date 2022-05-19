@@ -11,35 +11,41 @@ import tagsService from "@/services/tags";
 import locationsService from "@/services/locations";
 
 const getItems = async (): Promise<any[]> => {
-  const items: ItemDocument<LocationId, TagDocument>[] =
-    await ItemModel.find().populate("_tags");
+  const items: (ItemDocument<LocationId, TagDocument> & {
+    toObject: () => ItemDocument<LocationId, TagDocument>;
+  })[] = await ItemModel.find().populate("_tags");
 
-  return items.map((item: ItemDocument<LocationId, TagDocument>) =>
-    //@ts-expect-error
-    itemDoc2MinItem(item.toObject())
+  return items.map(
+    (
+      item: ItemDocument<LocationId, TagDocument> & {
+        toObject: () => ItemDocument<LocationId, TagDocument>;
+      }
+    ) => itemDoc2MinItem(item.toObject())
   );
 };
 
 const getItem = async (id: ItemId): Promise<Item | null> => {
-  const item: ItemDocument<LocationDocument | null, TagDocument> | null =
-    await ItemModel.findById(id)
-      .populate(["_tags", "_location"])
-      .select([
-        "_id",
-        "name",
-        "description",
-        "quantity",
-        "unit",
-        "_tags",
-        "_location",
-        "imgSrcs",
-      ]);
+  const item:
+    | (ItemDocument<LocationDocument | null, TagDocument> & {
+        toObject: () => ItemDocument<LocationDocument | null, TagDocument>;
+      })
+    | null = await ItemModel.findById(id)
+    .populate(["_tags", "_location"])
+    .select([
+      "_id",
+      "name",
+      "description",
+      "quantity",
+      "unit",
+      "_tags",
+      "_location",
+      "imgSrcs",
+    ]);
 
   if (!item) {
     return null;
   }
 
-  //@ts-expect-error
   return itemDoc2Item(item.toObject());
 };
 

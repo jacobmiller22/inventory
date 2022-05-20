@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 /** Interfaces/types */
 
 /** components */
-import { DataGrid, GridState } from "@mui/x-data-grid";
-import { deleteItem, deleteItems, getItems } from "api/inv";
+import { DataGrid } from "@mui/x-data-grid";
+import { deleteItems, getItems } from "api/inv";
 import { Button, Card, Toolbar } from "@mui/material";
 import { ItemId, MinItem } from "interfaces/item";
 import { Tag } from "interfaces/tag";
@@ -75,13 +75,10 @@ const InventoryList = ({}: IInventoryListProps) => {
         sx={{ borderRadius: 0, borderInline: "none", borderBottom: "none" }}
         rows={rows}
         columns={columns}
-        // rowsPerPageOptions={[5]}
         checkboxSelection
         disableSelectionOnClick
         loading={rows.length === 0}
         autoHeight
-
-        // autoPageSize
       />
     </Card>
   );

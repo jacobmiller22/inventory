@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Item, ItemId, MinItem } from "interfaces/item";
-import { LocationId, MinLocation } from "interfaces/location";
+import { LocationId, MinLocation, Location } from "interfaces/location";
 import { Tag, TagId } from "interfaces/tag";
 import { HttpStatus } from "lib/http";
 

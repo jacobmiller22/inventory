@@ -6,14 +6,40 @@
   width: 100%;
   max-width: var(--content-width);
   margin: 0 auto;
+  display: flex;
 }
 
 .brand {
   cursor: pointer;
+  text-decoration: none !important;
+}
+
+.brand:hover {
+  text-decoration: none !important;
 }
 
 .toolbar {
   max-width: var(--content-width);
   margin-inline: auto;
   width: 100%;
+}
+
+.link-side-left {
+  padding-right: 0.5rem;
+}
+
+.link-side-right {
+  padding-left: 0.5rem;
+}
+
+.link-side-inside {
+  padding-inline: 0.5rem;
+}
+
+.link {
+  text-decoration: none !important;
+}
+
+.link:hover {
+  text-decoration: underline !important;
 }

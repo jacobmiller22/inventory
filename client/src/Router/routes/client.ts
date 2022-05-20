@@ -6,6 +6,11 @@ export type Route = {
 
 /** Pages  */
 
+export const itemsRoute: Route = {
+  path: "/",
+  name: "Items",
+};
+
 export const newItemRoute: Route = {
   path: "/items/new",
   name: "New Item",
@@ -22,10 +27,36 @@ export const editItemRoute: Route = {
   name: "Edit Item",
   wildcards: ["itemId"],
 };
+export const tagsRoute: Route = {
+  path: "/tags",
+  name: "Tags",
+};
 
 export const newTagRoute: Route = {
   path: "/tags/new",
   name: "New Tag",
+};
+
+export const tagDetailsRoute: Route = {
+  path: "/tags/*",
+  name: "Tag Details",
+  wildcards: ["tagId"],
+};
+
+export const locationsRoute: Route = {
+  path: "/locations",
+  name: "Locations",
+};
+
+export const newLocationRoute: Route = {
+  path: "/locations/new",
+  name: "New Location",
+};
+
+export const locationDetailsRoute: Route = {
+  path: "/locations/*",
+  name: "Location Details",
+  wildcards: ["locationId"],
 };
 
 export const loginRoute: Route = {

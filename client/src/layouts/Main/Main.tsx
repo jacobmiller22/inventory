@@ -2,13 +2,19 @@
 import { Divider } from "@mui/material";
 import { Footer, Header } from "./components";
 import styles from "./Layout.module.css";
+import { Helmet } from "react-helmet";
 
 type LayoutProps = {
   children: React.ReactNode | React.ReactNode[];
   variant?: "full" | "light";
+  title?: string;
 };
 
-const Layout = ({ children, variant = "light" }: LayoutProps) => {
+const Layout = ({
+  children,
+  variant = "light",
+  title = "Inventory",
+}: LayoutProps) => {
   const renderContent = () => {
     switch (variant) {
       case "light":
@@ -32,6 +38,9 @@ const Layout = ({ children, variant = "light" }: LayoutProps) => {
 
   return (
     <div className={styles["container"]}>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
       <Header />
       <Divider />
       {renderContent()}

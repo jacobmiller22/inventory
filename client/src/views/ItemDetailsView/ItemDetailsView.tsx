@@ -1,28 +1,12 @@
 import { useEffect, useState } from "react";
-import fieldsTemplate from "./fields";
-import fieldsSchema from "./schema";
-import { getLocations, getItem, createItem } from "api/inv";
+import { getItem } from "api/inv";
 import { useNavigate, useParams } from "react-router-dom";
 
 /** Components */
-import { BackButton, BasicForm, EditButton, Spacer } from "components";
+import { BackButton, EditButton, Spacer } from "components";
 import { Tag } from "interfaces/tag";
-import { MinLocation } from "interfaces/location";
-import { FormType } from "interfaces/form";
-import { Item, MinItem } from "interfaces/item";
-import {
-  Avatar,
-  Chip,
-  FormControl,
-  ImageList,
-  ImageListItem,
-  InputLabel,
-  Menu,
-  MenuItem,
-  Select,
-  Typography,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Item } from "interfaces/item";
+import { Chip, ImageList, ImageListItem, Typography } from "@mui/material";
 import styles from "./ItemDetailsView.module.css";
 import { replaceWildcards } from "Router/routes";
 import { editItemRoute } from "Router/routes/client";
@@ -131,39 +115,3 @@ const ItemDetailsView = () => {
 };
 
 export default ItemDetailsView;
-
-// const populateFields = (fieldsTemplate: any[], map: any) => {
-//   return fieldsTemplate.map((field) => {
-//     if (field.type !== FormType.SELECT) {
-//       return field;
-//     }
-
-//     const options = map[field.name].map((item: Tag | MinLocation) => {
-//       return {
-//         //@ts-expect-error
-//         id: item[field.name === "tags" ? "tagId" : "locationId"],
-
-//         label: item.name,
-//       };
-//     });
-//     return {
-//       ...field,
-//       options,
-//     };
-//   });
-// };
-
-// const __createItem = async (values: any) => {
-//   const { name, description, quantity, unit, location, tags } = values;
-
-//   const newItem: Omit<MinItem & Item, "itemId" | "location"> = {
-//     name,
-//     description,
-//     quantity,
-//     unit,
-//     locationId: location,
-//     tags: tags ? [tags] : [],
-//   };
-
-//   await createItem(newItem);
-// };

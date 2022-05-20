@@ -11,3 +11,12 @@ export const replaceWildcards = (
   }
   return path;
 };
+
+export const wildcardsToDynamicRoutes = (route: ClientRT) => {
+  let path = route.path;
+
+  for (let i = 0; i < (route.wildcards ?? []).length; i++) {
+    path = path.replace(`*`, `:${route.wildcards![i]}`);
+  }
+  return path;
+};

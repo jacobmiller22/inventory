@@ -7,11 +7,12 @@ import { useNavigate } from "react-router-dom";
 /** components */
 import { DataGrid, GridState } from "@mui/x-data-grid";
 import { deleteItem, deleteItems, getItems } from "api/inv";
-import { Card, Toolbar } from "@mui/material";
+import { Button, Card, Toolbar } from "@mui/material";
 import { ItemId, MinItem } from "interfaces/item";
 import { Tag } from "interfaces/tag";
 import { AddButton, Spacer, TrashButton } from "components";
-import { newItemRoute } from "Router/routes/client";
+import { itemDetailsRoute, newItemRoute } from "Router/routes/client";
+import { replaceWildcards } from "Router/routes";
 
 interface IInventoryListProps {}
 
@@ -19,7 +20,7 @@ type RowItem = Omit<MinItem, "itemId"> & { id: ItemId };
 
 const InventoryList = ({}: IInventoryListProps) => {
   const [rows, setRows] = useState<RowItem[]>([]);
-  const [selected, setSelected] = useState<ItemId[]>([]);
+
   const [selectionModel, setSelectionModel] = useState<ItemId[]>([]);
   const [__refresh, __setRefresh] = useState<boolean>(false);
 
@@ -39,7 +40,7 @@ const InventoryList = ({}: IInventoryListProps) => {
 
   const renderToolbar = () => {
     const handleDelete = () => {
-      deleteItems(selected);
+      deleteItems(selectionModel);
       setSelectionModel([]);
       toggleRefresh();
     };
@@ -47,7 +48,10 @@ const InventoryList = ({}: IInventoryListProps) => {
     if (selectionModel.length > 0) {
       return (
         <Toolbar sx={{ background: theme.palette.background.highlight }}>
-          <ToolbarContentSelected handleDelete={handleDelete} />
+          <ToolbarContentSelected
+            handleDelete={handleDelete}
+            selected={selectionModel}
+          />
         </Toolbar>
       );
     }
@@ -100,12 +104,25 @@ const ToolbarContentDefault = () => {
 
 const ToolbarContentSelected = ({
   handleDelete,
+  selected,
 }: {
   handleDelete: (selected: ItemId[]) => void;
+  selected: ItemId[];
 }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Spacer />
+      {selected.length === 1 && (
+        <Button
+          onClick={() =>
+            navigate(replaceWildcards(itemDetailsRoute, [selected[0]]))
+          }
+        >
+          View
+        </Button>
+      )}
       <TrashButton onClick={handleDelete} />
     </>
   );

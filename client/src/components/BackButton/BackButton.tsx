@@ -1,5 +1,6 @@
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 /** Interfaces/types */
 
 /** components */
@@ -18,41 +19,45 @@ const BackButton = ({
   href,
   ...rest
 }: BackButtonProps) => {
-  // const router = useRouter();
+  const navigate = useNavigate();
 
-  // if ((asLink && !href) || (!asLink && href)) {
-  //   throw "BackButton: asLink and href must be used together";
-  // }
+  if ((asLink && !href) || (!asLink && href)) {
+    throw "BackButton: asLink and href must be used together";
+  }
 
   if (!asLink) {
     return (
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={(e) => {
-          onClick && onClick(e);
-          // router.back();
-        }}
-        startIcon={<BackIcon />}
-        {...rest}
-      >
-        Back
-      </Button>
+      <Tooltip title="Go back">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={(e) => {
+            onClick && onClick(e);
+            navigate(-1);
+          }}
+          startIcon={<BackIcon />}
+          {...rest}
+        >
+          Back
+        </Button>
+      </Tooltip>
     );
   }
   return (
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={onClick}
-      startIcon={<BackIcon />}
-      {...rest}
-    >
-      Back
-    </Button>
+    <Tooltip title="Go back">
+      <Link to={href!}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onClick}
+          startIcon={<BackIcon />}
+          {...rest}
+        >
+          Back
+        </Button>
+      </Link>
+    </Tooltip>
   );
-
-  return <Button></Button>;
 };
 
 export default BackButton;

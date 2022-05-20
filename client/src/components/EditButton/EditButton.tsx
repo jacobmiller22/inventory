@@ -1,19 +1,19 @@
 import { IconButton, Tooltip } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { DefaultComponentProps } from "@mui/material/OverridableComponent";
 
 interface AddButtonProps {
   [rest: string]: DefaultComponentProps<any>;
 }
 
-const TrashButton = ({ ...rest }: AddButtonProps) => {
+const EditButton = ({ ...rest }: AddButtonProps) => {
   return (
-    <Tooltip title="Delete">
+    <Tooltip title="Edit">
       <IconButton {...rest}>
-        <DeleteIcon />
+        <EditIcon />
       </IconButton>
     </Tooltip>
   );
 };
 
-export default TrashButton;
+export default EditButton;

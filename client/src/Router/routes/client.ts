@@ -11,6 +11,23 @@ export const newItemRoute: Route = {
   name: "New Item",
 };
 
+export const itemDetailsRoute: Route = {
+  path: "/items/*",
+  name: "Item Details",
+  wildcards: ["itemId"],
+};
+
+export const editItemRoute: Route = {
+  path: "/items/*/edit",
+  name: "Edit Item",
+  wildcards: ["itemId"],
+};
+
+export const newTagRoute: Route = {
+  path: "/tags/new",
+  name: "New Tag",
+};
+
 export const loginRoute: Route = {
   path: "/auth/login",
   name: "Login",

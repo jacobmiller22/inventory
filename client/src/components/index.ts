@@ -5,3 +5,5 @@ export { default as TextArea } from "./TextArea";
 export { default as NumberField } from "./NumberField";
 export { default as BasicForm } from "./BasicForm";
 export { default as TrashButton } from "./TrashButton";
+export { default as EditButton } from "./EditButton";
+export { default as DataTable } from "./DataTable";

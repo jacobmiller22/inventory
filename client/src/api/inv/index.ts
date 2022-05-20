@@ -65,13 +65,18 @@ export const getItem = async (id: ItemId): Promise<Item | null> => {
   if (!id || typeof id !== "string") {
     throw "getItem expects a string locationId";
   }
-  const res = await itemApi.get(`/${id}`);
+  try {
+    const res = await itemApi.get(`/${id}`);
 
-  console.log(res);
+    console.log(res);
 
-  const item: Item = res.data;
+    const item: Item = res.data;
 
-  return item;
+    return item;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 };
 
 export const createItem = async (

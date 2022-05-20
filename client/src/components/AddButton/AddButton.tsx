@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { DefaultComponentProps } from "@mui/material/OverridableComponent";
 
@@ -8,9 +8,11 @@ interface AddButtonProps {
 
 const AddButton = ({ ...rest }: AddButtonProps) => {
   return (
-    <Button startIcon={<AddIcon />} {...rest}>
-      Add
-    </Button>
+    <Tooltip title="Add">
+      <Button startIcon={<AddIcon />} {...rest}>
+        Add
+      </Button>
+    </Tooltip>
   );
 };
 

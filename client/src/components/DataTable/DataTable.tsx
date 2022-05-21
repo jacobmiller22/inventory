@@ -8,18 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { deleteItems, getItems } from "api/inv";
 import { Button, Card, Toolbar, Typography } from "@mui/material";
-// import { ItemId, MinItem } from "interfaces/item";
-import { Tag } from "interfaces/tag";
 import { AddButton, Spacer, TrashButton } from "components";
 import { itemDetailsRoute, newItemRoute } from "Router/routes/client";
 import { replaceWildcards } from "Router/routes";
-import ItemDetailsView from "views/ItemDetailsView";
 
 interface DataTableProps<T, E> {
   idKey: string;
   items: T[] | null;
   columns: any[];
   onCellDoubleClick?: (cell: any) => void;
+  addLink: string;
+  onDelete: (id: E[]) => Promise<boolean>;
   title?: string;
 }
 
@@ -28,6 +27,8 @@ const DataTable = <Item extends object, Id extends string>({
   items,
   columns,
   onCellDoubleClick,
+  addLink,
+  onDelete,
   title,
 }: DataTableProps<Item, Id>) => {
   type RowItem = Omit<Item, "itemId"> & { id: Id };
@@ -57,8 +58,8 @@ const DataTable = <Item extends object, Id extends string>({
   };
 
   const renderToolbar = () => {
-    const handleDelete = () => {
-      deleteItems(selectionModel);
+    const handleDelete = async () => {
+      await onDelete(selectionModel);
       setSelectionModel([]);
       toggleRefresh();
     };
@@ -75,7 +76,7 @@ const DataTable = <Item extends object, Id extends string>({
     }
     return (
       <Toolbar>
-        <ToolbarContentDefault title={title} />
+        <ToolbarContentDefault title={title} addLink={addLink} />
       </Toolbar>
     );
   };
@@ -107,18 +108,19 @@ export default DataTable;
 
 interface ToolbarContentDefaultProps {
   title?: string;
+  addLink: string;
 }
 
-const ToolbarContentDefault = ({ title }: ToolbarContentDefaultProps) => {
+const ToolbarContentDefault = ({
+  title,
+  addLink,
+}: ToolbarContentDefaultProps) => {
   const navigate = useNavigate();
   return (
     <>
       {title && <Typography variant="h6">{title}</Typography>}
       <Spacer />
-      <AddButton
-        variant="contained"
-        onClick={() => navigate(newItemRoute.path)}
-      />
+      <AddButton variant="contained" onClick={() => navigate(addLink)} />
     </>
   );
 };

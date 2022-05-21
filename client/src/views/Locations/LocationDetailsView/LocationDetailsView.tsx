@@ -8,7 +8,7 @@ import { Location } from "interfaces/location";
 import { Typography } from "@mui/material";
 import styles from "./LocationDetailsView.module.css";
 import { replaceWildcards } from "Router/routes";
-import { editItemRoute } from "Router/routes/client";
+import { editItemRoute, editLocationRoute } from "Router/routes/client";
 
 const LocationDetailsView = () => {
   const [location, setLocation] = useState<Location | null | undefined>(
@@ -36,7 +36,7 @@ const LocationDetailsView = () => {
   }
 
   const handleEdit = () => {
-    navigate(replaceWildcards(editItemRoute, [location.locationId]));
+    navigate(replaceWildcards(editLocationRoute, [location.locationId]));
   };
 
   return (

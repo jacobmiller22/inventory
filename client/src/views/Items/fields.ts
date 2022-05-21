@@ -38,7 +38,7 @@ export default [
     required: false,
   },
   {
-    name: "location",
+    name: "locationId",
     label: "Location",
     placeholder: "Description...",
     initialValue: "",
@@ -48,7 +48,7 @@ export default [
     options: [],
   },
   {
-    name: "tags",
+    name: "tagIds",
     label: "Tags",
     placeholder: "Description...",
     initialValue: "",

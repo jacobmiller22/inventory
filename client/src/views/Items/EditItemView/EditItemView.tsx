@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import fieldsTemplate from "./fields";
-import fieldsSchema from "./schema";
+import fieldsTemplate from "../fields";
+import fieldsSchema from "../schema";
 import { getLocations, getTags, createItem, getItem } from "api/inv";
 
 /** Components */
 import { BasicForm } from "components";
-import { Tag } from "interfaces/tag";
+import { Tag, TagId } from "interfaces/tag";
 import { MinLocation } from "interfaces/location";
 import { FormType } from "interfaces/form";
-import { Item, MinItem } from "interfaces/item";
+import { Item, ItemId, MinItem } from "interfaces/item";
 import { useParams, useNavigate } from "react-router-dom";
+import { FormView } from "views";
 
 const EditItemView = () => {
   const [tags, setTags] = useState<Tag[] | null>(null);
@@ -40,9 +41,6 @@ const EditItemView = () => {
 
   useEffect(() => {
     // This will set our fields with our choices
-    console.log(locations);
-    console.log(tags);
-    console.log(item);
     if (!locations || !tags || !item) return;
 
     const map = { tags, location: locations };
@@ -58,17 +56,12 @@ const EditItemView = () => {
     return true;
   };
 
+  if (!tags || !locations || !fields) {
+    return <div>loading</div>;
+  }
+
   return (
-    <div>
-      <br />
-      {tags && locations && fields && (
-        <BasicForm
-          fields={fields}
-          handleSubmit={handleSubmit}
-          schema={fieldsSchema}
-        />
-      )}
-    </div>
+    <FormView fields={fields} onSubmit={handleSubmit} schema={fieldsSchema} />
   );
 };
 
@@ -89,17 +82,7 @@ const populateFields = (fieldsTemplate: any[], map: any, item: Item) => {
         label: item.name,
       };
     });
-    console.log(newField);
-    console.log(item);
-    console.log({
-      ...newField,
-      options,
 
-      initialValue:
-        newField.name === "tags"
-          ? item.tags[0]?.tagId ?? ""
-          : item.location?.locationId ?? "",
-    });
     return {
       ...newField,
       options,
@@ -109,17 +92,27 @@ const populateFields = (fieldsTemplate: any[], map: any, item: Item) => {
   });
 };
 
-const __createItem = async (values: any) => {
-  const { name, description, quantity, unit, location, tags } = values;
+const __createItem = async (
+  values: Omit<
+    MinItem & Item & { tagIds: TagId[] },
+    "itemId" | "location" | "tags"
+  >
+) => {
+  const { name, description, quantity, unit, locationId, tagIds } = values;
 
-  const newItem: Omit<MinItem & Item, "itemId" | "location"> = {
+  const newItem: Omit<MinItem & Item, "itemId" | "location" | "tags"> & {
+    tags: TagId[];
+  } = {
     name,
     description,
     quantity,
     unit,
-    locationId: location,
-    tags: tags ? [tags] : [],
+    locationId,
+    ///@ts-expect-error
+    tags: tagIds ? [tagIds] : [],
   };
 
-  await createItem(newItem);
+  const itemId: ItemId | null = await createItem(newItem);
+
+  return Boolean(itemId);
 };

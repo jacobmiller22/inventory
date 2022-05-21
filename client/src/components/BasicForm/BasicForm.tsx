@@ -26,25 +26,25 @@ import theme from "theme";
 import _ from "lodash";
 import { FormType } from "interfaces/form";
 
-interface IRecipeFormProps {
+interface IRecipeFormProps<V> {
   fields: any[];
-  handleSubmit: (values: any) => Promise<boolean>;
+  onSubmit: (values: V) => Promise<boolean>;
   schema?: AnySchema;
   submitButtonText?: string;
   successText?: string;
 }
 
-const BasicForm = ({
+const BasicForm = <V extends object>({
   fields,
-  handleSubmit,
+  onSubmit,
   schema,
   submitButtonText = "Submit",
   successText = "Success",
-}: IRecipeFormProps) => {
+}: IRecipeFormProps<V>) => {
   const [submitText, setSubmitText] = React.useState(submitButtonText);
 
-  const onSubmit = async (values: any, actions: any) => {
-    const success: boolean = await handleSubmit(values);
+  const handleSubmit = async (values: any, actions: any) => {
+    const success: boolean = await onSubmit(values);
     actions.setSubmitting(false);
     setSubmitText(successText);
     setTimeout(() => {
@@ -59,7 +59,7 @@ const BasicForm = ({
 
   return (
     <Formik
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       initialValues={initialValues}
       validationSchema={schema}
     >

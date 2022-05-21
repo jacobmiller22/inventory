@@ -1,27 +1,34 @@
-import Layout from "layouts/Main";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "layouts/Main";
 import {
   EditItemView,
   IndexView,
   ItemDetailsView,
-  LocationsView,
   NewItemView,
-  NewLocationView,
-  TagsView,
-  LocationDetailsView,
-} from "views";
+} from "views/Items";
 
+import {
+  LocationsView,
+  LocationFormView,
+  LocationDetailsView,
+} from "views/Locations";
+
+import { TagsView } from "views/Tags";
 import { wildcardsToDynamicRoutes } from "./routes";
 import {
   editItemRoute,
+  editLocationRoute,
+  editTagRoute,
   itemDetailsRoute,
   itemsRoute,
   locationDetailsRoute,
   locationsRoute,
   newItemRoute,
   newLocationRoute,
+  newTagRoute,
   tagsRoute,
 } from "./routes/client";
+import TagFormView from "views/Tags/TagFormView";
 
 const Router = () => {
   return (
@@ -73,7 +80,15 @@ const Router = () => {
           path={newLocationRoute.path}
           element={
             <Layout variant="light" title={newLocationRoute.name}>
-              <NewLocationView />
+              <LocationFormView />
+            </Layout>
+          }
+        />
+        <Route
+          path={wildcardsToDynamicRoutes(editLocationRoute)}
+          element={
+            <Layout variant="light" title={editLocationRoute.name}>
+              <LocationFormView />
             </Layout>
           }
         />
@@ -91,6 +106,30 @@ const Router = () => {
           element={
             <Layout variant="light" title={tagsRoute.name}>
               <TagsView />
+            </Layout>
+          }
+        />
+        <Route
+          path={tagsRoute.path}
+          element={
+            <Layout variant="light" title={tagsRoute.name}>
+              <TagsView />
+            </Layout>
+          }
+        />
+        <Route
+          path={newTagRoute.path}
+          element={
+            <Layout variant="light" title={tagsRoute.name}>
+              <TagFormView />
+            </Layout>
+          }
+        />
+        <Route
+          path={editTagRoute.path}
+          element={
+            <Layout variant="light" title={tagsRoute.name}>
+              <TagFormView />
             </Layout>
           }
         />

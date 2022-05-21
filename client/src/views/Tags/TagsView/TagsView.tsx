@@ -5,7 +5,7 @@ import { getTags } from "api/inv";
 import { Tag, TagId } from "interfaces/tag";
 import { useNavigate } from "react-router-dom";
 import { replaceWildcards } from "Router/routes";
-import { tagDetailsRoute } from "Router/routes/client";
+import { newTagRoute, tagDetailsRoute } from "Router/routes/client";
 
 const TagsView = () => {
   const navigate = useNavigate();
@@ -17,16 +17,22 @@ const TagsView = () => {
     })();
   }, []);
 
-  const onCellDoubleClick = (cell: { id: TagId }) => {
+  const handleCellDoubleClick = (cell: { id: TagId }) => {
     navigate(replaceWildcards(tagDetailsRoute, [cell.id]));
+  };
+
+  const handleDelete = async (tagIds: TagId[]): Promise<boolean> => {
+    return true;
   };
 
   const dataTableProps = {
     idKey: "tagId",
     items: tags,
     columns,
-    onCellDoubleClick,
+    onCellDoubleClick: handleCellDoubleClick,
     title: "Tags",
+    addLink: newTagRoute.path,
+    onDelete: handleDelete,
   };
 
   return (

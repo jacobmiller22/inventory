@@ -4,7 +4,7 @@ import { DataTable } from "components";
 import { getLocations } from "api/inv";
 
 import { LocationId, MinLocation } from "interfaces/location";
-import { locationDetailsRoute } from "Router/routes/client";
+import { locationDetailsRoute, newLocationRoute } from "Router/routes/client";
 import { replaceWildcards } from "Router/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -18,15 +18,21 @@ const LocationsView = () => {
     })();
   }, []);
 
-  const onCellDoubleClick = (cell: { id: LocationId }) =>
+  const handleCellDoubleClick = (cell: { id: LocationId }) =>
     navigate(replaceWildcards(locationDetailsRoute, [cell.id]));
+
+  const handleDelete = async (locationIds: LocationId[]): Promise<boolean> => {
+    return true;
+  };
 
   const dataTableProps = {
     idKey: "locationId",
     items: locations,
     columns,
-    onCellDoubleClick,
+    onCellDoubleClick: handleCellDoubleClick,
     title: "Locations",
+    addLink: newLocationRoute.path,
+    onDelete: handleDelete,
   };
 
   return (

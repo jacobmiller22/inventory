@@ -80,7 +80,7 @@ export const getItem = async (id: ItemId): Promise<Item | null> => {
 };
 
 export const createItem = async (
-  item: Omit<MinItem & Item, "itemId" | "location">
+  item: Omit<MinItem & Item, "itemId" | "location" | "tags"> & { tags: TagId[] }
 ): Promise<ItemId | null> => {
   const res = await itemApi.post("/", item);
 
@@ -129,6 +129,15 @@ export const getTags = async (): Promise<Tag[]> => {
   const items: Tag[] = res.data;
 
   return items;
+};
+
+export const getTag = async (tagId: TagId): Promise<Tag> => {
+  const res = await tagApi.get(`/${tagId}`);
+  console.log(res);
+
+  const tag: Tag = res.data;
+
+  return tag;
 };
 
 export const createTag = async (

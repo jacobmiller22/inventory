@@ -11,6 +11,8 @@ const router = express();
 
 router.get("/", invTypeController.getTags);
 
+router.get("/:tagId", invTypeController.getTag);
+
 router.post("/", verifyExistence(["name"]), invTypeController.createTag);
 
 router.put("/:tagId", invTypeController.updateTag);

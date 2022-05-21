@@ -1,21 +1,38 @@
 import { Request, Response } from "express";
 import { isValidTagId, Tag, TagId } from "@/types/tag";
-import tagService from "@/services/tags";
+import tagsService from "@/services/tags";
 import { HttpStatus } from "@/types/http";
 
 const getTags = async (req: Request, res: Response) => {
   /** Get all types */
 
-  const tags: Tag[] = await tagService.getTags();
+  const tags: Tag[] = await tagsService.getTags();
 
   return res.status(200).json(tags);
+};
+
+const getTag = async (req: Request, res: Response) => {
+  /** Get information about a tag */
+  const itemId: any = req.params.itemId;
+
+  if (!isValidTagId(itemId)) {
+    return res.status(HttpStatus.BAD_REQUEST).end("Invalid itemId");
+  }
+
+  const item = await tagsService.getTag(itemId);
+
+  if (!item) {
+    return res.status(HttpStatus.NOT_FOUND).end();
+  }
+
+  return res.status(HttpStatus.OK).json(item);
 };
 
 const createTag = async (req: Request, res: Response) => {
   /** Add a new type */
   const tag: Omit<Tag, "tagId"> = { name: req.body.name };
 
-  const tagId: TagId | null = await tagService.createTag(tag);
+  const tagId: TagId | null = await tagsService.createTag(tag);
 
   if (!tagId) {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
@@ -34,7 +51,7 @@ const updateTag = async (req: Request, res: Response) => {
 
   const tag: Omit<Partial<Tag>, "tagId"> = { name: req.body.name };
 
-  const success: boolean = await tagService.updateTag(tagId, tag);
+  const success: boolean = await tagsService.updateTag(tagId, tag);
 
   if (!success) {
     return res.status(HttpStatus.NOT_FOUND).end();
@@ -51,7 +68,7 @@ const deleteTag = async (req: Request, res: Response) => {
     return res.status(HttpStatus.BAD_REQUEST).end("Invalid tagId");
   }
 
-  const success: boolean = await tagService.deleteTag(tagId);
+  const success: boolean = await tagsService.deleteTag(tagId);
 
   if (!success) {
     return res.status(HttpStatus.NOT_FOUND).end();
@@ -60,4 +77,4 @@ const deleteTag = async (req: Request, res: Response) => {
   return res.status(HttpStatus.OK).end();
 };
 
-export default { getTags, createTag, updateTag, deleteTag };
+export default { getTags, getTag, createTag, updateTag, deleteTag };

@@ -7,6 +7,17 @@ const getTags = async (): Promise<Tag[]> => {
   return tags.map((tag: TagDocument) => tagDoc2Tag(tag));
 };
 
+const getTag = async (id: TagId): Promise<Tag | null> => {
+  const tag: (TagDocument & { toObject: () => TagDocument }) | null =
+    await TagModel.findById(id);
+
+  if (!tag) {
+    return null;
+  }
+
+  return tagDoc2Tag(tag.toObject());
+};
+
 const createTag = async (tag: Omit<Tag, "tagId">): Promise<TagId | null> => {
   const newTagId = `t_${uuid()}`;
   const newTag = { ...tag, _id: newTagId };
@@ -56,6 +67,7 @@ const tagDoc2Tag = (tag: TagDocument) => {
 
 export default {
   getTags,
+  getTag,
   createTag,
   updateTag,
   deleteTag,

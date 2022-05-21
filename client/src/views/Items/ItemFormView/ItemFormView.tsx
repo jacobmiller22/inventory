@@ -136,6 +136,8 @@ const __updateItem = async (
     tags: tagIds,
   };
 
+  console.log("Update Item!", newItem);
+
   const success: boolean = await updateItem(id, newItem);
 
   return success;
@@ -147,14 +149,17 @@ const populateFields = (map: any, item: Item | null) => {
       ...field,
 
       initialValue: item
-        ? field.name === "locationId" && item.location
-          ? item.location.locationId
+        ? field.name === "locationId"
+          ? item.location
+            ? item.location.locationId
+            : ""
           : field.name === "tagIds"
           ? item.tags.map((tag) => tag.tagId)
           : //@ts-expect-error
             item[field.name]
         : field.initialValue,
     };
+
     if (newField.type !== FormType.SELECT) {
       return newField;
     }

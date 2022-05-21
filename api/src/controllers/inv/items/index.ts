@@ -73,6 +73,8 @@ const updateItem = async (req: Request, res: Response) => {
     tags: req.body.tags,
   };
 
+  console.log("newItem", newItem);
+
   if (newItem.locationId && !isValidLocationId(newItem.locationId)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
@@ -136,8 +138,6 @@ const deleteItem = async (req: Request, res: Response) => {
   /** Delete an item */
   const itemId: ItemId = req.params.itemId;
 
-  console.log("itemId", itemId);
-
   if (!isValidItemId(itemId)) {
     return res.status(HttpStatus.BAD_REQUEST).end("Invalid itemId");
   }
@@ -152,6 +152,3 @@ const deleteItem = async (req: Request, res: Response) => {
 };
 
 export default { getItems, getItem, createItem, updateItem, deleteItem };
-function isValidTag(t: any): unknown {
-  throw new Error("Function not implemented.");
-}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./IndexView.module.css";
 import { DataTable } from "components";
-import { getItems } from "api/inv";
+import { deleteItems, getItems as __getItems } from "api/inv";
 import { ItemId, MinItem } from "interfaces/item";
 import { Tag } from "interfaces/tag";
 import { itemDetailsRoute, newItemRoute } from "Router/routes/client";
@@ -12,19 +12,20 @@ const IndexView = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<MinItem[] | null>(null);
 
+  const getItems = async () => {
+    setItems(await __getItems());
+  };
+
   useEffect(() => {
-    (async () => {
-      setItems(await getItems());
-    })();
+    getItems();
   }, []);
 
   const handleCellDoubleClick = (cell: { id: ItemId }) => {
     navigate(replaceWildcards(itemDetailsRoute, [cell.id]));
   };
 
-  const handleDelete = async (itemIds: ItemId[]): Promise<boolean> => {
-    return true;
-  };
+  const handleDelete = async (itemIds: ItemId[]): Promise<boolean> =>
+    await deleteItems(itemIds);
 
   const dataTableProps = {
     idKey: "itemId",
@@ -34,6 +35,7 @@ const IndexView = () => {
     title: "Items",
     addLink: newItemRoute.path,
     onDelete: handleDelete,
+    onRefreshRequest: () => getItems(),
   };
 
   return (

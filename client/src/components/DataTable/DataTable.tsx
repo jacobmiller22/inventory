@@ -20,6 +20,7 @@ interface DataTableProps<T, E> {
   addLink: string;
   onDelete: (id: E[]) => Promise<boolean>;
   title?: string;
+  onRefreshRequest?: () => void;
 }
 
 const DataTable = <Item extends object, Id extends string>({
@@ -29,6 +30,7 @@ const DataTable = <Item extends object, Id extends string>({
   onCellDoubleClick,
   addLink,
   onDelete,
+  onRefreshRequest,
   title,
 }: DataTableProps<Item, Id>) => {
   type RowItem = Omit<Item, "itemId"> & { id: Id };
@@ -44,10 +46,15 @@ const DataTable = <Item extends object, Id extends string>({
     setSelectionModel(newSelectionModel);
 
   useEffect(() => {
-    console.log("Refresh");
+    // Tell the grid to refresh
+    onRefreshRequest && onRefreshRequest();
+  }, [__refresh]);
+
+  useEffect(() => {
+    console.log("Refresh", items);
     if (!items) return;
     setRows(items.map((i) => itemToRow(i, idKey)));
-  }, [__refresh, items]);
+  }, [items]);
 
   const itemToRow = (item: Item, idKey: string): RowItem => {
     return {

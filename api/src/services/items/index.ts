@@ -43,6 +43,8 @@ const getItem = async (id: ItemId): Promise<Item | null> => {
       "__v",
     ]);
 
+  console.log("item", item);
+
   if (!item) {
     return null;
   }
@@ -77,8 +79,18 @@ const createItem = async (
 };
 
 const updateItem = async (id: ItemId, item: Omit<Partial<Item>, "itemId">) => {
+  console.log("item uodate", item);
+  let newItem: any = { ...item, _id: id };
+
+  // Replace locationId with reference to _location
+
+  newItem._location = newItem.locationId;
+  newItem._tags = newItem.tags;
+  delete newItem["locationId"];
+  delete newItem["tags"];
+  console.log("item uodate", newItem);
   try {
-    await ItemModel.findByIdAndUpdate(id, item);
+    await ItemModel.findByIdAndUpdate(id, newItem);
     return true;
   } catch (err) {
     return false;

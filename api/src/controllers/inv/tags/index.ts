@@ -57,7 +57,7 @@ const updateTag = async (req: Request, res: Response) => {
     return res.status(HttpStatus.NOT_FOUND).end();
   }
 
-  return res.status(HttpStatus.OK).end();
+  return res.status(HttpStatus.OK).json(true);
 };
 
 const deleteTag = async (req: Request, res: Response) => {
@@ -71,7 +71,7 @@ const deleteTag = async (req: Request, res: Response) => {
   const success: boolean = await tagsService.deleteTag(tagId);
 
   if (!success) {
-    return res.status(HttpStatus.NOT_FOUND).end();
+    return res.status(HttpStatus.NOT_FOUND).json(true);
   }
 
   return res.status(HttpStatus.OK).end();

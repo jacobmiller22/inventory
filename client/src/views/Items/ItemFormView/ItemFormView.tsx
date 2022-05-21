@@ -1,6 +1,12 @@
 import fieldsTemplate from "./fields";
 import schema from "./schema";
-import { createItem, getItem, getLocations, getTags } from "api/inv";
+import {
+  createItem,
+  getItem,
+  getLocations,
+  getTags,
+  updateItem,
+} from "api/inv";
 import { useParams } from "react-router-dom";
 
 /** Components */
@@ -42,7 +48,6 @@ const ItemFormView = ({}: ItemFormViewProps) => {
 
     // This will set our fields with our choices
     const newFields = populateFields(map, item!);
-    console.log("newFIelds", newFields);
 
     setFields(newFields);
   }, [params, tags, locations, item]);
@@ -71,8 +76,15 @@ const ItemFormView = ({}: ItemFormViewProps) => {
     >
   ): Promise<boolean> => {
     console.log("Submit!", values);
-    const success: boolean = await __createItem(values);
-    return success;
+    // Create the item if we are on the new item route, otherwise update the item
+
+    if (params.itemId) {
+      // This is an existing item
+      return await __updateItem(params.itemId, values);
+    }
+
+    // This is a new item
+    return await __createItem(values);
   };
 
   return <FormView schema={schema} fields={fields} onSubmit={handleSubmit} />;
@@ -104,13 +116,33 @@ const __createItem = async (
   return Boolean(itemId);
 };
 
+const __updateItem = async (
+  id: ItemId,
+  values: Omit<
+    MinItem & Item & { tagIds: TagId[] },
+    "itemId" | "location" | "tags"
+  >
+) => {
+  const { name, description, quantity, unit, locationId, tagIds } = values;
+
+  const newItem: Omit<MinItem & Item, "itemId" | "location" | "tags"> & {
+    tags: TagId[];
+  } = {
+    name,
+    description,
+    quantity,
+    unit,
+    locationId,
+    tags: tagIds,
+  };
+
+  const success: boolean = await updateItem(id, newItem);
+
+  return success;
+};
+
 const populateFields = (map: any, item: Item | null) => {
   return fieldsTemplate.map((field) => {
-    if (item) {
-      console.log(field.name);
-
-      console.log(item);
-    }
     let newField = {
       ...field,
 

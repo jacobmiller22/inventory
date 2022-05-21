@@ -129,7 +129,7 @@ const updateItem = async (req: Request, res: Response) => {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
   }
 
-  return res.status(HttpStatus.OK).end();
+  return res.status(HttpStatus.OK).json(true);
 };
 
 const deleteItem = async (req: Request, res: Response) => {
@@ -148,7 +148,7 @@ const deleteItem = async (req: Request, res: Response) => {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
   }
 
-  return res.status(HttpStatus.OK).end();
+  return res.status(HttpStatus.OK).json(true);
 };
 
 export default { getItems, getItem, createItem, updateItem, deleteItem };

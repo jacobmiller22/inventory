@@ -95,7 +95,9 @@ export const createItem = async (
 
 export const updateItem = async (
   id: ItemId,
-  fields: Partial<Omit<Item, "itemId">>
+  fields: Partial<
+    Omit<Item, "itemId" | "location" | "tags"> & { tags: TagId[] }
+  >
 ): Promise<boolean> => {
   return false;
 };

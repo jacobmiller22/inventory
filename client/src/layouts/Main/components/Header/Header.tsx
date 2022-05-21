@@ -10,7 +10,9 @@ const Header = () => {
     <Toolbar className={styles["toolbar"]}>
       <div className={styles["content"]}>
         <LinkItem className={styles["brand"]} href="/" side="left">
-          <span className={styles["accent"]}>I</span>nventory
+          <strong>
+            <span className={styles["accent"]}>I</span>nventory
+          </strong>
         </LinkItem>
         <Spacer />
         <LinkItem href={itemsRoute.path} side="inside">

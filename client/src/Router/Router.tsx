@@ -1,12 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "layouts/Main";
-import {
-  EditItemView,
-  IndexView,
-  ItemDetailsView,
-  ItemFormView,
-  NewItemView,
-} from "views/Items";
+import { IndexView, ItemDetailsView, ItemFormView } from "views/Items";
 
 import {
   LocationsView,
@@ -49,7 +43,6 @@ const Router = () => {
           path={newItemRoute.path}
           element={
             <Layout variant="light" title={newItemRoute.name}>
-              {/* <NewItemView /> */}
               <ItemFormView />
             </Layout>
           }
@@ -58,7 +51,6 @@ const Router = () => {
           path={wildcardsToDynamicRoutes(editItemRoute)}
           element={
             <Layout variant="light" title={editItemRoute.name}>
-              {/* <EditItemView /> */}
               <ItemFormView />
             </Layout>
           }

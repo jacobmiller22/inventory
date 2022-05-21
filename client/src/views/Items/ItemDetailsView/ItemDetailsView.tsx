@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
 import { getItem } from "api/inv";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 /** Components */
-import { BackButton, EditButton, Spacer } from "components";
 import { Tag } from "interfaces/tag";
 import { Item } from "interfaces/item";
 import { Chip, ImageList, ImageListItem, Typography } from "@mui/material";
 import styles from "./ItemDetailsView.module.css";
-import { replaceWildcards } from "Router/routes";
 import { editItemRoute } from "Router/routes/client";
+import { DetailsView } from "views";
 
 const ItemDetailsView = () => {
   const [item, setItem] = useState<Item | null | undefined>(undefined);
 
   const query = useParams();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!query.itemId) return;
@@ -70,23 +67,8 @@ const ItemDetailsView = () => {
     );
   };
 
-  const handleEdit = () => {
-    navigate(replaceWildcards(editItemRoute, [item.itemId]));
-  };
-
   return (
-    <div>
-      <br />
-      <div className={styles["title-container"]}>
-        <Typography variant="h6" className={styles["title"]}>
-          {item.name}
-        </Typography>
-        <Spacer />
-        <EditButton onClick={handleEdit} color="primary" />
-        <BackButton variant="text" />
-      </div>
-
-      <br />
+    <DetailsView editRoute={editItemRoute} key="itemId" item={item}>
       <Typography variant="caption">Description</Typography>
       <Typography variant="body1">{item.description}</Typography>
       <br />
@@ -110,7 +92,7 @@ const ItemDetailsView = () => {
           "https://semantic-ui.com/images/wireframe/image.png",
         ])}
       </div>
-    </div>
+    </DetailsView>
   );
 };
 

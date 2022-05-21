@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { getLocation } from "api/inv";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 /** Components */
-import { BackButton, EditButton, Spacer } from "components";
 import { Location } from "interfaces/location";
 import { Typography } from "@mui/material";
 import styles from "./LocationDetailsView.module.css";
-import { replaceWildcards } from "Router/routes";
-import { editItemRoute, editLocationRoute } from "Router/routes/client";
+import { editLocationRoute } from "Router/routes/client";
+import { DetailsView } from "views";
 
 const LocationDetailsView = () => {
   const [location, setLocation] = useState<Location | null | undefined>(
@@ -16,8 +15,6 @@ const LocationDetailsView = () => {
   );
 
   const query = useParams();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!query.locationId) return;
@@ -32,30 +29,15 @@ const LocationDetailsView = () => {
   }
 
   if (location === null) {
-    return <div>404 item not found</div>;
+    return <div>404 location not found</div>;
   }
 
-  const handleEdit = () => {
-    navigate(replaceWildcards(editLocationRoute, [location.locationId]));
-  };
-
   return (
-    <div>
-      <br />
-      <div className={styles["title-container"]}>
-        <Typography variant="h6" className={styles["title"]}>
-          {location.name}
-        </Typography>
-        <Spacer />
-        <EditButton onClick={handleEdit} color="primary" />
-        <BackButton variant="text" />
-      </div>
-
-      <br />
+    <DetailsView editRoute={editLocationRoute} key="locationId" item={location}>
       <Typography variant="caption">Description</Typography>
       <Typography variant="body1">{location.description}</Typography>
       <br />
-    </div>
+    </DetailsView>
   );
 };
 

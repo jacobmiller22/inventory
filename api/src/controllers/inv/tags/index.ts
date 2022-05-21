@@ -13,13 +13,13 @@ const getTags = async (req: Request, res: Response) => {
 
 const getTag = async (req: Request, res: Response) => {
   /** Get information about a tag */
-  const itemId: any = req.params.itemId;
+  const tagId: any = req.params.tagId;
 
-  if (!isValidTagId(itemId)) {
-    return res.status(HttpStatus.BAD_REQUEST).end("Invalid itemId");
+  if (!isValidTagId(tagId)) {
+    return res.status(HttpStatus.BAD_REQUEST).end("Invalid tagId");
   }
 
-  const item = await tagsService.getTag(itemId);
+  const item = await tagsService.getTag(tagId);
 
   if (!item) {
     return res.status(HttpStatus.NOT_FOUND).end();

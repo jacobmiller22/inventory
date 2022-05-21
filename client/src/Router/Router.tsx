@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "layouts/Main";
-import { IndexView, ItemDetailsView, ItemFormView } from "views/Items";
+import { ItemsView, ItemDetailsView, ItemFormView } from "views/Items";
 
 import {
   LocationsView,
@@ -35,7 +35,7 @@ const Router = () => {
           path={itemsRoute.path}
           element={
             <Layout variant="light" title={itemsRoute.name}>
-              <IndexView />
+              <ItemsView />
             </Layout>
           }
         />

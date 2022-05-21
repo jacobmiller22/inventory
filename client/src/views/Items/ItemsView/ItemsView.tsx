@@ -8,7 +8,7 @@ import { itemDetailsRoute, newItemRoute } from "Router/routes/client";
 import { replaceWildcards } from "Router/routes";
 import { useNavigate } from "react-router-dom";
 
-const IndexView = () => {
+const ItemsView = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<MinItem[] | null>(null);
 
@@ -46,7 +46,7 @@ const IndexView = () => {
   );
 };
 
-export default IndexView;
+export default ItemsView;
 
 const columns = [
   {

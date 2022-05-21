@@ -68,7 +68,7 @@ const ItemDetailsView = () => {
   };
 
   return (
-    <DetailsView editRoute={editItemRoute} key="itemId" item={item}>
+    <DetailsView editRoute={editItemRoute} idKey="itemId" item={item}>
       <Typography variant="caption">Description</Typography>
       <Typography variant="body1">{item.description}</Typography>
       <br />

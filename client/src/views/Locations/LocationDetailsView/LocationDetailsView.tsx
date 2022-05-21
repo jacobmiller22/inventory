@@ -33,7 +33,11 @@ const LocationDetailsView = () => {
   }
 
   return (
-    <DetailsView editRoute={editLocationRoute} key="locationId" item={location}>
+    <DetailsView
+      editRoute={editLocationRoute}
+      idKey="locationId"
+      item={location}
+    >
       <Typography variant="caption">Description</Typography>
       <Typography variant="body1">{location.description}</Typography>
       <br />

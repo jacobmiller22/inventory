@@ -31,7 +31,11 @@ const LocationDetailsView = () => {
   }
 
   return (
-    <DetailsView editRoute={editTagRoute} key="tagId" item={tag}></DetailsView>
+    <DetailsView
+      editRoute={editTagRoute}
+      idKey="tagId"
+      item={tag}
+    ></DetailsView>
   );
 };
 

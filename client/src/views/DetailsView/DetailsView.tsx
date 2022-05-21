@@ -10,11 +10,16 @@ import { Route } from "Router/routes/client";
 interface DetailsViewProps {
   item: any;
   editRoute: Route;
-  key: string;
+  idKey: string;
   children?: React.ReactNode | React.ReactNode[];
 }
 
-const DetailsView = ({ item, editRoute, key, children }: DetailsViewProps) => {
+const DetailsView = ({
+  item,
+  editRoute,
+  idKey,
+  children,
+}: DetailsViewProps) => {
   const navigate = useNavigate();
 
   if (item == null) {
@@ -22,7 +27,7 @@ const DetailsView = ({ item, editRoute, key, children }: DetailsViewProps) => {
   }
 
   const handleEdit = () => {
-    navigate(replaceWildcards(editRoute, [item[key]]));
+    navigate(replaceWildcards(editRoute, [item[idKey]]));
   };
 
   return (

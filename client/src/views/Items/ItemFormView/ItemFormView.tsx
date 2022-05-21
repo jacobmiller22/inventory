@@ -1,5 +1,5 @@
-import fieldsTemplate from "../fields";
-import schema from "../schema";
+import fieldsTemplate from "./fields";
+import schema from "./schema";
 import {
   createItem,
   createLocation,

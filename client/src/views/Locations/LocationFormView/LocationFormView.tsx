@@ -1,5 +1,5 @@
-import fieldsTemplate from "../fields";
-import schema from "../schema";
+import fieldsTemplate from "./fields";
+import schema from "./schema";
 import { createLocation, getLocation } from "api/inv";
 import { useParams, useNavigate } from "react-router-dom";
 

@@ -4,6 +4,8 @@ import { LocationId, MinLocation, Location } from "interfaces/location";
 import { Tag, TagId } from "interfaces/tag";
 import { HttpStatus } from "lib/http";
 
+/** Locations */
+
 const locationApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/locations`,
 });
@@ -34,19 +36,41 @@ export const getLocation = async (id: LocationId): Promise<Location | null> => {
 export const createLocation = async (
   location: Omit<Location, "locationId">
 ): Promise<LocationId | null> => {
-  return null;
+  const res = await locationApi.post("/", location);
+
+  console.log(res);
+  const locationId: LocationId = res.data;
+
+  if (!locationId) {
+    return null;
+  }
+  return locationId;
 };
 
 export const updateLocation = async (
   id: LocationId,
   fields: Partial<Omit<Location, "items" | "locationId">>
 ): Promise<boolean> => {
-  return false;
+  try {
+    const res = await locationApi.put(`/${id}`, fields);
+
+    return res.data;
+  } catch (err) {
+    return false;
+  }
 };
 
 export const deleteLocation = async (id: LocationId): Promise<boolean> => {
-  return false;
+  try {
+    const res = await locationApi.delete(`/${id}`);
+
+    return res.data;
+  } catch (err) {
+    return false;
+  }
 };
+
+/** Items */
 
 const itemApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/items`,
@@ -99,26 +123,37 @@ export const updateItem = async (
     Omit<Item, "itemId" | "location" | "tags"> & { tags: TagId[] }
   >
 ): Promise<boolean> => {
-  return false;
+  try {
+    const res = await itemApi.put(`/${id}`, fields);
+
+    return res.data;
+  } catch (err) {
+    return false;
+  }
 };
 
 export const deleteItem = async (id: ItemId): Promise<boolean> => {
-  const res = await itemApi.delete(`/${id}`);
+  try {
+    const res = await itemApi.delete(`/${id}`);
 
-  console.log(res);
-
-  return res.status !== HttpStatus.OK;
+    return res.data;
+  } catch (err) {
+    return false;
+  }
 };
 
 export const deleteItems = async (ids: ItemId[]): Promise<boolean> => {
   // Temporary solution until bulk delete is available from API
-  await Promise.all(
+  const successArr = await Promise.all(
     ids.map(async (id: ItemId) => {
       return await deleteItem(id);
     })
   );
-  return true;
+
+  return successArr.every((el) => el === true);
 };
+
+/** Tags */
 
 const tagApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/tags`,
@@ -143,18 +178,38 @@ export const getTag = async (tagId: TagId): Promise<Tag> => {
 };
 
 export const createTag = async (
-  item: Omit<Tag, "tagId">
+  tag: Omit<Tag, "tagId">
 ): Promise<TagId | null> => {
-  return null;
+  const res = await tagApi.post("/", tag);
+
+  console.log(res);
+  const tagId: TagId = res.data;
+
+  if (!tagId) {
+    return null;
+  }
+  return tagId;
 };
 
 export const updateTag = async (
   id: TagId,
   fields: Partial<Omit<Tag, "tagId">>
 ): Promise<boolean> => {
-  return false;
+  try {
+    const res = await tagApi.put(`/${id}`, fields);
+
+    return res.data;
+  } catch (err) {
+    return false;
+  }
 };
 
 export const deleteTag = async (id: TagId): Promise<boolean> => {
-  return false;
+  try {
+    const res = await tagApi.delete(`/${id}`);
+
+    return res.data;
+  } catch (err) {
+    return false;
+  }
 };

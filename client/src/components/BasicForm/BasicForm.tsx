@@ -14,7 +14,7 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
-import { Formik, Form, FormikProps, Field, FieldArray } from "formik";
+import { Formik, Form, FormikProps, Field, FieldArray, useField } from "formik";
 
 import NumberField from "../NumberField";
 import TextArea from "../TextArea";
@@ -188,7 +188,7 @@ const renderField = (
       {({ field, form }: { field: any; form: any }) => {
         return (
           <Box width="100%" marginY="0.25rem">
-            {renderInput(customField, field, formikProps)}
+            {CustomInput(customField, field, formikProps)}
           </Box>
         );
       }}
@@ -196,19 +196,17 @@ const renderField = (
   );
 };
 
-const renderInput = (
+const CustomInput = (
   customField: any,
   formikField: any,
   { errors, touched, index }: { errors: any; touched: any; index: number }
 ) => {
-  // console.log({ errors, touched });
+  const [hookField, meta, hookHelpers] = useField(formikField.name);
+
+  const errorMessage: string = meta.touched && meta.error ? meta.error! : "";
+
   switch (customField.type) {
     case FormType.LONG_TEXT: {
-      const error =
-        nestStrToValue(formikField.name, touched) &&
-        nestStrToValue(formikField.name, errors);
-
-      const errorMessage = _.isEmpty(error) ? null : error;
       return (
         <TextArea
           id={formikField.name}
@@ -217,7 +215,7 @@ const renderInput = (
           label={customField.label}
           helperText={customField.helperText}
           required={customField.required}
-          error={errorMessage}
+          error={Boolean(errorMessage)}
           disabled={
             customField.editable === undefined ? false : !customField.editable
           }
@@ -226,11 +224,8 @@ const renderInput = (
       );
     }
     case FormType.SHORT_TEXT: {
-      const error =
-        nestStrToValue(formikField.name, touched) &&
-        nestStrToValue(formikField.name, errors);
-
-      const errorMessage = _.isEmpty(error) ? null : error;
+      const errorMessage: string =
+        meta.touched && meta.error ? meta.error! : "";
 
       return (
         <TextField
@@ -246,7 +241,7 @@ const renderInput = (
           }
           variant="standard"
           required={customField.required}
-          error={errorMessage}
+          error={Boolean(errorMessage)}
           {...formikField}
           helperText={
             errorMessage ? errorMessage : customField.helperText || " "
@@ -255,12 +250,6 @@ const renderInput = (
       );
     }
     case FormType.NUMBER: {
-      const error =
-        nestStrToValue(formikField.name, touched) &&
-        nestStrToValue(formikField.name, errors);
-
-      const errorMessage = _.isEmpty(error) ? null : error;
-
       return (
         <NumberField
           id={formikField.name}
@@ -278,12 +267,6 @@ const renderInput = (
       );
     }
     case FormType.SELECT: {
-      const error =
-        nestStrToValue(formikField.name, touched) &&
-        nestStrToValue(formikField.name, errors);
-
-      const errorMessage = _.isEmpty(error) ? null : error;
-
       return (
         <FormControl variant="standard" sx={{ width: "100%", m: 0 }}>
           <InputLabel id={`${formikField.name}-label`}>
@@ -303,7 +286,7 @@ const renderInput = (
             }
             variant="standard"
             required={customField.required}
-            error={errorMessage}
+            error={Boolean(errorMessage)}
             {...formikField}
           >
             {customField.options.map(
@@ -314,7 +297,7 @@ const renderInput = (
               )
             )}
           </Select>
-          <FormHelperText error={errorMessage}>
+          <FormHelperText error={Boolean(errorMessage)}>
             {errorMessage ? errorMessage : customField.helperText || " "}
           </FormHelperText>
         </FormControl>
@@ -322,6 +305,7 @@ const renderInput = (
     }
     case FormType.ARRAY: {
       throw new Error("Array type not supported. This should never happen");
+      return null;
     }
     default: {
       console.warn("Unsupported field type. Defaulting to short text field");
@@ -331,12 +315,14 @@ const renderInput = (
           variant="standard"
           label={customField.label}
           placeholder={customField.placeholder}
-          helperText={customField.helperText}
           required={customField.required}
-          error={errors[formikField.name]}
+          error={Boolean(errorMessage)}
           touched={touched[formikField.name]}
           disabled={
             customField.editable === undefined ? false : !customField.editable
+          }
+          helperText={
+            errorMessage ? errorMessage : customField.helperText || " "
           }
           {...formikField}
         />

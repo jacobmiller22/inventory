@@ -15,7 +15,6 @@ export default Yup.object().shape({
     .max(50, "Character limit exceeded (50)")
     .required("Required"),
   description: Yup.string().max(2000, "Character limit exceeded (2000)"),
-  location: Yup.string().required("Required"),
-  tags: Yup.string(),
-  // tags: Yup.array().of(Yup.string()),
+  locationId: Yup.string().required("Required"),
+  tagIds: Yup.array().of(Yup.string()),
 });

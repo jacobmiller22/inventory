@@ -51,10 +51,10 @@ export default [
     name: "tagIds",
     label: "Tags",
     placeholder: "Description...",
-    initialValue: "",
+    initialValue: [],
     type: FormType.SELECT,
     required: false,
-    multiple: false,
+    multiple: true,
     options: [],
   },
 ];

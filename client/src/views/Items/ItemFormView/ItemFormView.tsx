@@ -1,17 +1,10 @@
 import fieldsTemplate from "./fields";
 import schema from "./schema";
-import {
-  createItem,
-  createLocation,
-  getItem,
-  getLocation,
-  getLocations,
-  getTags,
-} from "api/inv";
-import { useParams, useNavigate } from "react-router-dom";
+import { createItem, getItem, getLocations, getTags } from "api/inv";
+import { useParams } from "react-router-dom";
 
 /** Components */
-import { Location, LocationId, MinLocation } from "interfaces/location";
+import { MinLocation } from "interfaces/location";
 import { FormView } from "views";
 import { useEffect, useState } from "react";
 import { Item, ItemId, MinItem } from "interfaces/item";
@@ -32,28 +25,6 @@ const ItemFormView = ({}: ItemFormViewProps) => {
   const [fields, setFields] = useState<any[] | null>(null);
   const [item, setItem] = useState<Item | null>(null);
 
-  // useEffect(() => {
-  // if (Object.keys(params).length === 0) {
-  //   // No route params.. This is the new location route
-  //   setFields(fieldsTemplate);
-  //   return;
-  // }
-
-  //   // Route params.. this is the edit location route
-  //   if (!location) return; // Populate fields once we have a location
-
-  //   const newFields: any[] = populateFields(item);
-  //   setFields(newFields);
-  // }, [params, location]);
-
-  // useEffect(() => {
-  //   if (!params.locationId) return;
-
-  //   (async () => {
-  //     setLocation(await getLocation(params.locationId!));
-  //   })();
-  // }, [params]);
-
   useEffect(() => {
     if (!locations || !tags) return;
 
@@ -72,7 +43,6 @@ const ItemFormView = ({}: ItemFormViewProps) => {
     // This will set our fields with our choices
     const newFields = populateFields(map, item!);
 
-    //@ts-ignore
     setFields(newFields);
   }, [params, tags, locations, item]);
 
@@ -125,8 +95,7 @@ const __createItem = async (
     quantity,
     unit,
     locationId,
-    ///@ts-expect-error
-    tags: tagIds ? [tagIds] : [],
+    tags: tagIds,
   };
 
   const itemId: ItemId | null = await createItem(newItem);
@@ -148,7 +117,7 @@ const populateFields = (map: any, item: Item | null) => {
     const options = map[newField.name].map((item: Tag | MinLocation) => {
       return {
         //@ts-expect-error
-        id: item[newField.name === "tags" ? "tagId" : "locationId"],
+        id: item[newField.name === "tagIds" ? "tagId" : "locationId"],
         label: item.name,
       };
     });
@@ -158,7 +127,7 @@ const populateFields = (map: any, item: Item | null) => {
       options,
       initialValue: item
         ? //@ts-expect-error
-          item[newField.name === "tags" ? "tagId" : "locationId"]
+          item[newField.name === "tagIds" ? "tagId" : "locationId"]
         : newField.initialValue,
     };
   });

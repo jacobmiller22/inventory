@@ -20,7 +20,7 @@ const NumberField = ({ ...field }: NumberFieldProps) => {
       label={`${field.label}${field.required ? "*" : ""}`}
       required={field.required}
       {...field}
-      error={field.error}
+      error={Boolean(field.error)}
       helperText={field.error ? field.error : field.helperText || " "}
     />
   );

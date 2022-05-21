@@ -87,7 +87,14 @@ const ItemFormView = ({}: ItemFormViewProps) => {
     return await __createItem(values);
   };
 
-  return <FormView schema={schema} fields={fields} onSubmit={handleSubmit} />;
+  return (
+    <FormView
+      schema={schema}
+      fields={fields}
+      onSubmit={handleSubmit}
+      resetOnSuccess={!Boolean(params.itemId)}
+    />
+  );
 };
 
 export default ItemFormView;

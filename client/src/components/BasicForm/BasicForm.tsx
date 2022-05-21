@@ -41,7 +41,7 @@ const BasicForm = <V extends object>({
   schema,
   submitButtonText = "Submit",
   successText = "Success",
-  resetOnSuccess = false,
+  resetOnSuccess = true,
 }: IRecipeFormProps<V>) => {
   const [submitText, setSubmitText] = React.useState(submitButtonText);
 

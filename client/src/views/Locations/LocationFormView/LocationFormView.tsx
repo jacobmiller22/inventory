@@ -50,7 +50,14 @@ const LocationFormView = ({}: LocationFormViewProps) => {
     return success;
   };
 
-  return <FormView schema={schema} fields={fields} onSubmit={handleSubmit} />;
+  return (
+    <FormView
+      schema={schema}
+      fields={fields}
+      onSubmit={handleSubmit}
+      resetOnSuccess={!Boolean(params.locationId)}
+    />
+  );
 };
 
 export default LocationFormView;

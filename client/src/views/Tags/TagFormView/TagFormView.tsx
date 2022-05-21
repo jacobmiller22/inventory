@@ -48,7 +48,14 @@ const TagFormView = ({}: TagFormViewProps) => {
     return success;
   };
 
-  return <FormView schema={schema} fields={fields} onSubmit={handleSubmit} />;
+  return (
+    <FormView
+      schema={schema}
+      fields={fields}
+      onSubmit={handleSubmit}
+      resetOnSuccess={!Boolean(params.tagId)}
+    />
+  );
 };
 
 export default TagFormView;

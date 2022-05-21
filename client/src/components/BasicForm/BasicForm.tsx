@@ -32,6 +32,7 @@ interface IRecipeFormProps<V> {
   schema?: AnySchema;
   submitButtonText?: string;
   successText?: string;
+  resetOnSuccess?: boolean;
 }
 
 const BasicForm = <V extends object>({
@@ -40,6 +41,7 @@ const BasicForm = <V extends object>({
   schema,
   submitButtonText = "Submit",
   successText = "Success",
+  resetOnSuccess = false,
 }: IRecipeFormProps<V>) => {
   const [submitText, setSubmitText] = React.useState(submitButtonText);
 
@@ -50,7 +52,7 @@ const BasicForm = <V extends object>({
     setTimeout(() => {
       setSubmitText(submitButtonText);
     }, 3000);
-    if (success) {
+    if (success && resetOnSuccess) {
       actions.resetForm();
     }
   };
@@ -345,21 +347,6 @@ const createInitialValues = (fields: any[], k: string | null) => {
         ]
       : [field.name, k ? field[k] : ""]
   );
-};
-
-const nestStrToValue = (nestedString: string, obj: any) => {
-  // Example nested string
-  // ingredients.0.unit
-
-  const nestedArr = nestedString.split(".");
-  let currentObj = { ...obj }; // Use spread operator to clone object
-  for (let i = 0; i < nestedArr.length; i++) {
-    const key = nestedArr[i];
-    currentObj[key] = currentObj[key] || {}; // Create the object if it doesn't exist
-    currentObj = currentObj[key];
-  }
-
-  return currentObj;
 };
 
 export const mapObjectArr = (obj: any[], func: (...args: any[]) => any) =>

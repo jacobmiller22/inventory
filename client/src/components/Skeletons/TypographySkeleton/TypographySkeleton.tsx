@@ -25,7 +25,7 @@ const TypographySkeleton = ({
 
 export default TypographySkeleton;
 
-const variantToHeight = (variant: Variant): number => {
+const variantToHeight = (variant?: Variant): number => {
   switch (variant) {
     case "h1":
       return 66;

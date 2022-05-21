@@ -42,6 +42,7 @@ const ItemFormView = ({}: ItemFormViewProps) => {
 
     // This will set our fields with our choices
     const newFields = populateFields(map, item!);
+    console.log("newFIelds", newFields);
 
     setFields(newFields);
   }, [params, tags, locations, item]);
@@ -105,10 +106,22 @@ const __createItem = async (
 
 const populateFields = (map: any, item: Item | null) => {
   return fieldsTemplate.map((field) => {
+    if (item) {
+      console.log(field.name);
+
+      console.log(item);
+    }
     let newField = {
       ...field,
-      //@ts-expect-error
-      initialValue: item ? item[field.name] : field.initialValue,
+
+      initialValue: item
+        ? field.name === "locationId" && item.location
+          ? item.location.locationId
+          : field.name === "tagIds"
+          ? item.tags.map((tag) => tag.tagId)
+          : //@ts-expect-error
+            item[field.name]
+        : field.initialValue,
     };
     if (newField.type !== FormType.SELECT) {
       return newField;
@@ -125,10 +138,7 @@ const populateFields = (map: any, item: Item | null) => {
     return {
       ...newField,
       options,
-      initialValue: item
-        ? //@ts-expect-error
-          item[newField.name === "tagIds" ? "tagId" : "locationId"]
-        : newField.initialValue,
+      initialValue: newField.initialValue,
     };
   });
 };

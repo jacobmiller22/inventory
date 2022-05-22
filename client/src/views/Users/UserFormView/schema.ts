@@ -4,7 +4,7 @@
 
 import * as Yup from "yup";
 
-export default Yup.object().shape({
+let sharedSchema = Yup.object().shape({
   firstName: Yup.string()
     .max(30, "Character limit exceeded (30)")
     .required("Required"),
@@ -12,6 +12,10 @@ export default Yup.object().shape({
     .max(30, "Character limit exceeded (30)")
     .required("Required"),
   email: Yup.string().email().required("Required"),
+  username: Yup.string().required("Required"),
+});
+
+export const newSchema = sharedSchema.shape({
   password: Yup.string()
     .max(30, "Character limit exceeded (30)")
     .required("Required"),
@@ -20,3 +24,5 @@ export default Yup.object().shape({
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Required"),
 });
+
+export const editSchema = sharedSchema;

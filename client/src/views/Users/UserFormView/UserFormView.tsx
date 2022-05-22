@@ -1,5 +1,5 @@
 import fieldsTemplate from "./fields";
-import schema from "./schema";
+import { editSchema, newSchema } from "./schema";
 import { useParams, useNavigate } from "react-router-dom";
 /** Interfaces/types */
 import { UserId, User } from "interfaces/user";
@@ -22,8 +22,10 @@ const UserFormView = ({}: IUserFormViewProps) => {
   const [fields, setFields] = useState<any[] | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
+  const isEdit = Boolean(params.userId);
+
   useEffect(() => {
-    if (Object.keys(params).length === 0) {
+    if (!isEdit) {
       // No route params.. This is the new location route
       setFields(fieldsTemplate);
       return;
@@ -37,7 +39,7 @@ const UserFormView = ({}: IUserFormViewProps) => {
   }, [params, user]);
 
   useEffect(() => {
-    if (!params.userId) return;
+    if (!isEdit) return;
 
     (async () => {
       setUser(await getUser(params.userId!));
@@ -56,7 +58,7 @@ const UserFormView = ({}: IUserFormViewProps) => {
       fields={fields}
       resetOnSuccess={false}
       onSubmit={handleSubmit}
-      schema={schema}
+      schema={isEdit ? editSchema : newSchema}
     />
   );
 };

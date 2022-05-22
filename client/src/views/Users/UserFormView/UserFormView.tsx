@@ -87,15 +87,6 @@ const populateFields = (user: User) => {
     );
   }
   return newTemplate.map((field) => {
-    // if (field.name === "roles") {
-    //   return {
-    //     ...field,
-    //     initialValue: (user?.roles || []).map((role) => ({
-    //       id: role,
-    //       label: _.capitalize(role),
-    //     })),
-    //   };
-    // }
     //@ts-expect-error
     return { ...field, initialValue: user[field.name] };
   });

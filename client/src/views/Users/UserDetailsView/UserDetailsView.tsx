@@ -35,29 +35,6 @@ const UserDetailsView = ({}: UserDetailsViewProps) => {
     return <div>404 item not found</div>;
   }
 
-  // const renderImages = (imgSrcs: string[]) => {
-  //   if (imgSrcs.length === 0) {
-  //     return <Typography>No Images</Typography>;
-  //   }
-  //   return (
-  //     <ImageList
-  //       cols={2}
-  //       gap={8}
-  //       sx={{ width: "100%", maxWidth: "100%" }}
-  //       rowHeight="auto"
-  //       className={styles["imagelist"]}
-  //     >
-  //       {imgSrcs.map((src: string, i: number) => {
-  //         return (
-  //           <ImageListItem key={`img-${i}`}>
-  //             <img src={src} />
-  //           </ImageListItem>
-  //         );
-  //       })}
-  //     </ImageList>
-  //   );
-  // };
-
   const item = {
     userId: user.userId,
     name: user.username,
@@ -65,21 +42,24 @@ const UserDetailsView = ({}: UserDetailsViewProps) => {
 
   return (
     <DetailsView editRoute={editUserRoute} idKey="userId" item={item}>
-      {/* <Typography variant="caption">Description</Typography>
-      <Typography variant="body1">{item.description}</Typography>
-      <br />
-      <Typography variant="caption">Quantity</Typography>
+      <Typography variant="caption">Name</Typography>
       <Typography>
-        {item.quantity} {item.unit}
+        {user.firstName} {user.lastName}
       </Typography>
       <br />
 
-      <Typography variant="caption">Location</Typography>
-      <Typography>{item.location?.name ?? "Invalid location"}</Typography>
-      <br /> */}
-      <Typography variant="caption">Tags</Typography>
-
-      <ChipList items={user.roles} />
+      <Typography variant="caption">Email</Typography>
+      <Typography>{user.email}</Typography>
+      <br />
+      <Typography variant="caption">Roles</Typography>
+      <ChipList
+        items={user.roles}
+        chipProps={{
+          variant: "outlined",
+          color: "secondary",
+        }}
+        noneText="No roles"
+      />
       <br />
     </DetailsView>
   );

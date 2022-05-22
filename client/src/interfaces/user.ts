@@ -14,5 +14,7 @@ export interface MinUser {
 }
 
 export interface User extends MinUser {
-  email: StringDecoder;
+  firstName: string;
+  lastName: string;
+  email: string;
 }

@@ -86,6 +86,7 @@ const createUsers = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (err) {
     res.status(HttpStatus.BAD_REQUEST).json({ message: err });
+    return;
   }
 
   const newUserIdsSanitized = await Promise.all(

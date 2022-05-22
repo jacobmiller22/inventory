@@ -12,6 +12,7 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
 
   if (!isValidUserId(userId)) {
     res.status(HttpStatus.BAD_REQUEST).send("Invalid userId");
+    return;
   }
 
   const user: User | null = await usersService.getUser(userId);
@@ -22,6 +23,7 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
   }
 
   res.status(HttpStatus.OK).json(user);
+  return;
 };
 
 /**

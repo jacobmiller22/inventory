@@ -1,8 +1,10 @@
 /** Interfaces/types */
 
+import { Avatar } from "@mui/material";
 import { getUsers } from "api/users";
-import { DataTable } from "components";
+import { DataTable, ChipList } from "components";
 import { MinUser, User, UserId } from "interfaces/user";
+import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { replaceWildcards } from "Router/routes";
@@ -30,7 +32,7 @@ const UsersView = ({}: IUsersViewProps) => {
     return true;
   };
   const dataTableProps = {
-    idKey: "_id",
+    idKey: "userId",
     items: users,
     columns,
     onCellDoubleClick: handleCellDoubleClick,
@@ -51,9 +53,27 @@ export default UsersView;
 
 const columns: any[] = [
   {
+    field: "profileSrc",
+    headerName: "Pic",
+    width: 60,
+    editable: false,
+    renderCell: (params: any) => <Avatar src={params.row.profileSrc} />,
+  },
+  {
     field: "username",
     headerName: "username",
     width: 250,
     editable: false,
+  },
+  {
+    field: "roles",
+    headerName: "Roles",
+    width: 200,
+    editable: false,
+    renderCell: (params: any) => (
+      <ChipList
+        items={params.row.roles.map((role: string) => _.capitalize(role))}
+      />
+    ),
   },
 ];

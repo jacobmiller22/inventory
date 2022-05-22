@@ -7,3 +7,4 @@ export { default as BasicForm } from "./BasicForm";
 export { default as TrashButton } from "./TrashButton";
 export { default as EditButton } from "./EditButton";
 export { default as DataTable } from "./DataTable";
+export { default as ChipList } from "./ChipList";

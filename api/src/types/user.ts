@@ -22,6 +22,7 @@ export interface MinUser {
   userId: UserId;
   username: string;
   profileSrc: string;
+  roles: Role[];
 }
 
 /**
@@ -30,7 +31,6 @@ export interface MinUser {
 export interface User extends MinUser {
   createdAt: number;
   email: string;
-  roles: Role[];
 }
 
 /**

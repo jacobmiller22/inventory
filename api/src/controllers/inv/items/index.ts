@@ -73,8 +73,6 @@ const updateItem = async (req: Request, res: Response) => {
     tags: req.body.tags,
   };
 
-  console.log("newItem", newItem);
-
   if (newItem.locationId && !isValidLocationId(newItem.locationId)) {
     return res
       .status(HttpStatus.BAD_REQUEST)

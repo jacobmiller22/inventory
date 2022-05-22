@@ -80,8 +80,7 @@ export const hasRole = (roles: Role[]) => {
 
     //@ts-expect-error
     const { roles: userRoles } = req.auth;
-    console.log("userRoles", userRoles);
-    console.log("roles", roles);
+
     if (
       userRoles.some((role: Role) => roles.includes(role.toLowerCase() as Role))
     ) {

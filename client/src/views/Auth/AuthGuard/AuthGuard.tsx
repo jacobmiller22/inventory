@@ -18,15 +18,21 @@ const AuthGuard = ({ children, reverse = false }: IAuthGuardProps) => {
 
   useEffect(() => {
     checkAuth();
+    if (reverse && auth) {
+      navigate(indexRoute.path);
+      return;
+    }
+    if (!reverse && !auth) {
+      navigate(loginRoute.path);
+      return;
+    }
   }, []);
-  console.log("auth", auth);
+
   if (reverse && auth) {
-    navigate(indexRoute.path);
     return null;
   }
 
   if (!reverse && !auth) {
-    navigate(loginRoute.path);
     return null;
   }
   return <React.Fragment>{children}</React.Fragment>;

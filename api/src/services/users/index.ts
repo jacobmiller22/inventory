@@ -48,6 +48,7 @@ const getMinUser = async (userId: string): Promise<MinUser | null> => {
     "_id",
     "username",
     "profileSrc",
+    "roles",
   ]);
 
   if (!user) {
@@ -89,6 +90,7 @@ const getUserByEmail = async (email: string): Promise<MinUser | null> => {
     "_id",
     "username",
     "profileSrc",
+    "roles",
   ]);
 
   if (!user) {
@@ -107,6 +109,7 @@ const getUserByUsername = async (username: string): Promise<MinUser | null> => {
     "_id",
     "username",
     "profileSrc",
+    "roles",
   ]);
 
   if (!user) {
@@ -142,7 +145,12 @@ const getMinUsers = async (): Promise<MinUser[]> => {
   const users: (UserDocument & {
     toObject: () => UserDocument;
   })[] =
-    (await UserModel.find().select(["_id", "username", "profileSrc"])) ?? [];
+    (await UserModel.find().select([
+      "_id",
+      "username",
+      "profileSrc",
+      "roles",
+    ])) ?? [];
 
   return users.map(
     (
@@ -229,7 +237,7 @@ export const __sanitizeMinUser = (user: any): MinUser => {
   const sanitizedUser = {
     userId: user.userId,
     username: user.username,
-
+    roles: user.roles,
     profileSrc: user.profileSrc,
   };
 
@@ -243,6 +251,7 @@ export const userDoc2MinUser = (user: UserDocument): MinUser => {
     userId: _id,
     username,
     profileSrc,
+    roles,
   };
 };
 
@@ -253,7 +262,6 @@ export const userDoc2User = (user: UserDocument): User => {
     ...userDoc2MinUser(user),
     email,
     createdAt,
-    roles,
   };
 };
 
@@ -271,7 +279,6 @@ export const userDoc2ConfidentialUser = (
 export const __sanitizeUser = (user: User | ConfidentialUser): User => {
   const sanitizedUser = {
     ...__sanitizeMinUser(user),
-    roles: user.roles,
     email: user.email,
     createdAt: user.createdAt,
   };

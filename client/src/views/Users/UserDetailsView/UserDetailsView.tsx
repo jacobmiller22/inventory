@@ -1,6 +1,6 @@
 /** Interfaces/types */
 
-import { Typography } from "@mui/material";
+import { Avatar, Typography } from "@mui/material";
 import { getUser } from "api/users";
 import { ChipList } from "components";
 import { Role, User } from "interfaces/user";
@@ -60,6 +60,12 @@ const UserDetailsView = ({}: UserDetailsViewProps) => {
         }}
         noneText="No roles"
       />
+      <br />
+      <Typography variant="caption">Profile Source URL</Typography>
+      <div className={styles["profile-container"]}>
+        <Avatar src={user.profileSrc} />
+        <Typography>{user.profileSrc}</Typography>
+      </div>
       <br />
     </DetailsView>
   );

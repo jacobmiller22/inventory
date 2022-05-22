@@ -50,6 +50,7 @@ const isRevoked = async (
   if (!user) {
     return true;
   }
+
   return false;
 };
 

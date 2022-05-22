@@ -13,6 +13,12 @@ const login: Middleware = async (req, res) => {
     return;
   }
 
+  // res.cookie("jwt", userWithToken.token, {
+  //   httpOnly: false,
+  //   secure: true,
+  //   maxAge: 3600000,
+  // });
+
   res.status(HttpStatus.OK).json(userWithToken);
   return;
 };
@@ -26,8 +32,6 @@ const signup: Middleware = async (req, res) => {
     password,
     roles: [Role.USER],
   };
-
-  console.log("newUser", newUser);
 
   const newUserSanitized = await authService.signup(newUser);
 
@@ -54,7 +58,7 @@ const signup: Middleware = async (req, res) => {
     return;
   }
 
-  res.status(HttpStatus.OK).json({ token: userWithToken.token });
+  res.status(HttpStatus.OK).json(userWithToken);
   return;
 };
 

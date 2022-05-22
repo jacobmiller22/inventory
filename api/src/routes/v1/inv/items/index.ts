@@ -6,10 +6,11 @@
 import express from "express";
 import invItemController from "@/controllers/inv/items";
 import { verifyExistence } from "@/middleware/existence";
+import { requireAuth } from "@/middleware/auth";
 
 const router = express();
 
-router.get("/", invItemController.getItems);
+router.get("/", requireAuth(), invItemController.getItems);
 
 /**
  * @api {item} /v1/inventory/item/:item Get all details of an inventory item

@@ -6,10 +6,11 @@
 import express from "express";
 import invLocationsController from "@/controllers/inv/locations";
 import { verifyExistence } from "@/middleware/existence";
+import { requireAuth } from "@/middleware/auth";
 
 const router = express();
 
-router.get("/", invLocationsController.getLocations);
+router.get("/", requireAuth(), invLocationsController.getLocations);
 
 router.get("/:locationId", invLocationsController.getLocation);
 

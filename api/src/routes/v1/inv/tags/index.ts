@@ -6,10 +6,11 @@
 import express from "express";
 import invTypeController from "@/controllers/inv/tags";
 import { verifyExistence } from "@/middleware/existence";
+import { requireAuth } from "@/middleware/auth";
 
 const router = express();
 
-router.get("/", invTypeController.getTags);
+router.get("/", requireAuth(), invTypeController.getTags);
 
 router.get("/:tagId", invTypeController.getTag);
 

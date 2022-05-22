@@ -10,8 +10,16 @@ import { requireAuth } from "@/middleware/auth";
 
 const router = express();
 
-router.post("/", userController.createUser);
+router.post(
+  "/",
+  verifyExistence(["username", "password", "email", "firstName", "lastName"]),
+  userController.createUser
+);
 
 router.post("/batch", userController.createUsers);
+
+router.put("/:userId", userController.updateUser);
+
+router.delete("/:userId", userController.deleteUser);
 
 export default router;

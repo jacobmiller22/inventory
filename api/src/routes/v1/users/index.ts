@@ -40,11 +40,4 @@ router.put(
   userController.updateUserPicture
 );
 
-router.delete(
-  "/:userId",
-  // hasRoleOrIsSubject([Role.ADMIN]),
-  userController.deleteUser
-);
-
-// module.exports = router;
 export default router;

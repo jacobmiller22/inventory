@@ -21,7 +21,7 @@ router.post(
  */
 router.post(
   "/signup",
-  verifyExistence(["username", "password", "email"]),
+  verifyExistence(["username", "password", "email", "firstName", "lastName"]),
   authController.signup
 );
 

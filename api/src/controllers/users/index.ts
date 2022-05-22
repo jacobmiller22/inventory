@@ -1,8 +1,16 @@
 import type { Request, Response } from "express";
 import validator from "validator";
 import { HttpStatus } from "@/types/http";
-import { isValidUserId, MinUser, Role, User, UserPending } from "@/types/user";
+import {
+  isValidUserId,
+  MinUser,
+  Role,
+  User,
+  UserId,
+  UserPending,
+} from "@/types/user";
 import usersService from "@/services/users";
+import { removeUndefined } from "@/lib/validators";
 
 /**
  * Get user by id, contains some private information
@@ -234,11 +242,96 @@ const updateUserPicture = async (
   res.status(HttpStatus.CREATED).end();
 };
 
+const updateUser = async (req: Request, res: Response): Promise<void> => {
+  const userId: UserId | any = req.params.userId;
+
+  if (!isValidUserId(userId)) {
+    return res.status(HttpStatus.BAD_REQUEST).end("Invalid userId");
+  }
+
+  let newUser: Omit<User, "password" | "createdAt"> = {
+    userId: req.body.locationId,
+    username: req.body.username,
+    email: req.body.email,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    roles: req.body.roles,
+    profileSrc: req.body.profileSrc,
+  };
+
+  if (userId && !isValidUserId(userId)) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .end("Item locationId must be a valid locationId");
+  }
+
+  if (newUser.username && typeof newUser.username !== "string") {
+    return res.status(HttpStatus.BAD_REQUEST).end("Username must be a string");
+  }
+
+  if (
+    newUser?.email &&
+    (typeof newUser.email !== "string" || !validator.isEmail(newUser.email))
+  ) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .end("Email must be a string and valid");
+  }
+
+  if (newUser.firstName && typeof newUser.firstName !== "number") {
+    return res.status(HttpStatus.BAD_REQUEST).end("firstName must be a string");
+  }
+
+  if (newUser.lastName && typeof newUser.lastName !== "string") {
+    return res.status(HttpStatus.BAD_REQUEST).end("lastName must be a string");
+  }
+
+  if (newUser.roles && !Array.isArray(newUser.roles)) {
+    return res.status(HttpStatus.BAD_REQUEST).end("Roles must be an array");
+  }
+
+  // Verify correct roles structure
+  if (
+    newUser.roles &&
+    (newUser.roles as any[]).some((role) => role !== "admin" || role !== "user")
+  ) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .end("Provided at least one invalid tag");
+  }
+
+  if (newUser.profileSrc && typeof newUser.profileSrc !== "string") {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .end("profileSrc must be a string");
+  }
+
+  /** Remove undefined values from newLocation object */
+  newUser = removeUndefined(newUser);
+
+  if (Object.keys(newUser).length === 0) {
+    return res
+      .status(HttpStatus.BAD_REQUEST)
+      .end("None of the given fields are valid");
+  }
+
+  const success = await usersService.updateUser(userId, newUser);
+
+  if (!success) {
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+    return;
+  }
+
+  res.status(HttpStatus.OK).json(true);
+  return;
+};
+
 export default {
   getUser,
   getMinUsers,
   deleteUser,
   updateUserEmail,
+  updateUser,
   createUser,
   createUsers,
   updateUserPicture,

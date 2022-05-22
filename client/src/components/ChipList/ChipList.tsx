@@ -5,6 +5,7 @@ interface ChipListProps {
   items: string[];
   noneText?: string;
   chipProps?: ChipProps;
+  [rest: string]: any;
 }
 
 const ChipList = ({

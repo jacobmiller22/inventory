@@ -46,7 +46,7 @@ export const setAuthorizationHeader = (req: any) => {
   const user: { token: string } | null = JSON.parse(
     localStorage.getItem("user") || "null"
   );
-  console.log("token", user?.token);
+
   if (user?.token) {
     // @ts-ignore
     req.headers.Authorization = `Bearer ${user.token}`;

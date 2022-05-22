@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styles from "./IndexView.module.css";
-import { DataTable } from "components";
+import { ChipList, DataTable } from "components";
 import {
   deleteItems,
   getItems as __getItems,
@@ -113,6 +113,14 @@ const columns = [
     description: "This column has a value getter and is not sortable.",
     sortable: false,
 
-    valueGetter: (params: any) => params.row.tags.map((tag: Tag) => tag.name),
+    renderCell: (params: any) => (
+      <ChipList
+        items={params.row.tags.map((tag: Tag) => tag.name)}
+        chipProps={{
+          variant: "outlined",
+          color: "secondary",
+        }}
+      />
+    ),
   },
 ];

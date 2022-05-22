@@ -73,6 +73,10 @@ const columns: any[] = [
     renderCell: (params: any) => (
       <ChipList
         items={params.row.roles.map((role: string) => _.capitalize(role))}
+        chipProps={{
+          variant: "outlined",
+          color: "secondary",
+        }}
       />
     ),
   },

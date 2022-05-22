@@ -1,3 +1,5 @@
+import { Role, User } from "interfaces/user";
+import _ from "lodash";
 import { createContext, useContext, useState } from "react";
 
 const ProfileContext = createContext<any>({});
@@ -11,11 +13,13 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  const [auth, setAuth] = useState<any>(user);
+  const [auth, setAuth] = useState<User | null>(user);
 
   const checkAuth = () => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    setAuth(user);
+    if (!_.isEqual(user, auth)) {
+      setAuth(user);
+    }
   };
 
   const logout = () => {
@@ -23,10 +27,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setAuth(null);
   };
 
-  console.log("auth", auth);
+  const isAdmin = (): boolean => {
+    return Boolean(auth?.roles.includes(Role.ADMIN));
+  };
 
   return (
-    <ProfileContext.Provider value={{ auth, checkAuth, logout }}>
+    <ProfileContext.Provider value={{ auth, checkAuth, logout, isAdmin }}>
       {children}
     </ProfileContext.Provider>
   );
@@ -34,8 +40,4 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
 export default AuthProvider;
 
-export const useAuth = () => {
-  const { auth, checkAuth, logout } = useContext(ProfileContext);
-  console.log("useAuth", auth);
-  return { auth, checkAuth, logout };
-};
+export const useAuth = () => useContext(ProfileContext);

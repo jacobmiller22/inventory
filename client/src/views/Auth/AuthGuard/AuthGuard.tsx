@@ -10,11 +10,16 @@ import { indexRoute, loginRoute } from "Router/routes/client";
 interface IAuthGuardProps {
   children: React.ReactNode | React.ReactNode[];
   reverse?: boolean;
+  admin?: boolean;
 }
 
-const AuthGuard = ({ children, reverse = false }: IAuthGuardProps) => {
+const AuthGuard = ({
+  children,
+  reverse = false,
+  admin = false,
+}: IAuthGuardProps) => {
   const navigate = useNavigate();
-  const { auth, checkAuth } = useAuth();
+  const { auth, checkAuth, isAdmin } = useAuth();
 
   useEffect(() => {
     checkAuth();
@@ -26,13 +31,13 @@ const AuthGuard = ({ children, reverse = false }: IAuthGuardProps) => {
       navigate(loginRoute.path);
       return;
     }
-  }, []);
+  }, [auth]);
 
-  if (reverse && auth) {
+  if ((reverse && auth) || (admin && isAdmin())) {
     return null;
   }
 
-  if (!reverse && !auth) {
+  if ((!reverse && !auth) || (admin && !isAdmin())) {
     return null;
   }
   return <React.Fragment>{children}</React.Fragment>;

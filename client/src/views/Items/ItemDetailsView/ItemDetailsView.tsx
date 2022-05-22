@@ -9,6 +9,7 @@ import { Chip, ImageList, ImageListItem, Typography } from "@mui/material";
 import styles from "./ItemDetailsView.module.css";
 import { editItemRoute } from "Router/routes/client";
 import { DetailsView } from "views";
+import { ChipList } from "components";
 
 const ItemDetailsView = () => {
   const [item, setItem] = useState<Item | null | undefined>(undefined);
@@ -30,19 +31,6 @@ const ItemDetailsView = () => {
   if (item === null) {
     return <div>404 item not found</div>;
   }
-
-  const renderTags = (tags: Tag[]) => {
-    if (tags.length === 0) {
-      return <Typography>No tags</Typography>;
-    }
-    return (
-      <div className={styles["chip-container"]}>
-        {tags.map((tag: Tag, i: number) => (
-          <Chip label={tag.name} key={`chip-${i}`} />
-        ))}
-      </div>
-    );
-  };
 
   const renderImages = (imgSrcs: string[]) => {
     if (imgSrcs.length === 0) {
@@ -77,12 +65,18 @@ const ItemDetailsView = () => {
         {item.quantity} {item.unit}
       </Typography>
       <br />
-
       <Typography variant="caption">Location</Typography>
       <Typography>{item.location?.name ?? "Invalid location"}</Typography>
       <br />
       <Typography variant="caption">Tags</Typography>
-      {renderTags(item.tags)}
+      <ChipList
+        items={item.tags.map((tag: Tag) => tag.name)}
+        chipProps={{
+          variant: "outlined",
+          color: "secondary",
+        }}
+        noneText="No tags"
+      />
       <br />
       <Typography variant="h6">Images</Typography>
 

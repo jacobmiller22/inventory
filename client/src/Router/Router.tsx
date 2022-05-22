@@ -14,6 +14,7 @@ import {
   editItemRoute,
   editLocationRoute,
   editTagRoute,
+  editUserRoute,
   itemDetailsRoute,
   itemsRoute,
   locationDetailsRoute,
@@ -22,12 +23,16 @@ import {
   newItemRoute,
   newLocationRoute,
   newTagRoute,
+  newUserRoute,
   signupRoute,
   tagDetailsRoute,
   tagsRoute,
+  userDetailsRoute,
+  usersRoute,
 } from "./routes/client";
 import TagFormView from "views/Tags/TagFormView";
 import { AuthGuard, LoginView, SignupView } from "views/Auth";
+import { UserDetailsView, UserFormView, UsersView } from "views/Users";
 
 const Router = () => {
   return (
@@ -150,6 +155,40 @@ const Router = () => {
           }
         />
         {/* User Routes */}
+
+        <Route
+          path={usersRoute.path}
+          element={
+            <Layout variant="light" title={usersRoute.name} auth>
+              <UsersView />
+            </Layout>
+          }
+        />
+        <Route
+          path={newUserRoute.path}
+          element={
+            <Layout variant="light" title={newUserRoute.name} auth>
+              <UserFormView />
+            </Layout>
+          }
+        />
+        <Route
+          path={wildcardsToDynamicRoutes(editUserRoute)}
+          element={
+            <Layout variant="light" title={editUserRoute.name} auth>
+              <UserFormView />
+            </Layout>
+          }
+        />
+        <Route
+          path={wildcardsToDynamicRoutes(userDetailsRoute)}
+          element={
+            <Layout variant="light" title={userDetailsRoute.name} auth>
+              <UserDetailsView />
+            </Layout>
+          }
+        />
+
         {/* Admin Management Routes */}
       </Routes>
     </BrowserRouter>

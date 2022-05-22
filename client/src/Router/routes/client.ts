@@ -50,7 +50,7 @@ export const tagDetailsRoute: Route = {
 
 export const editTagRoute: Route = {
   path: "/tags/*/edit",
-  name: "Tag Details",
+  name: "Edit Tag",
   wildcards: ["tagId"],
 };
 
@@ -73,7 +73,7 @@ export const locationDetailsRoute: Route = {
 
 export const editLocationRoute: Route = {
   path: "/locations/*/edit",
-  name: "Location Details",
+  name: "Edit Location",
   wildcards: ["locationId"],
 };
 
@@ -87,6 +87,35 @@ export const loginRoute: Route = {
 export const signupRoute: Route = {
   path: "/auth/signup",
   name: "Signup",
+};
+
+/** User Routes */
+
+export const usersRoute: Route = {
+  path: "/users",
+  name: "Users",
+};
+
+export const newUserRoute: Route = {
+  path: "/users/new",
+  name: "New User",
+};
+
+export const newUsersRoute: Route = {
+  path: "/users/new/batch",
+  name: "New Batch Users",
+};
+
+export const userDetailsRoute: Route = {
+  path: "/users/*",
+  name: "User Details",
+  wildcards: ["userId"],
+};
+
+export const editUserRoute: Route = {
+  path: "/users/*/edit",
+  name: "Edit User",
+  wildcards: ["userId"],
 };
 
 /** Other */

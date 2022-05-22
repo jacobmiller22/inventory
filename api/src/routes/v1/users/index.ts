@@ -18,7 +18,11 @@ router.get("/", userController.getMinUsers);
 /**
  * Information about user with the given id
  */
-router.get("/userId", hasRoleOrIsSubject([Role.ADMIN]), userController.getUser);
+router.get(
+  "/:userId",
+  hasRoleOrIsSubject([Role.USER, Role.ADMIN]),
+  userController.getUser
+);
 
 router.post("/", hasRole([Role.ADMIN]), userController.createUsers);
 

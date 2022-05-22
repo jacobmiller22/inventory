@@ -106,7 +106,7 @@ export const isSubject = () => {
       return;
     }
     //@ts-expect-error
-    const { sub }: { sub: string } = req?.user;
+    const { sub }: { sub: string } = req?.auth;
 
     if (sub !== req.params.id) {
       res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });
@@ -133,18 +133,19 @@ export const hasRoleOrIsSubject = (roles: Role[]) => {
     next: NextFunction
   ) => {
     //@ts-expect-error
-    if (!req?.user) {
+    if (!req?.auth) {
       res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });
       return;
     }
     //@ts-expect-error
-    const { sub }: { sub: string } = req?.user;
+    const { sub }: { sub: string } = req?.auth;
 
     if (sub === req.params.id) {
       next();
       return;
     }
     const user: User | null = await usersService.getUser(sub);
+    console.log("user", user);
     if (user?.roles.some((role: Role) => roles.includes(role))) {
       // Check if the user has the required role
       next();

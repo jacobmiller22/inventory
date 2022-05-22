@@ -9,7 +9,14 @@ const userApi = axios.create({
   withCredentials: true,
 });
 
+const adminUserApi = axios.create({
+  baseURL: `${process.env.REACT_APP_API_URL}/v1/admin/users`,
+  withCredentials: true,
+});
+
 userApi.interceptors.request.use(setAuthorizationHeader);
+
+adminUserApi.interceptors.request.use(setAuthorizationHeader);
 
 export const getUsers = async (): Promise<MinUser[]> => {
   const res = await userApi.get("/");
@@ -35,25 +42,25 @@ export const getUser = async (id: UserId): Promise<User | null> => {
 };
 
 export const createUser = async (
-  location: Omit<User, "locationId">
+  user: Omit<User, "userId">
 ): Promise<UserId | null> => {
-  const res = await userApi.post("/", location);
+  const res = await adminUserApi.post("/", user);
 
   console.log(res);
-  const locationId: UserId = res.data;
+  const userId: UserId = res.data;
 
-  if (!locationId) {
+  if (!userId) {
     return null;
   }
-  return locationId;
+  return userId;
 };
 
 export const updateUser = async (
   id: UserId,
-  fields: Partial<Omit<User, "items" | "locationId">>
+  fields: Partial<Omit<User, "userId">>
 ): Promise<boolean> => {
   try {
-    const res = await userApi.put(`/${id}`, fields);
+    const res = await adminUserApi.put(`/${id}`, fields);
 
     return res.data;
   } catch (err) {
@@ -63,7 +70,7 @@ export const updateUser = async (
 
 export const deleteUser = async (id: UserId): Promise<boolean> => {
   try {
-    const res = await userApi.delete(`/${id}`);
+    const res = await adminUserApi.delete(`/${id}`);
 
     return res.data;
   } catch (err) {

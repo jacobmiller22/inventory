@@ -12,6 +12,7 @@
 .brand {
   cursor: pointer;
   text-decoration: none !important;
+  padding-left: 0 !important;
 }
 
 .brand:hover {
@@ -25,21 +26,42 @@
 }
 
 .link-side-left {
-  padding-right: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .link-side-right {
-  padding-left: 0.5rem;
+  margin-left: 1rem !important;
 }
 
 .link-side-inside {
-  padding-inline: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.button {
+  margin-inline: 1rem;
 }
 
 .link {
   text-decoration: none !important;
+  color: initial;
+}
+
+.link:visited {
+  color: initial;
 }
 
 .link:hover {
   text-decoration: underline !important;
+}
+
+.option-list {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+
+.no-wrap {
+  white-space: nowrap;
 }

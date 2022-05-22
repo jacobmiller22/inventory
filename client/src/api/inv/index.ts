@@ -1,3 +1,4 @@
+import { setAuthorizationHeader } from "api/auth";
 import axios from "axios";
 import { Item, ItemId, MinItem } from "interfaces/item";
 import { LocationId, MinLocation, Location } from "interfaces/location";
@@ -8,7 +9,10 @@ import { HttpStatus } from "lib/http";
 
 const locationApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/locations`,
+  withCredentials: true,
 });
+
+locationApi.interceptors.request.use(setAuthorizationHeader);
 
 export const getLocations = async (): Promise<MinLocation[]> => {
   const res = await locationApi.get("/");
@@ -74,7 +78,10 @@ export const deleteLocation = async (id: LocationId): Promise<boolean> => {
 
 const itemApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/items`,
+  withCredentials: true,
 });
+
+itemApi.interceptors.request.use(setAuthorizationHeader);
 
 export const getItems = async (): Promise<MinItem[]> => {
   const res = await itemApi.get("/");
@@ -157,7 +164,10 @@ export const deleteItems = async (ids: ItemId[]): Promise<boolean> => {
 
 const tagApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/tags`,
+  withCredentials: true,
 });
+
+tagApi.interceptors.request.use(setAuthorizationHeader);
 
 export const getTags = async (): Promise<Tag[]> => {
   const res = await tagApi.get("/");

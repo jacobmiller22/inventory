@@ -77,43 +77,21 @@ export const editLocationRoute: Route = {
   wildcards: ["locationId"],
 };
 
-/** Other */
+/** Auth Routes */
 
 export const loginRoute: Route = {
   path: "/auth/login",
   name: "Login",
 };
 
-export const myRecipesRoute: Route = {
-  path: "/u/*/recipes/",
-  name: "My Recipes",
-  wildcards: ["userId"],
+export const signupRoute: Route = {
+  path: "/auth/signup",
+  name: "Signup",
 };
 
-export const recipesRoute: Route = {
-  path: "/u/*/recipes/",
-  name: "My Recipes",
-  wildcards: ["userId"],
-};
+/** Other */
 
-export const memberRecipeRoute: Route = {
-  path: "/u/*/recipes/*",
-  name: "Recipe",
-  wildcards: ["userId", "recipeId"],
-};
-
-export const profileRoute: Route = {
-  path: "/u/*/",
-  name: "Profile",
-  wildcards: ["userId"],
-};
-
-export const myProfileRoute: Route = {
-  path: "/account",
-  name: "My Profile",
-};
-
-export const publicRoutes: Route[] = [loginRoute, profileRoute];
+export const indexRoute: Route = itemsRoute;
 
 export const RC_START = "routeChangeStart";
 

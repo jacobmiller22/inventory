@@ -3,6 +3,7 @@ export interface FormField {
   label: string;
   type: string;
   value: string;
+  hide?: boolean;
 }
 
 export enum FormType {

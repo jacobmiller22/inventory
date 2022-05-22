@@ -217,6 +217,9 @@ const CustomInput = (
           label={customField.label}
           helperText={customField.helperText}
           required={customField.required}
+          InputProps={{
+            type: (customField.hide && "password") || "text",
+          }}
           error={Boolean(errorMessage)}
           disabled={
             customField.editable === undefined ? false : !customField.editable
@@ -237,6 +240,9 @@ const CustomInput = (
           label={customField.label}
           InputLabelProps={{
             shrink: true,
+          }}
+          InputProps={{
+            type: (customField.hide && "password") || "text",
           }}
           disabled={
             customField.editable === undefined ? false : !customField.editable
@@ -259,6 +265,9 @@ const CustomInput = (
           placeholder={customField.placeholder}
           label={customField.label}
           helperText={customField.helperText}
+          InputProps={{
+            type: (customField.hide && "password") || "text",
+          }}
           required={customField.required}
           error={errorMessage}
           disabled={
@@ -318,6 +327,9 @@ const CustomInput = (
           label={customField.label}
           placeholder={customField.placeholder}
           required={customField.required}
+          InputProps={{
+            type: (customField.hide && "password") || "text",
+          }}
           error={Boolean(errorMessage)}
           touched={touched[formikField.name]}
           disabled={

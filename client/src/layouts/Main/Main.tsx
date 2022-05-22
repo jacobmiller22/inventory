@@ -3,17 +3,20 @@ import { Divider } from "@mui/material";
 import { Footer, Header } from "./components";
 import styles from "./Layout.module.css";
 import { Helmet } from "react-helmet";
+import { AuthGuard } from "views/Auth";
 
 type LayoutProps = {
   children: React.ReactNode | React.ReactNode[];
   variant?: "full" | "light";
   title?: string;
+  auth?: boolean;
 };
 
 const Layout = ({
   children,
   variant = "light",
   title = "Inventory",
+  auth = false,
 }: LayoutProps) => {
   const renderContent = () => {
     switch (variant) {
@@ -36,7 +39,7 @@ const Layout = ({
     }
   };
 
-  return (
+  const Comp = (
     <div className={styles["container"]}>
       <Helmet>
         <title>{title}</title>
@@ -47,5 +50,10 @@ const Layout = ({
       <Footer />
     </div>
   );
+  if (auth) {
+    return <AuthGuard>{Comp}</AuthGuard>;
+  }
+
+  return Comp;
 };
 export default Layout;

@@ -18,13 +18,16 @@ import {
   itemsRoute,
   locationDetailsRoute,
   locationsRoute,
+  loginRoute,
   newItemRoute,
   newLocationRoute,
   newTagRoute,
+  signupRoute,
   tagDetailsRoute,
   tagsRoute,
 } from "./routes/client";
 import TagFormView from "views/Tags/TagFormView";
+import { AuthGuard, LoginView, SignupView } from "views/Auth";
 
 const Router = () => {
   return (
@@ -34,7 +37,7 @@ const Router = () => {
         <Route
           path={itemsRoute.path}
           element={
-            <Layout variant="light" title={itemsRoute.name}>
+            <Layout variant="light" title={itemsRoute.name} auth>
               <ItemsView />
             </Layout>
           }
@@ -42,7 +45,7 @@ const Router = () => {
         <Route
           path={newItemRoute.path}
           element={
-            <Layout variant="light" title={newItemRoute.name}>
+            <Layout variant="light" title={newItemRoute.name} auth>
               <ItemFormView />
             </Layout>
           }
@@ -50,7 +53,7 @@ const Router = () => {
         <Route
           path={wildcardsToDynamicRoutes(editItemRoute)}
           element={
-            <Layout variant="light" title={editItemRoute.name}>
+            <Layout variant="light" title={editItemRoute.name} auth>
               <ItemFormView />
             </Layout>
           }
@@ -58,7 +61,7 @@ const Router = () => {
         <Route
           path={wildcardsToDynamicRoutes(itemDetailsRoute)}
           element={
-            <Layout variant="light" title={itemDetailsRoute.name}>
+            <Layout variant="light" title={itemDetailsRoute.name} auth>
               <ItemDetailsView />
             </Layout>
           }
@@ -67,7 +70,7 @@ const Router = () => {
         <Route
           path={locationsRoute.path}
           element={
-            <Layout variant="light" title={locationsRoute.name}>
+            <Layout variant="light" title={locationsRoute.name} auth>
               <LocationsView />
             </Layout>
           }
@@ -75,7 +78,7 @@ const Router = () => {
         <Route
           path={newLocationRoute.path}
           element={
-            <Layout variant="light" title={newLocationRoute.name}>
+            <Layout variant="light" title={newLocationRoute.name} auth>
               <LocationFormView />
             </Layout>
           }
@@ -83,7 +86,7 @@ const Router = () => {
         <Route
           path={wildcardsToDynamicRoutes(editLocationRoute)}
           element={
-            <Layout variant="light" title={editLocationRoute.name}>
+            <Layout variant="light" title={editLocationRoute.name} auth>
               <LocationFormView />
             </Layout>
           }
@@ -91,7 +94,7 @@ const Router = () => {
         <Route
           path={wildcardsToDynamicRoutes(locationDetailsRoute)}
           element={
-            <Layout variant="light" title={locationDetailsRoute.name}>
+            <Layout variant="light" title={locationDetailsRoute.name} auth>
               <LocationDetailsView />
             </Layout>
           }
@@ -100,7 +103,7 @@ const Router = () => {
         <Route
           path={tagsRoute.path}
           element={
-            <Layout variant="light" title={tagsRoute.name}>
+            <Layout variant="light" title={tagsRoute.name} auth>
               <TagsView />
             </Layout>
           }
@@ -108,7 +111,7 @@ const Router = () => {
         <Route
           path={newTagRoute.path}
           element={
-            <Layout variant="light" title={newTagRoute.name}>
+            <Layout variant="light" title={newTagRoute.name} auth>
               <TagFormView />
             </Layout>
           }
@@ -116,7 +119,7 @@ const Router = () => {
         <Route
           path={wildcardsToDynamicRoutes(editTagRoute)}
           element={
-            <Layout variant="light" title={editTagRoute.name}>
+            <Layout variant="light" title={editTagRoute.name} auth>
               <TagFormView />
             </Layout>
           }
@@ -124,8 +127,25 @@ const Router = () => {
         <Route
           path={wildcardsToDynamicRoutes(tagDetailsRoute)}
           element={
-            <Layout variant="light" title={tagDetailsRoute.name}>
+            <Layout variant="light" title={tagDetailsRoute.name} auth>
               <TagDetailsView />
+            </Layout>
+          }
+        />
+        {/* Auth Routes */}
+        <Route
+          path={signupRoute.path}
+          element={
+            <Layout variant="light" title={signupRoute.name}>
+              <SignupView />
+            </Layout>
+          }
+        />
+        <Route
+          path={loginRoute.path}
+          element={
+            <Layout variant="light" title={loginRoute.name}>
+              <LoginView />
             </Layout>
           }
         />

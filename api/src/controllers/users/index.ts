@@ -41,6 +41,71 @@ const getMinUsers = async (req: Request, res: Response): Promise<void> => {
 };
 
 /**
+ * Accepts a user object and creates it
+ */
+const createUser = async (req: Request, res: Response): Promise<void> => {
+  const user: any = req.body;
+
+  if (typeof user !== "object") {
+    res
+      .status(HttpStatus.BAD_REQUEST)
+      .json({ message: "Body must be an object" });
+    return;
+  }
+
+  let sanitizedUser: UserPending;
+
+  try {
+    if (!user.email || !validator.isEmail(user.email)) {
+      throw new Error("Invalid email");
+    }
+    if (!user.username || typeof user.username !== "string") {
+      throw new Error("Invalid username");
+    }
+    if (!user.password || typeof user.password !== "string") {
+      throw new Error("Invalid password");
+    }
+    if (!user.roles || !Array.isArray(user.roles)) {
+      throw new Error("Invalid roles. Roles must be an array");
+    }
+    if (!user.firstName || typeof user.firstName !== "string") {
+      throw new Error("Invalid firstName");
+    }
+    if (!user.lastName || typeof user.lastName !== "string") {
+      throw new Error("Invalid lastName");
+    }
+    sanitizedUser = {
+      email: user.email,
+      username: user.username,
+      password: user.password,
+      roles: user.roles,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
+  } catch (err) {
+    res.status(HttpStatus.BAD_REQUEST).json({ message: err });
+    return;
+  }
+
+  if (!sanitizedUser) {
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: "Error while creating user" });
+    return;
+  }
+
+  const newUserId = await usersService.createUser(sanitizedUser);
+
+  if (newUserId === null) {
+    res.status(HttpStatus.BAD_REQUEST).json({ message: "Users not created" });
+    return;
+  }
+
+  res.status(HttpStatus.OK).send(newUserId);
+  return;
+};
+
+/**
  * Accepts a list of user objects and creates them
  */
 const createUsers = async (req: Request, res: Response): Promise<void> => {
@@ -174,6 +239,7 @@ export default {
   getMinUsers,
   deleteUser,
   updateUserEmail,
+  createUser,
   createUsers,
   updateUserPicture,
 };

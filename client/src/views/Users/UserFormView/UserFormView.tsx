@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { BasicForm } from "components";
 import FormView from "views/FormView";
 import { getUser, updateUser, createUser } from "api/users";
+import _ from "lodash";
 
 type Params = {
   userId?: UserId;
@@ -35,6 +36,7 @@ const UserFormView = ({}: IUserFormViewProps) => {
     if (!user) return; // Populate fields once we have a user
 
     const newFields: any[] = populateFields(user);
+    console.log("newFields", newFields);
     setFields(newFields);
   }, [params, user]);
 
@@ -85,6 +87,15 @@ const populateFields = (user: User) => {
     );
   }
   return newTemplate.map((field) => {
+    // if (field.name === "roles") {
+    //   return {
+    //     ...field,
+    //     initialValue: (user?.roles || []).map((role) => ({
+    //       id: role,
+    //       label: _.capitalize(role),
+    //     })),
+    //   };
+    // }
     //@ts-expect-error
     return { ...field, initialValue: user[field.name] };
   });

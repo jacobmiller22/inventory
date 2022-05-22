@@ -48,6 +48,7 @@ const ItemFormView = ({}: ItemFormViewProps) => {
 
     // This will set our fields with our choices
     const newFields = populateFields(map, item!);
+    console.log("newFields", newFields);
 
     setFields(newFields);
   }, [params, tags, locations, item]);

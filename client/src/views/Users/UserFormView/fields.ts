@@ -3,6 +3,7 @@
  */
 
 import { FormType } from "interfaces/form";
+import { Role } from "interfaces/user";
 
 export default [
   {
@@ -54,5 +55,26 @@ export default [
     type: FormType.SHORT_TEXT,
     required: true,
     hide: true,
+  },
+  {
+    name: "roles",
+    label: "Roles",
+    placeholder: "",
+    initialValue: [],
+    type: FormType.SELECT,
+    required: true,
+    multiple: true,
+    options: [
+      { id: Role.ADMIN, label: "Admin" },
+      { id: Role.USER, label: "User" },
+    ],
+  },
+  {
+    name: "profileSrc",
+    label: "Profile Source URL",
+    placeholder: "",
+    initialValue: "",
+    type: FormType.SHORT_TEXT,
+    required: true,
   },
 ];

@@ -293,11 +293,11 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
   // Verify correct roles structure
   if (
     newUser.roles &&
-    (newUser.roles as any[]).some((role) => role !== "admin" || role !== "user")
+    (newUser.roles as any[]).some((role) => role !== "admin" && role !== "user")
   ) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .end("Provided at least one invalid tag");
+      .end("Provided at least one invalid role");
   }
 
   if (newUser.profileSrc && typeof newUser.profileSrc !== "string") {
@@ -316,6 +316,9 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
   }
 
   const success = await usersService.updateUser(userId, newUser);
+
+  console.log(success);
+  console.log(newUser);
 
   if (!success) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();

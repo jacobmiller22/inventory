@@ -9,29 +9,11 @@ import {
   UserId,
   UserPending,
   UserUpdate,
+  Role,
 } from "@/types/user";
 import { User as UserModel } from "@/models";
 
-const getUser = async (userId: string): Promise<User | null> => {
-  const user:
-    | null
-    | (UserDocument & {
-        toObject: () => UserDocument;
-      }) = await UserModel.findById(userId).select([
-    "_id",
-    "username",
-    "roles",
-    "email",
-    "createdAt",
-    "profileSrc",
-  ]);
-
-  if (!user) {
-    return null;
-  }
-
-  return userDoc2User(user.toObject());
-};
+let __IS_NO_USERS_CREATED: boolean = true; // A flag to indicate if users have been created, used to create the admin user as the first user
 
 const getMinUser = async (userId: string): Promise<MinUser | null> => {
   const isValid = validate.isUUID(userId);
@@ -56,29 +38,6 @@ const getMinUser = async (userId: string): Promise<MinUser | null> => {
   }
 
   return userDoc2MinUser(user.toObject());
-};
-
-/**
- *
- * Get confidential information about a user
- *
- * @param {ConfidentialUser} userId
- * @returns
- */
-const getUserConfidential = async (
-  userId: string
-): Promise<ConfidentialUser | null> => {
-  const user:
-    | null
-    | (UserDocument & {
-        toObject: () => UserDocument;
-      }) = await UserModel.findById(userId);
-
-  if (!user) {
-    return null;
-  }
-
-  return userDoc2ConfidentialUser(user.toObject());
 };
 
 const getUserByEmail = async (email: string): Promise<MinUser | null> => {
@@ -119,26 +78,46 @@ const getUserByUsername = async (username: string): Promise<MinUser | null> => {
   return userDoc2MinUser(user.toObject());
 };
 
-const getUsers = async (): Promise<User[]> => {
-  const users: (UserDocument & {
-    toObject: () => UserDocument;
-  })[] =
-    (await UserModel.find().select([
-      "_id",
-      "username",
-      "roles",
-      "email",
-      "createdAt",
-      "profileSrc",
-    ])) ?? [];
-
-  return users.map(
-    (
-      user: UserDocument & {
+const getUser = async (userId: string): Promise<User | null> => {
+  const user:
+    | null
+    | (UserDocument & {
         toObject: () => UserDocument;
-      }
-    ) => userDoc2User(user.toObject())
-  );
+      }) = await UserModel.findById(userId).select([
+    "_id",
+    "username",
+    "roles",
+    "email",
+    "createdAt",
+    "profileSrc",
+  ]);
+
+  if (!user) {
+    return null;
+  }
+
+  return userDoc2User(user.toObject());
+};
+
+/**
+ * Get confidential information about a user
+ * @param {ConfidentialUser} userId
+ * @returns
+ */
+const getUserConfidential = async (
+  userId: string
+): Promise<ConfidentialUser | null> => {
+  const user:
+    | null
+    | (UserDocument & {
+        toObject: () => UserDocument;
+      }) = await UserModel.findById(userId);
+
+  if (!user) {
+    return null;
+  }
+
+  return userDoc2ConfidentialUser(user.toObject());
 };
 
 const getMinUsers = async (): Promise<MinUser[]> => {
@@ -161,6 +140,28 @@ const getMinUsers = async (): Promise<MinUser[]> => {
   );
 };
 
+const getUsers = async (): Promise<User[]> => {
+  const users: (UserDocument & {
+    toObject: () => UserDocument;
+  })[] =
+    (await UserModel.find().select([
+      "_id",
+      "username",
+      "roles",
+      "email",
+      "createdAt",
+      "profileSrc",
+    ])) ?? [];
+
+  return users.map(
+    (
+      user: UserDocument & {
+        toObject: () => UserDocument;
+      }
+    ) => userDoc2User(user.toObject())
+  );
+};
+
 /**
  * Creates a new user and returns the userId
  *
@@ -172,38 +173,31 @@ const createUser = async (user: UserPending): Promise<string | null> => {
 
   const userId = `u_${uuid()}`;
 
+  const roles = __IS_NO_USERS_CREATED ? [Role.ADMIN, Role.USER] : user.roles; // If no users have been created, the first user created is the admin user
+
   const newUser: Omit<UserDocument, "profileSrc" | "__v"> = {
     _id: userId,
     createdAt,
     username: user.username,
     email: user.email,
     hash: await saltHashPassword(user.password),
-    roles: user.roles,
+    roles,
   };
 
   const createdUser = new UserModel(newUser); // Create a new UserModel instance
   try {
     await createdUser.save(); // Save the user to the database, TODO: handle errors
 
+    if (__IS_NO_USERS_CREATED) {
+      // If no users have been created, the first user created is the admin user, so set the flag to false since we have created a user
+      __IS_NO_USERS_CREATED = false;
+    }
+
     // Return the ID of the newly created user
     return userId!;
   } catch (err) {
     console.error("Error occured whilist creating user", err);
     return null;
-  }
-};
-
-/**
- * Deletes a user from the database
- * @param id the userId of the user to be deleted
- * @returns true or false depending on if the user was deleted or not
- */
-const deleteUser = async (id: UserId): Promise<boolean> => {
-  try {
-    await UserModel.findByIdAndRemove(id);
-    return true;
-  } catch (err) {
-    return false;
   }
 };
 
@@ -233,6 +227,20 @@ const updateUser = async (
   }
 };
 
+/**
+ * Deletes a user from the database
+ * @param id the userId of the user to be deleted
+ * @returns true or false depending on if the user was deleted or not
+ */
+const deleteUser = async (id: UserId): Promise<boolean> => {
+  try {
+    await UserModel.findByIdAndRemove(id);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 export const __sanitizeMinUser = (user: any): MinUser => {
   const sanitizedUser = {
     userId: user.userId,
@@ -256,7 +264,7 @@ export const userDoc2MinUser = (user: UserDocument): MinUser => {
 };
 
 export const userDoc2User = (user: UserDocument): User => {
-  const { email, createdAt, roles } = user;
+  const { email, createdAt } = user;
 
   return {
     ...userDoc2MinUser(user),

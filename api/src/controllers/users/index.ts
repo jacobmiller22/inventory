@@ -1,14 +1,19 @@
 import type { Request, Response } from "express";
 import validator from "validator";
 import { HttpStatus } from "@/types/http";
-import { MinUser, Role, User, UserPending } from "@/types/user";
+import { isValidUserId, MinUser, Role, User, UserPending } from "@/types/user";
 import usersService from "@/services/users";
 
 /**
  * Get user by id, contains some private information
  */
 const getUser = async (req: Request, res: Response): Promise<void> => {
-  const { id: userId } = req.params;
+  const { userId } = req.params;
+
+  if (!isValidUserId(userId)) {
+    res.status(HttpStatus.BAD_REQUEST).send("Invalid userId");
+  }
+
   const user: User | null = await usersService.getUser(userId);
 
   if (!user) {
@@ -92,7 +97,8 @@ const createUsers = async (req: Request, res: Response): Promise<void> => {
  * Delete user by id
  */
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
-  const { id: userId } = req.params;
+  const { userId } = req.params;
+
   const success: boolean = await usersService.deleteUser(userId);
 
   if (!success) {
@@ -104,7 +110,11 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const updateUserEmail = async (req: Request, res: Response): Promise<void> => {
-  const { id: userId } = req.params;
+  const { userId } = req.params;
+
+  if (!isValidUserId(userId)) {
+    res.status(HttpStatus.BAD_REQUEST).send("Invalid userId");
+  }
 
   const { email }: { email: string } = req.body;
   if (!email || !validator.isEmail(email)) {
@@ -125,7 +135,11 @@ const updateUserPicture = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { id: userId } = req.params;
+  const { userId } = req.params;
+
+  if (!isValidUserId(userId)) {
+    res.status(HttpStatus.BAD_REQUEST).send("Invalid userId");
+  }
 
   const { src }: { src: string } = req.body;
   if (!src || typeof src !== "string") {

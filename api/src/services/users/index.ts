@@ -1,29 +1,28 @@
 import validate from "validator";
 import { v4 as uuid } from "uuid";
-import { saltHashPassword } from "../auth";
+import { saltHashPassword } from "@/services/auth";
 import {
   MinUser,
   User,
-  UserConfidential,
+  ConfidentialUser,
+  UserDocument,
+  UserId,
   UserPending,
   UserUpdate,
-} from "../../types/user";
-import { User as UserModel } from "../../models";
+} from "@/types/user";
+import { User as UserModel } from "@/models";
 
 const getUser = async (userId: string): Promise<User | null> => {
-  const isValid = validate.isUUID(userId);
-
-  if (!isValid) {
-    return null;
-  }
-
-  const user: User = await UserModel.findById(userId).select([
+  const user:
+    | null
+    | (UserDocument & {
+        toObject: () => UserDocument;
+      }) = await UserModel.findById(userId).select([
     "_id",
     "username",
     "roles",
     "email",
     "createdAt",
-    "wonBids",
     "profileSrc",
   ]);
 
@@ -31,7 +30,7 @@ const getUser = async (userId: string): Promise<User | null> => {
     return null;
   }
 
-  return __sanitizeUser(user);
+  return userDoc2User(user.toObject());
 };
 
 const getMinUser = async (userId: string): Promise<MinUser | null> => {
@@ -41,10 +40,13 @@ const getMinUser = async (userId: string): Promise<MinUser | null> => {
     return null;
   }
 
-  const user: MinUser = await UserModel.findById(userId).select([
+  const user:
+    | null
+    | (UserDocument & {
+        toObject: () => UserDocument;
+      }) = await UserModel.findById(userId).select([
     "_id",
     "username",
-    "wonBids",
     "profileSrc",
   ]);
 
@@ -52,55 +54,58 @@ const getMinUser = async (userId: string): Promise<MinUser | null> => {
     return null;
   }
 
-  return __sanitizeMinUser(user);
+  return userDoc2MinUser(user.toObject());
 };
 
 /**
  *
  * Get confidential information about a user
  *
- * @param {UserConfidential} userId
+ * @param {ConfidentialUser} userId
  * @returns
  */
 const getUserConfidential = async (
   userId: string
-): Promise<UserConfidential | null> => {
-  const isValid: boolean = validate.isUUID(userId);
-
-  if (!isValid) {
-    return null;
-  }
-
-  const user = await UserModel.findById(userId);
+): Promise<ConfidentialUser | null> => {
+  const user:
+    | null
+    | (UserDocument & {
+        toObject: () => UserDocument;
+      }) = await UserModel.findById(userId);
 
   if (!user) {
     return null;
   }
 
-  return user;
+  return userDoc2ConfidentialUser(user.toObject());
 };
 
 const getUserByEmail = async (email: string): Promise<MinUser | null> => {
-  const user = await UserModel.findOne({ email }).select([
+  const user:
+    | null
+    | (UserDocument & {
+        toObject: () => UserDocument;
+      }) = await UserModel.findOne({ email }).select([
     "_id",
     "username",
     "profileSrc",
-    "wonBids",
   ]);
 
   if (!user) {
     return null;
   }
 
-  //@ts-ignore
-  return __sanitizeMinUser(user);
+  return userDoc2MinUser(user.toObject());
 };
 
 const getUserByUsername = async (username: string): Promise<MinUser | null> => {
-  const user = await UserModel.findOne({ username }).select([
+  const user:
+    | null
+    | (UserDocument & {
+        toObject: () => UserDocument;
+      }) = await UserModel.findOne({ username }).select([
     "_id",
     "username",
-    "wonBids",
     "profileSrc",
   ]);
 
@@ -108,30 +113,44 @@ const getUserByUsername = async (username: string): Promise<MinUser | null> => {
     return null;
   }
 
-  //@ts-ignore
-  return __sanitizeMinUser(user);
+  return userDoc2MinUser(user.toObject());
 };
 
 const getUsers = async (): Promise<User[]> => {
-  const users: User[] =
+  const users: (UserDocument & {
+    toObject: () => UserDocument;
+  })[] =
     (await UserModel.find().select([
       "_id",
       "username",
       "roles",
       "email",
       "createdAt",
-      "wonBids",
       "profileSrc",
     ])) ?? [];
 
-  return users.map((user: User) => __sanitizeUser(user));
+  return users.map(
+    (
+      user: UserDocument & {
+        toObject: () => UserDocument;
+      }
+    ) => userDoc2User(user.toObject())
+  );
 };
 
 const getMinUsers = async (): Promise<MinUser[]> => {
-  const users: User[] =
+  const users: (UserDocument & {
+    toObject: () => UserDocument;
+  })[] =
     (await UserModel.find().select(["_id", "username", "profileSrc"])) ?? [];
 
-  return users.map((user: MinUser) => __sanitizeMinUser(user));
+  return users.map(
+    (
+      user: UserDocument & {
+        toObject: () => UserDocument;
+      }
+    ) => userDoc2MinUser(user.toObject())
+  );
 };
 
 /**
@@ -143,8 +162,10 @@ const getMinUsers = async (): Promise<MinUser[]> => {
 const createUser = async (user: UserPending): Promise<string | null> => {
   const createdAt = new Date().getTime();
 
-  const newUser: Partial<UserConfidential> = {
-    _id: uuid(),
+  const userId = `u_${uuid()}`;
+
+  const newUser: Omit<UserDocument, "profileSrc" | "__v"> = {
+    _id: userId,
     createdAt,
     username: user.username,
     email: user.email,
@@ -155,34 +176,27 @@ const createUser = async (user: UserPending): Promise<string | null> => {
   const createdUser = new UserModel(newUser); // Create a new UserModel instance
   try {
     await createdUser.save(); // Save the user to the database, TODO: handle errors
+
+    // Return the ID of the newly created user
+    return userId!;
   } catch (err) {
     console.error("Error occured whilist creating user", err);
     return null;
   }
-
-  // Return the ID of the newly created user
-  return newUser._id!;
 };
 
 /**
  * Deletes a user from the database
- * @param userId the _id of the user to be deleted
+ * @param id the userId of the user to be deleted
  * @returns true or false depending on if the user was deleted or not
  */
-const deleteUser = async (userId: string): Promise<boolean> => {
-  const isValid = validate.isUUID(userId);
-
-  if (!isValid) {
+const deleteUser = async (id: UserId): Promise<boolean> => {
+  try {
+    await UserModel.findByIdAndRemove(id);
+    return true;
+  } catch (err) {
     return false;
   }
-
-  const user = await UserModel.findByIdAndRemove(userId);
-
-  if (!user) {
-    return false;
-  }
-
-  return true;
 };
 
 /**
@@ -211,11 +225,9 @@ const updateUser = async (
   }
 };
 
-export const __sanitizeMinUser = (
-  user: User | MinUser | UserConfidential
-): MinUser => {
+export const __sanitizeMinUser = (user: any): MinUser => {
   const sanitizedUser = {
-    _id: user._id,
+    userId: user.userId,
     username: user.username,
 
     profileSrc: user.profileSrc,
@@ -224,7 +236,39 @@ export const __sanitizeMinUser = (
   return sanitizedUser;
 };
 
-export const __sanitizeUser = (user: User | UserConfidential): User => {
+export const userDoc2MinUser = (user: UserDocument): MinUser => {
+  const { _id, username, profileSrc, roles } = user;
+
+  return {
+    userId: _id,
+    username,
+    profileSrc,
+  };
+};
+
+export const userDoc2User = (user: UserDocument): User => {
+  const { email, createdAt, roles } = user;
+
+  return {
+    ...userDoc2MinUser(user),
+    email,
+    createdAt,
+    roles,
+  };
+};
+
+export const userDoc2ConfidentialUser = (
+  user: UserDocument
+): ConfidentialUser => {
+  const { hash } = user;
+
+  return {
+    ...userDoc2User(user),
+    hash,
+  };
+};
+
+export const __sanitizeUser = (user: User | ConfidentialUser): User => {
   const sanitizedUser = {
     ...__sanitizeMinUser(user),
     roles: user.roles,

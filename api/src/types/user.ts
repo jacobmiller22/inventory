@@ -1,7 +1,12 @@
+import { Document } from "./mongo";
+import validate from "validator";
+
 export enum Role {
   ADMIN = "admin",
   USER = "user",
 }
+
+export type UserId = string;
 
 export interface UserPending {
   username: string;
@@ -14,7 +19,7 @@ export interface UserPending {
  * Represents a user object that contains only public information.
  */
 export interface MinUser {
-  _id: string;
+  userId: UserId;
   username: string;
   profileSrc: string;
 }
@@ -32,7 +37,7 @@ export interface User extends MinUser {
  * Represents a user that has been created in the database. Biggest difference between this and the UserConfidentialPending
  * is that this one's password is hashed.
  */
-export interface UserConfidential extends User {
+export interface ConfidentialUser extends User {
   hash: string;
 }
 
@@ -45,3 +50,21 @@ export interface UserConfidentialPending extends User {
 }
 
 export interface UserUpdate extends Omit<User, "createdAt" | "_id"> {}
+
+export interface UserDocument extends Document {
+  _id: UserId;
+  username: string;
+  email: string;
+  roles: Role[];
+  createdAt: number;
+  profileSrc: string;
+  hash: string;
+}
+
+export const isValidUserId = (id: any): boolean => {
+  if (typeof id !== "string" || id.length !== 38 || !id.startsWith("u_")) {
+    return false;
+  }
+
+  return validate.isUUID(id.slice(2));
+};

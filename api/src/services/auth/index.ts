@@ -2,7 +2,7 @@ import usersService from "../users";
 import config from "../../config.json";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { MinUser, User, UserConfidential, UserPending } from "../../types/user";
+import { MinUser, User, ConfidentialUser, UserPending } from "../../types/user";
 
 type LoginArgs = {
   username: string;
@@ -12,15 +12,15 @@ type LoginArgs = {
 const login = async ({ username, password }: LoginArgs) => {
   /** Login a user if they are not authenticated and renew their token if they are already authenticated */
 
-  const { _id: id }: MinUser =
+  const { userId }: MinUser =
     (await usersService.getUserByUsername(username)) || ({} as MinUser);
 
-  if (!id) {
+  if (!userId) {
     return null;
   }
 
-  const user: UserConfidential | null = await usersService.getUserConfidential(
-    id
+  const user: ConfidentialUser | null = await usersService.getUserConfidential(
+    userId
   );
 
   if (!user) {
@@ -70,7 +70,7 @@ export const saltHashPassword = async (password: string): Promise<string> => {
 
 const createToken = (user: User): string => {
   const token: string = jwt.sign(
-    { sub: user._id, roles: user.roles },
+    { sub: user.userId, roles: user.roles },
     config.secret,
     {
       expiresIn: config.tokenExpiration,

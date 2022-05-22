@@ -18,27 +18,27 @@ router.get("/", userController.getMinUsers);
 /**
  * Information about user with the given id
  */
-router.get("/:id", hasRoleOrIsSubject([Role.ADMIN]), userController.getUser);
+router.get("/userId", hasRoleOrIsSubject([Role.ADMIN]), userController.getUser);
 
 router.post("/", hasRole([Role.ADMIN]), userController.createUsers);
 
 router.put(
-  "/:id/email",
+  "/:userId/email",
   hasRoleOrIsSubject([Role.ADMIN]),
   verifyExistence(["email"]),
   userController.updateUserEmail
 );
 
 router.put(
-  "/:id/picture",
+  "/:userId/picture",
   hasRoleOrIsSubject([Role.ADMIN]),
   verifyExistence(["src"]),
   userController.updateUserPicture
 );
 
 router.delete(
-  "/:id",
-  hasRoleOrIsSubject([Role.ADMIN]),
+  "/:userId",
+  // hasRoleOrIsSubject([Role.ADMIN]),
   userController.deleteUser
 );
 

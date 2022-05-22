@@ -7,7 +7,7 @@ const login: Middleware = async (req, res) => {
   const { username, password } = req.body;
 
   const userWithToken = await authService.login({ username, password });
-  console.log("userWithToken", userWithToken);
+
   if (!userWithToken || !userWithToken.token) {
     res.status(HttpStatus.UNAUTHORIZED).json({ message: "Invalid login" });
     return;

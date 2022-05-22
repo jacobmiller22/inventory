@@ -85,6 +85,8 @@ const getUser = async (userId: string): Promise<User | null> => {
         toObject: () => UserDocument;
       }) = await UserModel.findById(userId).select([
     "_id",
+    "firstName",
+    "lastName",
     "username",
     "roles",
     "email",
@@ -182,6 +184,8 @@ const createUser = async (user: UserPending): Promise<string | null> => {
     email: user.email,
     hash: await saltHashPassword(user.password),
     roles,
+    firstName: user.firstName,
+    lastName: user.lastName,
   };
 
   const createdUser = new UserModel(newUser); // Create a new UserModel instance
@@ -264,12 +268,14 @@ export const userDoc2MinUser = (user: UserDocument): MinUser => {
 };
 
 export const userDoc2User = (user: UserDocument): User => {
-  const { email, createdAt } = user;
+  const { email, createdAt, firstName, lastName } = user;
 
   return {
     ...userDoc2MinUser(user),
     email,
     createdAt,
+    firstName,
+    lastName,
   };
 };
 
@@ -289,6 +295,8 @@ export const __sanitizeUser = (user: User | ConfidentialUser): User => {
     ...__sanitizeMinUser(user),
     email: user.email,
     createdAt: user.createdAt,
+    firstName: user.firstName,
+    lastName: user.lastName,
   };
 
   return sanitizedUser;

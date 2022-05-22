@@ -13,6 +13,8 @@ export interface UserPending {
   email: string;
   password: string;
   roles: Role[];
+  firstName: string;
+  lastName: string;
 }
 
 /**
@@ -31,6 +33,8 @@ export interface MinUser {
 export interface User extends MinUser {
   createdAt: number;
   email: string;
+  firstName: string;
+  lastName: string;
 }
 
 /**
@@ -59,6 +63,8 @@ export interface UserDocument extends Document {
   createdAt: number;
   profileSrc: string;
   hash: string;
+  firstName: string;
+  lastName: string;
 }
 
 export const isValidUserId = (id: any): boolean => {

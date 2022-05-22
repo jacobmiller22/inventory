@@ -24,13 +24,15 @@ const login: Middleware = async (req, res) => {
 };
 
 const signup: Middleware = async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, firstName, lastName } = req.body;
 
   const newUser: UserPending = {
     email,
     username,
     password,
     roles: [Role.USER],
+    firstName,
+    lastName,
   };
 
   const newUserSanitized = await authService.signup(newUser);
@@ -41,8 +43,6 @@ const signup: Middleware = async (req, res) => {
       .json({ message: "An error occured while creating new user" });
     return;
   }
-
-  console.log("Attempting to login after signup");
 
   /** User has been successfully created, signin the user */
 

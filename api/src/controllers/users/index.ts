@@ -60,20 +60,28 @@ const createUsers = async (req: Request, res: Response): Promise<void> => {
       if (!user.email || !validator.isEmail(user.email)) {
         throw new Error(`Invalid email at index ${i}`);
       }
-      if (!user.username) {
+      if (!user.username || typeof user.username !== "string") {
         throw new Error(`Invalid username at index ${i}`);
       }
-      if (!user.password) {
+      if (!user.password || typeof user.password !== "string") {
         throw new Error(`Invalid password at index ${i}`);
       }
       if (!user.roles || !Array.isArray(user.roles)) {
         throw new Error(`Invalid roles at index ${i}. Roles must be an array`);
+      }
+      if (!user.firstName || typeof user.firstName !== "string") {
+        throw new Error(`Invalid firstName at index ${i}`);
+      }
+      if (!user.lastName || typeof user.lastName !== "string") {
+        throw new Error(`Invalid lastName at index ${i}`);
       }
       return {
         email: user.email,
         username: user.username,
         password: user.password,
         roles: user.roles,
+        firstName: user.firstName,
+        lastName: user.lastName,
       };
     });
   } catch (err) {

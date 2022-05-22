@@ -145,7 +145,7 @@ export const hasRoleOrIsSubject = (roles: Role[]) => {
       return;
     }
     const user: User | null = await usersService.getUser(sub);
-    console.log("user", user);
+
     if (user?.roles.some((role: Role) => roles.includes(role))) {
       // Check if the user has the required role
       next();

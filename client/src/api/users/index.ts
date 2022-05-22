@@ -70,3 +70,14 @@ export const deleteUser = async (id: UserId): Promise<boolean> => {
     return false;
   }
 };
+
+export const deleteUsers = async (ids: UserId[]): Promise<boolean> => {
+  // Temporary solution until bulk delete is available from API
+  const successArr = await Promise.all(
+    ids.map(async (id: UserId) => {
+      return await deleteUser(id);
+    })
+  );
+
+  return successArr.every((el) => el === true);
+};

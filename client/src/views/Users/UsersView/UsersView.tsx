@@ -1,7 +1,7 @@
 /** Interfaces/types */
 
 import { Avatar } from "@mui/material";
-import { getUsers } from "api/users";
+import { getUsers, deleteUsers } from "api/users";
 import { DataTable, ChipList } from "components";
 import { MinUser, User, UserId } from "interfaces/user";
 import _ from "lodash";
@@ -28,9 +28,9 @@ const UsersView = ({}: IUsersViewProps) => {
     navigate(replaceWildcards(userDetailsRoute, [cell.id]));
   };
 
-  const handleDelete = async (userIds: UserId[]): Promise<boolean> => {
-    return true;
-  };
+  const handleDelete = async (userIds: UserId[]): Promise<boolean> =>
+    await deleteUsers(userIds);
+
   const dataTableProps = {
     idKey: "userId",
     items: users,

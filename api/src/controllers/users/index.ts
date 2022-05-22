@@ -262,7 +262,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
   if (userId && !isValidUserId(userId)) {
     return res
       .status(HttpStatus.BAD_REQUEST)
-      .end("Item locationId must be a valid locationId");
+      .end("userId must be a valid userId");
   }
 
   if (newUser.username && typeof newUser.username !== "string") {
@@ -278,7 +278,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
       .end("Email must be a string and valid");
   }
 
-  if (newUser.firstName && typeof newUser.firstName !== "number") {
+  if (newUser.firstName && typeof newUser.firstName !== "string") {
     return res.status(HttpStatus.BAD_REQUEST).end("firstName must be a string");
   }
 

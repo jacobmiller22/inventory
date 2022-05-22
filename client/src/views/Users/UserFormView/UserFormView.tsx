@@ -8,7 +8,7 @@ import { UserId, User } from "interfaces/user";
 import { useEffect, useState } from "react";
 import { BasicForm } from "components";
 import FormView from "views/FormView";
-import { getUser } from "api/users";
+import { getUser, updateUser, createUser } from "api/users";
 
 type Params = {
   userId?: UserId;
@@ -46,11 +46,23 @@ const UserFormView = ({}: IUserFormViewProps) => {
     })();
   }, [params]);
 
-  const handleSubmit = async (values: any): Promise<boolean> => {
-    // const user: any | null = await signup(values);
-    // return Boolean(user);
-    console.log(values);
-    return true;
+  const handleSubmit = async (
+    values:
+      | Omit<User, "userId">
+      | (Omit<User, "userId"> & { password: string; confirm: string })
+  ): Promise<boolean> => {
+    console.log("Submit!", values);
+    // Create the item if we are on the new item route, otherwise update the item
+
+    if (isEdit) {
+      // This is an existing item
+      return await __updateUser(params.userId!, values);
+    }
+
+    // This is a new item
+    return await __createUser(
+      values as Omit<User, "userId"> & { password: string; confirm: string }
+    );
   };
 
   return (
@@ -76,4 +88,47 @@ const populateFields = (user: User) => {
     //@ts-expect-error
     return { ...field, initialValue: user[field.name] };
   });
+};
+
+const __createUser = async (
+  values: Omit<User, "userId"> & { password: string }
+): Promise<boolean> => {
+  const { username, email, firstName, lastName, profileSrc, roles, password } =
+    values;
+
+  const newUser: Omit<User, "userId"> & { password: string } = {
+    username,
+    email,
+    firstName,
+    lastName,
+    profileSrc,
+    roles,
+    password,
+  };
+
+  const userId: UserId | null = await createUser(newUser);
+
+  return Boolean(userId);
+};
+
+const __updateUser = async (
+  userId: UserId,
+  values: Omit<User, "userId">
+): Promise<boolean> => {
+  const { username, email, firstName, lastName, profileSrc, roles } = values;
+
+  const newUser: Omit<User, "userId"> = {
+    username,
+    email,
+    firstName,
+    lastName,
+    profileSrc,
+    roles,
+  };
+
+  console.log("Update Item!", newUser);
+
+  const success: boolean = await updateUser(userId, newUser);
+
+  return success;
 };

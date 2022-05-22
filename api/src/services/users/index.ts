@@ -214,7 +214,8 @@ const updateUser = async (
   userId: string,
   newUserData: Partial<UserUpdate>
 ): Promise<User | null> => {
-  const { username, email, roles, profileSrc } = newUserData;
+  const { username, email, roles, profileSrc, firstName, lastName } =
+    newUserData;
 
   try {
     const newUser = await UserModel.findByIdAndUpdate(userId, {
@@ -222,6 +223,8 @@ const updateUser = async (
       email,
       roles,
       profileSrc,
+      firstName,
+      lastName,
     });
 
     return __sanitizeUser(newUser);

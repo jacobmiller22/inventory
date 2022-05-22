@@ -5,15 +5,18 @@ import schema from "./schema";
 import { BasicForm } from "components";
 import AuthView from "../AuthView";
 import { signup } from "api/auth";
+import { useAuth } from "contexts/auth";
 
 /** components */
 
 interface SignupViewProps {}
 
 const SignupView = ({}: SignupViewProps) => {
+  const { checkAuth } = useAuth();
+
   const handleSubmit = async (values: any): Promise<boolean> => {
-    console.log(values);
     const user: any | null = await signup(values);
+    checkAuth();
     return Boolean(user);
   };
 

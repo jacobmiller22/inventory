@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 /** Interfaces/types */
 
 /** components */
+import { useSnackbar } from "notistack";
 import { DataGrid } from "@mui/x-data-grid";
 import { deleteItems, getItems } from "api/inv";
 import { Button, Card, Toolbar, Typography } from "@mui/material";
@@ -21,6 +22,7 @@ interface DataTableProps<T, E> {
   onDelete: (id: E[]) => Promise<boolean>;
   title?: string;
   onRefreshRequest?: () => void;
+  deleteFailText?: string;
 }
 
 const DataTable = <Item extends object, Id extends string>({
@@ -32,9 +34,10 @@ const DataTable = <Item extends object, Id extends string>({
   onDelete,
   onRefreshRequest,
   title,
+  deleteFailText = "Error while deleting item.",
 }: DataTableProps<Item, Id>) => {
   type RowItem = Omit<Item, "itemId"> & { id: Id };
-
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [rows, setRows] = useState<RowItem[]>([]);
 
   const [selectionModel, setSelectionModel] = useState<Id[]>([]);
@@ -51,7 +54,6 @@ const DataTable = <Item extends object, Id extends string>({
   }, [__refresh]);
 
   useEffect(() => {
-    console.log("Refresh", items);
     if (!items) return;
     setRows(items.map((i) => itemToRow(i, idKey)));
   }, [items]);
@@ -66,9 +68,14 @@ const DataTable = <Item extends object, Id extends string>({
 
   const renderToolbar = () => {
     const handleDelete = async () => {
-      await onDelete(selectionModel);
-      setSelectionModel([]);
-      toggleRefresh();
+      const success: boolean = await onDelete(selectionModel);
+      console.log("dataTable:onDelete", success);
+      if (success) {
+        setSelectionModel([]);
+        toggleRefresh();
+      } else {
+        enqueueSnackbar(deleteFailText, { variant: "error" });
+      }
     };
 
     if (selectionModel.length > 0) {

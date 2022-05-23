@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { DataTable } from "components";
-import { getTags } from "api/inv";
+import { getTags as __getTags } from "api/inv";
 import { Tag, TagId } from "interfaces/tag";
 import { useNavigate } from "react-router-dom";
 import { replaceWildcards } from "Router/routes";
@@ -11,10 +11,12 @@ const TagsView = () => {
   const navigate = useNavigate();
   const [tags, setTags] = useState<Tag[] | null>(null);
 
+  const getTags = async () => {
+    setTags(await __getTags());
+  };
+
   useEffect(() => {
-    (async () => {
-      setTags(await getTags());
-    })();
+    getTags();
   }, []);
 
   const handleCellDoubleClick = (cell: { id: TagId }) => {
@@ -33,6 +35,7 @@ const TagsView = () => {
     title: "Tags",
     addLink: newTagRoute.path,
     onDelete: handleDelete,
+    onRefreshRequest: () => getTags(),
   };
 
   return (

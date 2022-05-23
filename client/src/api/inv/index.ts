@@ -66,9 +66,9 @@ export const updateLocation = async (
 
 export const deleteLocation = async (id: LocationId): Promise<boolean> => {
   try {
-    const res = await locationApi.delete(`/${id}`);
+    await locationApi.delete(`/${id}`);
 
-    return res.data;
+    return true;
   } catch (err) {
     return false;
   }
@@ -141,9 +141,9 @@ export const updateItem = async (
 
 export const deleteItem = async (id: ItemId): Promise<boolean> => {
   try {
-    const res = await itemApi.delete(`/${id}`);
+    await itemApi.delete(`/${id}`);
 
-    return res.data;
+    return true;
   } catch (err) {
     return false;
   }
@@ -216,9 +216,9 @@ export const updateTag = async (
 
 export const deleteTag = async (id: TagId): Promise<boolean> => {
   try {
-    const res = await tagApi.delete(`/${id}`);
+    await tagApi.delete(`/${id}`);
 
-    return res.data;
+    return true;
   } catch (err) {
     return false;
   }

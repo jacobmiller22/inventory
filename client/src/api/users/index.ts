@@ -70,10 +70,11 @@ export const updateUser = async (
 
 export const deleteUser = async (id: UserId): Promise<boolean> => {
   try {
-    const res = await adminUserApi.delete(`/${id}`);
+    await adminUserApi.delete(`/${id}`);
 
-    return res.data;
+    return true;
   } catch (err) {
+    console.log("error", err);
     return false;
   }
 };
@@ -84,6 +85,11 @@ export const deleteUsers = async (ids: UserId[]): Promise<boolean> => {
     ids.map(async (id: UserId) => {
       return await deleteUser(id);
     })
+  );
+  console.log(
+    "deleteUsers",
+    successArr,
+    successArr.every((el) => el === true)
   );
 
   return successArr.every((el) => el === true);

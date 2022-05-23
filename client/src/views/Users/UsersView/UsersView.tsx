@@ -1,7 +1,7 @@
 /** Interfaces/types */
 
 import { Avatar } from "@mui/material";
-import { getUsers, deleteUsers } from "api/users";
+import { getUsers as __getUsers, deleteUsers } from "api/users";
 import { DataTable, ChipList } from "components";
 import { MinUser, User, UserId } from "interfaces/user";
 import _ from "lodash";
@@ -18,10 +18,12 @@ const UsersView = ({}: IUsersViewProps) => {
   const navigate = useNavigate();
   const [users, setUsers] = useState<MinUser[] | null>(null);
 
+  const getUsers = async () => {
+    setUsers(await __getUsers());
+  };
+
   useEffect(() => {
-    (async () => {
-      setUsers(await getUsers());
-    })();
+    getUsers();
   }, []);
 
   const handleCellDoubleClick = (cell: { id: UserId }) => {
@@ -39,6 +41,8 @@ const UsersView = ({}: IUsersViewProps) => {
     title: "Tags",
     addLink: newUserRoute.path,
     onDelete: handleDelete,
+    deleteFailText: "Error while deleting user(s).",
+    onRefreshRequest: () => getUsers(),
   };
 
   return (

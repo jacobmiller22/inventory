@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { DataTable } from "components";
-import { getLocations } from "api/inv";
+import { getLocations as __getLocations } from "api/inv";
 
 import { LocationId, MinLocation } from "interfaces/location";
 import { locationDetailsRoute, newLocationRoute } from "Router/routes/client";
@@ -12,10 +12,12 @@ const LocationsView = () => {
   const navigate = useNavigate();
   const [locations, setLocations] = useState<MinLocation[] | null>(null);
 
+  const getLocations = async () => {
+    setLocations(await __getLocations());
+  };
+
   useEffect(() => {
-    (async () => {
-      setLocations(await getLocations());
-    })();
+    getLocations();
   }, []);
 
   const handleCellDoubleClick = (cell: { id: LocationId }) =>
@@ -33,6 +35,7 @@ const LocationsView = () => {
     title: "Locations",
     addLink: newLocationRoute.path,
     onDelete: handleDelete,
+    onRefreshRequest: () => getLocations(),
   };
 
   return (

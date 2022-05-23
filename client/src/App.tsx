@@ -1,6 +1,7 @@
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, Snackbar, ThemeProvider } from "@mui/material";
 import ProfileProvider from "contexts/auth";
 import "globals.css";
+import { SnackbarProvider } from "notistack";
 import theme from "theme";
 import Router from "./Router";
 
@@ -8,8 +9,10 @@ const App = () => {
   return (
     <ProfileProvider>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router />
+        <SnackbarProvider maxSnack={6}>
+          <CssBaseline />
+          <Router />
+        </SnackbarProvider>
       </ThemeProvider>
     </ProfileProvider>
   );

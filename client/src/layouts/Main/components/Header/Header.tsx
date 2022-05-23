@@ -33,9 +33,15 @@ const Header = () => {
           <AuthGuard admin>
             <LinkItem href={usersRoute.path}>Users</LinkItem>
           </AuthGuard>
-          <LinkItem href={itemsRoute.path}>Items</LinkItem>
-          <LinkItem href={locationsRoute.path}>Locations</LinkItem>
-          <LinkItem href={tagsRoute.path}>Tags</LinkItem>
+          <AuthGuard>
+            <LinkItem href={itemsRoute.path}>Items</LinkItem>
+          </AuthGuard>
+          <AuthGuard>
+            <LinkItem href={locationsRoute.path}>Locations</LinkItem>
+          </AuthGuard>
+          <AuthGuard>
+            <LinkItem href={tagsRoute.path}>Tags</LinkItem>
+          </AuthGuard>
           <SignupButton className={styles["no-wrap"]} />
           <AuthButton className={styles["no-wrap"]} />
         </List>

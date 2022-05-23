@@ -1,6 +1,10 @@
 import fieldsTemplate from "./fields";
 import schema from "./schema";
-import { createLocation, getLocation } from "api/inv";
+import {
+  createLocation as __createLocation,
+  getLocation,
+  updateLocation as __updateLocation,
+} from "api/inv";
 import { useParams, useNavigate } from "react-router-dom";
 
 /** Components */
@@ -20,8 +24,10 @@ const LocationFormView = ({}: LocationFormViewProps) => {
   const [fields, setFields] = useState<any[] | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
 
+  const isEdit = Boolean(params.locationId);
+
   useEffect(() => {
-    if (Object.keys(params).length === 0) {
+    if (!isEdit) {
       // No route params.. This is the new location route
       setFields(fieldsTemplate);
       return;
@@ -35,7 +41,7 @@ const LocationFormView = ({}: LocationFormViewProps) => {
   }, [params, location]);
 
   useEffect(() => {
-    if (!params.locationId) return;
+    if (!isEdit) return;
 
     (async () => {
       setLocation(await getLocation(params.locationId!));
@@ -46,8 +52,15 @@ const LocationFormView = ({}: LocationFormViewProps) => {
     values: Omit<Location, "locationId">
   ): Promise<boolean> => {
     console.log("Submit!", values);
-    const success: boolean = await __createLocation(values);
-    return success;
+    // Create the tag if we are on the new tag route, otherwise update the tag
+
+    if (isEdit) {
+      // This is an existing tag
+      return await updateLocation(params.locationId!, values);
+    }
+
+    // This is a new tag
+    return await createLocation(values);
   };
 
   return (
@@ -62,7 +75,7 @@ const LocationFormView = ({}: LocationFormViewProps) => {
 
 export default LocationFormView;
 
-const __createLocation = async (values: Omit<Location, "locationId">) => {
+const createLocation = async (values: Omit<Location, "locationId">) => {
   const { name, description } = values;
 
   const newLocation: Omit<Location, "locationId"> = {
@@ -71,9 +84,25 @@ const __createLocation = async (values: Omit<Location, "locationId">) => {
     items: [], // Likely going to be removing items from the location schema
   };
 
-  const locationId: LocationId | null = await createLocation(newLocation);
+  const locationId: LocationId | null = await __createLocation(newLocation);
 
   return Boolean(locationId);
+};
+
+const updateLocation = async (
+  locationId: LocationId,
+  values: Omit<Location, "locationId" | "items">
+): Promise<boolean> => {
+  const { name, description } = values;
+
+  const newLocation: Omit<Location, "locationId" | "items"> = {
+    name,
+    description,
+  };
+
+  const success: boolean = await __updateLocation(locationId, newLocation);
+
+  return success;
 };
 
 const populateFields = (location: Location) => {

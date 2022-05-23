@@ -1,6 +1,10 @@
 import fieldsTemplate from "./fields";
 import schema from "./schema";
-import { createTag, getTag } from "api/inv";
+import {
+  createTag as __createTag,
+  getTag,
+  updateTag as __updateTag,
+} from "api/inv";
 import { useParams, useNavigate } from "react-router-dom";
 
 /** Components */
@@ -20,8 +24,10 @@ const TagFormView = ({}: TagFormViewProps) => {
   const [fields, setFields] = useState<any[] | null>(null);
   const [tag, setTag] = useState<Tag | null>(null);
 
+  const isEdit = Boolean(params.tagId);
+
   useEffect(() => {
-    if (Object.keys(params).length === 0) {
+    if (!isEdit) {
       // No route params.. This is the new location route
       setFields(fieldsTemplate);
       return;
@@ -35,7 +41,7 @@ const TagFormView = ({}: TagFormViewProps) => {
   }, [params, tag]);
 
   useEffect(() => {
-    if (!params.tagId) return;
+    if (!isEdit) return;
 
     (async () => {
       setTag(await getTag(params.tagId!));
@@ -44,8 +50,15 @@ const TagFormView = ({}: TagFormViewProps) => {
 
   const handleSubmit = async (values: Omit<Tag, "tagId">): Promise<boolean> => {
     console.log("Submit!", values);
-    const success: boolean = await __createTag(values);
-    return success;
+    // Create the tag if we are on the new tag route, otherwise update the tag
+
+    if (isEdit) {
+      // This is an existing tag
+      return await updateTag(params.tagId!, values);
+    }
+
+    // This is a new tag
+    return await createTag(values);
   };
 
   return (
@@ -60,16 +73,31 @@ const TagFormView = ({}: TagFormViewProps) => {
 
 export default TagFormView;
 
-const __createTag = async (values: Omit<Tag, "tagId">) => {
+const createTag = async (values: Omit<Tag, "tagId">) => {
   const { name } = values;
 
   const newTag: Omit<Tag, "tagId"> = {
     name,
   };
 
-  const locationId: TagId | null = await createTag(newTag);
+  const tagId: TagId | null = await __createTag(newTag);
 
-  return Boolean(locationId);
+  return Boolean(tagId);
+};
+
+const updateTag = async (
+  tagId: TagId,
+  values: Omit<Tag, "tagId">
+): Promise<boolean> => {
+  const { name } = values;
+
+  const newTag: Omit<Tag, "tagId"> = {
+    name,
+  };
+
+  const success: boolean = await __updateTag(tagId, newTag);
+
+  return success;
 };
 
 const populateFields = (tag: Tag) => {

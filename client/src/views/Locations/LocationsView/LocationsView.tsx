@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { DataTable } from "components";
-import { getLocations as __getLocations } from "api/inv";
+import { deleteLocations, getLocations as __getLocations } from "api/inv";
 
 import { LocationId, MinLocation } from "interfaces/location";
 import { locationDetailsRoute, newLocationRoute } from "Router/routes/client";
@@ -23,9 +23,8 @@ const LocationsView = () => {
   const handleCellDoubleClick = (cell: { id: LocationId }) =>
     navigate(replaceWildcards(locationDetailsRoute, [cell.id]));
 
-  const handleDelete = async (locationIds: LocationId[]): Promise<boolean> => {
-    return true;
-  };
+  const handleDelete = async (locationIds: LocationId[]): Promise<boolean> =>
+    await deleteLocations(locationIds);
 
   const dataTableProps = {
     idKey: "locationId",

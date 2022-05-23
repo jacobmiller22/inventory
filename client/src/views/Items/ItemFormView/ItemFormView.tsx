@@ -1,11 +1,11 @@
 import fieldsTemplate from "./fields";
 import schema from "./schema";
 import {
-  createItem,
+  createItem as __createItem,
   getItem,
   getLocations,
   getTags,
-  updateItem,
+  updateItem as __updateItem,
 } from "api/inv";
 import { useParams } from "react-router-dom";
 
@@ -81,11 +81,11 @@ const ItemFormView = ({}: ItemFormViewProps) => {
 
     if (params.itemId) {
       // This is an existing item
-      return await __updateItem(params.itemId, values);
+      return await updateItem(params.itemId, values);
     }
 
     // This is a new item
-    return await __createItem(values);
+    return await createItem(values);
   };
 
   return (
@@ -100,7 +100,7 @@ const ItemFormView = ({}: ItemFormViewProps) => {
 
 export default ItemFormView;
 
-const __createItem = async (
+const createItem = async (
   values: Omit<
     MinItem & Item & { tagIds: TagId[] },
     "itemId" | "location" | "tags"
@@ -119,12 +119,12 @@ const __createItem = async (
     tags: tagIds,
   };
 
-  const itemId: ItemId | null = await createItem(newItem);
+  const itemId: ItemId | null = await __createItem(newItem);
 
   return Boolean(itemId);
 };
 
-const __updateItem = async (
+const updateItem = async (
   id: ItemId,
   values: Omit<
     MinItem & Item & { tagIds: TagId[] },
@@ -146,7 +146,7 @@ const __updateItem = async (
 
   console.log("Update Item!", newItem);
 
-  const success: boolean = await updateItem(id, newItem);
+  const success: boolean = await __updateItem(id, newItem);
 
   return success;
 };

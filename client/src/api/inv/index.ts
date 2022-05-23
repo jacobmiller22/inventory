@@ -73,6 +73,16 @@ export const deleteLocation = async (id: LocationId): Promise<boolean> => {
     return false;
   }
 };
+export const deleteLocations = async (ids: LocationId[]): Promise<boolean> => {
+  // Temporary solution until bulk delete is available from API
+  const successArr = await Promise.all(
+    ids.map(async (id: ItemId) => {
+      return await deleteLocation(id);
+    })
+  );
+
+  return successArr.every((el) => el === true);
+};
 
 /** Items */
 
@@ -222,4 +232,15 @@ export const deleteTag = async (id: TagId): Promise<boolean> => {
   } catch (err) {
     return false;
   }
+};
+
+export const deleteTags = async (ids: TagId[]): Promise<boolean> => {
+  // Temporary solution until bulk delete is available from API
+  const successArr = await Promise.all(
+    ids.map(async (id: ItemId) => {
+      return await deleteTag(id);
+    })
+  );
+
+  return successArr.every((el) => el === true);
 };

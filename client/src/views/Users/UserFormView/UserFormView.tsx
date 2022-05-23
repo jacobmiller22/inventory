@@ -8,7 +8,11 @@ import { UserId, User } from "interfaces/user";
 import { useEffect, useState } from "react";
 import { BasicForm } from "components";
 import FormView from "views/FormView";
-import { getUser, updateUser, createUser } from "api/users";
+import {
+  getUser,
+  updateUser as __updateUser,
+  createUser as __createUser,
+} from "api/users";
 import _ from "lodash";
 
 type Params = {
@@ -58,11 +62,11 @@ const UserFormView = ({}: IUserFormViewProps) => {
 
     if (isEdit) {
       // This is an existing item
-      return await __updateUser(params.userId!, values);
+      return await updateUser(params.userId!, values);
     }
 
     // This is a new item
-    return await __createUser(
+    return await createUser(
       values as Omit<User, "userId"> & { password: string; confirm: string }
     );
   };
@@ -92,7 +96,7 @@ const populateFields = (user: User) => {
   });
 };
 
-const __createUser = async (
+const createUser = async (
   values: Omit<User, "userId"> & { password: string }
 ): Promise<boolean> => {
   const { username, email, firstName, lastName, profileSrc, roles, password } =
@@ -108,12 +112,12 @@ const __createUser = async (
     password,
   };
 
-  const userId: UserId | null = await createUser(newUser);
+  const userId: UserId | null = await __createUser(newUser);
 
   return Boolean(userId);
 };
 
-const __updateUser = async (
+const updateUser = async (
   userId: UserId,
   values: Omit<User, "userId">
 ): Promise<boolean> => {
@@ -128,9 +132,7 @@ const __updateUser = async (
     roles,
   };
 
-  console.log("Update Item!", newUser);
-
-  const success: boolean = await updateUser(userId, newUser);
+  const success: boolean = await __updateUser(userId, newUser);
 
   return success;
 };

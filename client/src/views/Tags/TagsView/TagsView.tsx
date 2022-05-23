@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { DataTable } from "components";
-import { getTags as __getTags } from "api/inv";
+import { deleteTag, deleteTags, getTags as __getTags } from "api/inv";
 import { Tag, TagId } from "interfaces/tag";
 import { useNavigate } from "react-router-dom";
 import { replaceWildcards } from "Router/routes";
@@ -23,9 +23,8 @@ const TagsView = () => {
     navigate(replaceWildcards(tagDetailsRoute, [cell.id]));
   };
 
-  const handleDelete = async (tagIds: TagId[]): Promise<boolean> => {
-    return true;
-  };
+  const handleDelete = async (tagIds: TagId[]): Promise<boolean> =>
+    await deleteTags(tagIds);
 
   const dataTableProps = {
     idKey: "tagId",

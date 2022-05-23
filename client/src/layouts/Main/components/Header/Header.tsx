@@ -9,10 +9,15 @@ import {
   Typography,
 } from "@mui/material";
 import { Spacer } from "components";
-import { itemsRoute, locationsRoute, tagsRoute } from "Router/routes/client";
+import {
+  itemsRoute,
+  locationsRoute,
+  tagsRoute,
+  usersRoute,
+} from "Router/routes/client";
 import styles from "./Header.module.css";
 import clsx from "clsx";
-import { AuthButton, SignupButton } from "components/Auth";
+import { AuthButton, AuthGuard, SignupButton } from "components/Auth";
 
 const Header = () => {
   return (
@@ -25,21 +30,14 @@ const Header = () => {
             </strong>
           </LinkItem>
           <Spacer />
-          <LinkItem href={itemsRoute.path} side="inside">
-            Items
-          </LinkItem>
-          <LinkItem href={locationsRoute.path} side="inside">
-            Locations
-          </LinkItem>
-          <LinkItem href={tagsRoute.path} side="inside">
-            Tags
-          </LinkItem>
-          <SignupButton
-            className={clsx(styles["no-wrap"], styles["link-side-inside"])}
-          />
-          <AuthButton
-            className={clsx(styles["no-wrap"], styles["link-side-right"])}
-          />
+          <AuthGuard admin>
+            <LinkItem href={usersRoute.path}>Users</LinkItem>
+          </AuthGuard>
+          <LinkItem href={itemsRoute.path}>Items</LinkItem>
+          <LinkItem href={locationsRoute.path}>Locations</LinkItem>
+          <LinkItem href={tagsRoute.path}>Tags</LinkItem>
+          <SignupButton className={styles["no-wrap"]} />
+          <AuthButton className={styles["no-wrap"]} />
         </List>
       </div>
     </Toolbar>
@@ -49,7 +47,6 @@ const Header = () => {
 interface LinkItemProps {
   href: string;
   children: React.ReactNode;
-  side: "left" | "right" | "inside";
   className?: string;
   [rest: string]: any;
 }
@@ -64,7 +61,7 @@ const LinkItem = ({
   return (
     <Link to={href} className={styles["link"]}>
       <ListItem
-        className={clsx(styles["link"], styles[`link-side-${side}`], className)}
+        className={clsx(styles["link"], className)}
         component="span"
         sx={{ textDecoration: "none" }}
       >

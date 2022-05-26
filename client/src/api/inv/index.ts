@@ -10,7 +10,7 @@ const locationApi = axios.create({
   baseURL: `${
     process.env.DOCKER ? "/api" : "http://localhost:8080"
   }/v1/inv/locations`,
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 locationApi.interceptors.request.use(setAuthorizationHeader);
@@ -91,7 +91,7 @@ const itemApi = axios.create({
   baseURL: `${
     process.env.DOCKER ? "/api" : "http://localhost:8080"
   }/v1/inv/items`,
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 itemApi.interceptors.request.use(setAuthorizationHeader);
@@ -179,7 +179,7 @@ const tagApi = axios.create({
   baseURL: `${
     process.env.DOCKER ? "/api" : "http://localhost:8080"
   }/v1/inv/tags`,
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 tagApi.interceptors.request.use(setAuthorizationHeader);

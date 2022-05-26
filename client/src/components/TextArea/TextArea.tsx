@@ -20,7 +20,7 @@ const TextArea = ({ ...field }: ITextAreaProps) => {
       }}
       {...field}
       error={field.error}
-      helperText={field.error ? field.error : field.helperText || " "}
+      helperText={field.helperText}
     />
   );
 };

@@ -49,8 +49,11 @@ const DataTable = <Item extends object, Id extends string>({
 
   useEffect(() => {
     // Tell the grid to refresh
-    onRefreshRequest && onRefreshRequest();
-  }, [__refresh, onRefreshRequest]);
+    if (!onRefreshRequest) return;
+
+    onRefreshRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [__refresh]);
 
   useEffect(() => {
     if (!items) return;

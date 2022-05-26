@@ -8,3 +8,4 @@ export { default as TrashButton } from "./TrashButton";
 export { default as EditButton } from "./EditButton";
 export { default as DataTable } from "./DataTable";
 export { default as ChipList } from "./ChipList";
+export { default as SubmitButton } from "./SubmitButton";

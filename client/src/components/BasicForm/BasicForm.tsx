@@ -19,11 +19,13 @@ import { Formik, Form, FormikProps, Field, FieldArray, useField } from "formik";
 import NumberField from "../NumberField";
 import TextArea from "../TextArea";
 import Spacer from "../Spacer";
-import React from "react";
+import React, { useEffect } from "react";
 import AddIcon from "@mui/icons-material/AddSharp";
 import RemoveIcon from "@mui/icons-material/RemoveSharp";
 import theme from "theme";
 import { FormType } from "interfaces/form";
+import { Status } from "interfaces";
+import SubmitButton from "components/SubmitButton";
 
 interface IRecipeFormProps<V> {
   fields: any[];
@@ -43,11 +45,28 @@ const BasicForm = <V extends object>({
   resetOnSuccess = true,
 }: IRecipeFormProps<V>) => {
   const [submitText, setSubmitText] = React.useState(submitButtonText);
+  const [status, setStatus] = React.useState<Status>(Status._);
+
+  const resetStatusTimer = () => {
+    setTimeout(() => {
+      setStatus(Status._);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    if (status === Status.SUCCESS) {
+      setSubmitText(submitButtonText);
+    } else if (status === Status.ERROR) {
+      setSubmitText("Error");
+    }
+    resetStatusTimer();
+  }, [status]);
 
   const handleSubmit = async (values: any, actions: any) => {
     const success: boolean = await onSubmit(values);
     actions.setSubmitting(false);
-    setSubmitText(successText);
+    // setSubmitText(successText);
+    setStatus(success ? Status.SUCCESS : Status.ERROR);
     setTimeout(() => {
       setSubmitText(submitButtonText);
     }, 3000);
@@ -73,17 +92,11 @@ const BasicForm = <V extends object>({
             paddingX="2"
           >
             {renderFields(fields, { formikProps: props })}
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={!props.dirty || props.isSubmitting}
-            >
-              {props.isSubmitting ? (
-                <CircularProgress size={24.5} />
-              ) : (
-                submitText
-              )}
-            </Button>
+            <SubmitButton
+              isSubmitting={props.isSubmitting}
+              status={status}
+              isValid={props.isValid}
+            />
           </Box>
         </Form>
       )}
@@ -97,13 +110,13 @@ const renderFields = (fields: any[], { formikProps }: { formikProps: any }) => {
   return fields.map((customField, index: number) => {
     return (
       <React.Fragment key={`field-${index}`}>
-        {renderField(customField, { formikProps, index })}
+        {CustomField(customField, { formikProps, index })}
       </React.Fragment>
     );
   });
 };
 
-const renderField = (
+const CustomField = (
   customField: any,
   {
     formikProps,
@@ -148,7 +161,7 @@ const renderField = (
                             <React.Fragment
                               key={`field-${index}-${subIndex}-${fieldIndex}`}
                             >
-                              {renderField(subCustomField, {
+                              {CustomField(subCustomField, {
                                 formikProps,
                                 index: subIndex,
                                 parentName: customField.name,

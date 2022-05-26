@@ -139,8 +139,7 @@ interface FormField {
  * Component that represents a field specified by the user-specifed field
  */
 const FormField = ({ field, parent }: FormField) => {
-  const name = parent ? parent : field.name;
-
+  const name = parent ? `${parent}.${field.name}` : field.name;
   if (field.type === FormType.ARRAY) {
     return (
       <Box>
@@ -202,7 +201,7 @@ const FormFieldArrayChildren = ({
   customField,
   formikName,
 }: FormFieldArrayChildrenProps) => {
-  const [field, meta] = useField(formikName);
+  const [field, meta, hook] = useField(formikName);
 
   return (
     <React.Fragment>
@@ -230,7 +229,7 @@ const FormFieldArrayChildren = ({
                   >
                     <FormField
                       field={subCustomField}
-                      parent={`${formikName}.${subIndex}.${subCustomField.name}`}
+                      parent={`${formikName}.${subIndex}`}
                     />
                   </React.Fragment>
                 );

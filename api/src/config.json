@@ -1,8 +1,0 @@
-{
-  "saltRounds": 10,
-  "secret": "secret",
-  "tokenExpiration": 86400,
-  "mongoose": {
-    "connectionString": "mongodb://localhost/inventory"
-  }
-}

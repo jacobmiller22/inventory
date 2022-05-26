@@ -8,7 +8,7 @@ import { HttpStatus } from "lib/http";
 /** Locations */
 
 const locationApi = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/locations`,
+  baseURL: `/api/v1/inv/locations`,
   withCredentials: true,
 });
 
@@ -87,7 +87,7 @@ export const deleteLocations = async (ids: LocationId[]): Promise<boolean> => {
 /** Items */
 
 const itemApi = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/items`,
+  baseURL: `/api/v1/inv/items`,
   withCredentials: true,
 });
 
@@ -173,7 +173,7 @@ export const deleteItems = async (ids: ItemId[]): Promise<boolean> => {
 /** Tags */
 
 const tagApi = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/v1/inv/tags`,
+  baseURL: `/api/v1/inv/tags`,
   withCredentials: true,
 });
 

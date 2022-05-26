@@ -1,5 +1,5 @@
 import usersService from "../users";
-import config from "../../config.json";
+import config from "@/../config.json";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { MinUser, User, ConfidentialUser, UserPending } from "../../types/user";
@@ -69,9 +69,10 @@ export const saltHashPassword = async (password: string): Promise<string> => {
 };
 
 const createToken = (user: User): string => {
+  const secret = process.env.SECRET!;
   const token: string = jwt.sign(
     { sub: user.userId, roles: user.roles },
-    config.secret,
+    secret,
     {
       expiresIn: config.tokenExpiration,
     }

@@ -1,6 +1,5 @@
 import { expressjwt } from "express-jwt";
 import usersService from "@/services/users";
-import config from "@/config.json";
 import type { Request, Response, NextFunction } from "express";
 import { Role, User } from "@/types/user";
 import { HttpStatus } from "@/types/http";
@@ -19,7 +18,7 @@ import { Middleware } from "@/types";
 // ];
 
 export const requireAuth = (): Middleware[] => {
-  const secret = config.secret;
+  const secret = process.env.SECRET;
 
   return [
     //@ts-ignore

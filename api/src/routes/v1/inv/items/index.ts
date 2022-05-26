@@ -10,7 +10,7 @@ import { requireAuth } from "@/middleware/auth";
 
 const router = express();
 
-router.get("/", requireAuth(), invItemController.getItems);
+router.get("/", invItemController.getItems);
 
 /**
  * @api {item} /v1/inventory/item/:item Get all details of an inventory item

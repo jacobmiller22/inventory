@@ -28,6 +28,7 @@ const AuthGuard = ({
       return;
     }
     if (!reverse && (!auth || (admin && !isAdmin()))) {
+      console.log("not auth");
       navigate(loginRoute.path);
       return;
     }

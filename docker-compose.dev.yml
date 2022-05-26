@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - "${REVERSE_PROXY_PORT}:80"
+  client:
+    environment:
+      - WDS_SOCKET_PORT=0
+      - CHOKIDAR_USEPOLLING=true # For windows wsl support
+    expose:
+      - ${REACT_APP_PORT}
+    restart: unless-stopped
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+    stdin_open: true # True to Keep container open to allow for debugging
+    tty: true # True to Keep container open to allow for debugging
+  api:
+    # environment:
+    #   - CHOKIDAR_USEPOLLING=true # For windows wsl support
+    restart: unless-stopped
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    environment:
+      - PORT=${API_PORT}
+      - MONGODB_URI=mongodb://db:27017/inventory
+      - DOCKER=true
+      - SECRET=${SECRET}
+      - CHOKIDAR_USEPOLLING=true # For windows wsl support
+    expose:
+      - ${API_PORT}
+    ports:
+      - ${API_PORT}:${API_PORT}
+    stdin_open: true # True to Keep container open to allow for debugging
+    tty: true # True to Keep container open to allow for debugging
+    volumes:
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
+  db:
+    image: mongo
+    container_name: db
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./db:/data/db
+    environment:
+      - PUID=1000
+      - PGID=1000

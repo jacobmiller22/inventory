@@ -5,12 +5,12 @@ import { MinUser, User, UserId } from "interfaces/user";
 /** Locations */
 
 const userApi = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/v1/users`,
+  baseURL: `/api/v1/users`,
   withCredentials: true,
 });
 
 const adminUserApi = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/v1/admin/users`,
+  baseURL: `/api/v1/admin/users`,
   withCredentials: true,
 });
 

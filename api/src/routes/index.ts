@@ -14,6 +14,8 @@ import { Role } from "@/types/user";
 
 const router = express();
 
+router.get("/", (req, res) => res.send("Hello, World!"));
+
 router.use("/auth", authRouter);
 router.use("/v1/inv", v1InventoryRouter);
 router.use("/v1/users", v1UsersRouter);

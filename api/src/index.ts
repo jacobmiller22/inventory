@@ -1,17 +1,44 @@
-import "module-alias/register"; // Register module alias for TS
+// Register module alias for TS
+import moduleAlias from "module-alias";
+moduleAlias.addAlias("@", __dirname);
+
+if (process.env.NODE_ENV === undefined) {
+  throw new Error("NODE_ENV is not set");
+}
+
+import dotEnv from "dotenv";
+
+if (!process.env.DOCKER && process.env.NODE_ENV === "development") {
+  dotEnv.config({ path: ".env.local" });
+  console.log("Loaded .env.local file");
+} else if (!process.env.DOCKER && process.env.NODE_ENV === "production") {
+  dotEnv.config({ path: ".env.production" });
+  console.log("Loaded .env.production file");
+}
+if (process.env.MONGODB_URI === undefined) {
+  throw new Error("MONGODB_URI is not set");
+}
 
 import express from "express";
 import cors from "cors";
 import indexRouter from "@/routes";
-import initDb from "@/models";
+import mongoose from "mongoose";
 
 const app = express();
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors());
 
 /** Services initializations */
-initDb();
+mongoose
+  .connect(process.env.MONGODB_URI!)
+  .then(() => {
+    console.log("Connected to mongodb");
+  })
+  .catch((err) => {
+    console.error("Error connecting to mongodb", err);
+    process.exit();
+  });
 
 // Connect routing
 app.use("/", indexRouter);

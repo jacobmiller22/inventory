@@ -25,7 +25,7 @@ const login: Middleware = async (req, res) => {
 
 const signup: Middleware = async (req, res) => {
   const { username, password, email, firstName, lastName } = req.body;
-
+  console.log("SIGNING UP", req.body);
   const newUser: UserPending = {
     email,
     username,

@@ -42,123 +42,99 @@ const Router = () => {
         <Route
           path={itemsRoute.path}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={itemsRoute.name} auth>
-                <ItemsView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={itemsRoute.name} auth>
+              <ItemsView />
+            </Layout>
           }
         />
         <Route
           path={newItemRoute.path}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={newItemRoute.name} auth>
-                <ItemFormView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={newItemRoute.name} auth>
+              <ItemFormView />
+            </Layout>
           }
         />
         <Route
           path={wildcardsToDynamicRoutes(editItemRoute)}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={editItemRoute.name} auth>
-                <ItemFormView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={editItemRoute.name} auth>
+              <ItemFormView />
+            </Layout>
           }
         />
         <Route
           path={wildcardsToDynamicRoutes(itemDetailsRoute)}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={itemDetailsRoute.name} auth>
-                <ItemDetailsView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={itemDetailsRoute.name} auth>
+              <ItemDetailsView />
+            </Layout>
           }
         />
         {/* Location Routes */}
         <Route
           path={locationsRoute.path}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={locationsRoute.name} auth>
-                <LocationsView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={locationsRoute.name} auth>
+              <LocationsView />
+            </Layout>
           }
         />
         <Route
           path={newLocationRoute.path}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={newLocationRoute.name} auth>
-                <LocationFormView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={newLocationRoute.name} auth>
+              <LocationFormView />
+            </Layout>
           }
         />
         <Route
           path={wildcardsToDynamicRoutes(editLocationRoute)}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={editLocationRoute.name} auth>
-                <LocationFormView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={editLocationRoute.name} auth>
+              <LocationFormView />
+            </Layout>
           }
         />
         <Route
           path={wildcardsToDynamicRoutes(locationDetailsRoute)}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={locationDetailsRoute.name} auth>
-                <LocationDetailsView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={locationDetailsRoute.name} auth>
+              <LocationDetailsView />
+            </Layout>
           }
         />
         {/* Tag Routes */}
         <Route
           path={tagsRoute.path}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={tagsRoute.name} auth>
-                <TagsView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={tagsRoute.name} auth>
+              <TagsView />
+            </Layout>
           }
         />
         <Route
           path={newTagRoute.path}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={newTagRoute.name} auth>
-                <TagFormView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={newTagRoute.name} auth>
+              <TagFormView />
+            </Layout>
           }
         />
         <Route
           path={wildcardsToDynamicRoutes(editTagRoute)}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={editTagRoute.name} auth>
-                <TagFormView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={editTagRoute.name} auth>
+              <TagFormView />
+            </Layout>
           }
         />
         <Route
           path={wildcardsToDynamicRoutes(tagDetailsRoute)}
           element={
-            <AuthGuard>
-              <Layout variant="light" title={tagDetailsRoute.name} auth>
-                <TagDetailsView />
-              </Layout>
-            </AuthGuard>
+            <Layout variant="light" title={tagDetailsRoute.name} auth>
+              <TagDetailsView />
+            </Layout>
           }
         />
         {/* Auth Routes */}

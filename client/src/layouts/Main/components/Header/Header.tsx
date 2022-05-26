@@ -1,13 +1,7 @@
 import { Link } from "react-router-dom";
 
 /** Components */
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { List, ListItem, ListItemText, Toolbar } from "@mui/material";
 import { Spacer } from "components";
 import {
   itemsRoute,

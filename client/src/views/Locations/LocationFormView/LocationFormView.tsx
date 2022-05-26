@@ -5,7 +5,7 @@ import {
   getLocation,
   updateLocation as __updateLocation,
 } from "api/inv";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 /** Components */
 import { Location, LocationId } from "interfaces/location";
@@ -16,9 +16,7 @@ type Params = {
   locationId?: LocationId;
 };
 
-interface LocationFormViewProps {}
-
-const LocationFormView = ({}: LocationFormViewProps) => {
+const LocationFormView = () => {
   const params: Params = useParams();
 
   const [fields, setFields] = useState<any[] | null>(null);
@@ -38,7 +36,7 @@ const LocationFormView = ({}: LocationFormViewProps) => {
 
     const newFields: any[] = populateFields(location);
     setFields(newFields);
-  }, [params, location]);
+  }, [params, location, isEdit]);
 
   useEffect(() => {
     if (!isEdit) return;
@@ -46,7 +44,7 @@ const LocationFormView = ({}: LocationFormViewProps) => {
     (async () => {
       setLocation(await getLocation(params.locationId!));
     })();
-  }, [params]);
+  }, [params, isEdit]);
 
   const handleSubmit = async (
     values: Omit<Location, "locationId">

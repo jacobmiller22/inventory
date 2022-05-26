@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 /** Components */
 import { Tag } from "interfaces/tag";
 import { Item } from "interfaces/item";
-import { Chip, ImageList, ImageListItem, Typography } from "@mui/material";
+import { ImageList, ImageListItem, Typography } from "@mui/material";
 import styles from "./ItemDetailsView.module.css";
 import { editItemRoute } from "Router/routes/client";
 import { DetailsView } from "views";
@@ -47,7 +47,7 @@ const ItemDetailsView = () => {
         {imgSrcs.map((src: string, i: number) => {
           return (
             <ImageListItem key={`img-${i}`}>
-              <img src={src} />
+              <img src={src} alt="" />
             </ImageListItem>
           );
         })}

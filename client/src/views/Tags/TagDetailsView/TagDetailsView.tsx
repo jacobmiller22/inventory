@@ -3,8 +3,6 @@ import { getTag } from "api/inv";
 import { useParams } from "react-router-dom";
 
 /** Components */
-import { Typography } from "@mui/material";
-import styles from "./TagDetailsView.module.css";
 import { editTagRoute } from "Router/routes/client";
 import { Tag } from "interfaces/tag";
 import { DetailsView } from "views";

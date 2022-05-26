@@ -1,27 +1,23 @@
 import fieldsTemplate from "./fields";
 import { editSchema, newSchema } from "./schema";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 /** Interfaces/types */
 import { UserId, User } from "interfaces/user";
 
 /** components */
 import { useEffect, useState } from "react";
-import { BasicForm } from "components";
 import FormView from "views/FormView";
 import {
   getUser,
   updateUser as __updateUser,
   createUser as __createUser,
 } from "api/users";
-import _ from "lodash";
 
 type Params = {
   userId?: UserId;
 };
 
-interface IUserFormViewProps {}
-
-const UserFormView = ({}: IUserFormViewProps) => {
+const UserFormView = () => {
   const params: Params = useParams();
 
   const [fields, setFields] = useState<any[] | null>(null);
@@ -40,9 +36,8 @@ const UserFormView = ({}: IUserFormViewProps) => {
     if (!user) return; // Populate fields once we have a user
 
     const newFields: any[] = populateFields(user);
-    console.log("newFields", newFields);
     setFields(newFields);
-  }, [params, user]);
+  }, [params, user, isEdit]);
 
   useEffect(() => {
     if (!isEdit) return;
@@ -50,7 +45,7 @@ const UserFormView = ({}: IUserFormViewProps) => {
     (async () => {
       setUser(await getUser(params.userId!));
     })();
-  }, [params]);
+  }, [params, isEdit]);
 
   const handleSubmit = async (
     values:

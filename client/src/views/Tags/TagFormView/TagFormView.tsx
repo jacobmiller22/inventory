@@ -5,7 +5,7 @@ import {
   getTag,
   updateTag as __updateTag,
 } from "api/inv";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 /** Components */
 import { FormView } from "views";
@@ -16,9 +16,7 @@ type Params = {
   tagId?: TagId;
 };
 
-interface TagFormViewProps {}
-
-const TagFormView = ({}: TagFormViewProps) => {
+const TagFormView = () => {
   const params: Params = useParams();
 
   const [fields, setFields] = useState<any[] | null>(null);
@@ -38,7 +36,7 @@ const TagFormView = ({}: TagFormViewProps) => {
 
     const newFields: any[] = populateFields(tag);
     setFields(newFields);
-  }, [params, tag]);
+  }, [params, tag, isEdit]);
 
   useEffect(() => {
     if (!isEdit) return;
@@ -46,7 +44,7 @@ const TagFormView = ({}: TagFormViewProps) => {
     (async () => {
       setTag(await getTag(params.tagId!));
     })();
-  }, [params]);
+  }, [params, isEdit]);
 
   const handleSubmit = async (values: Omit<Tag, "tagId">): Promise<boolean> => {
     console.log("Submit!", values);

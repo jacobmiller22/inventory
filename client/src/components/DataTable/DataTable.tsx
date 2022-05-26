@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import theme from "theme";
 import { useNavigate } from "react-router-dom";
 
@@ -7,10 +7,9 @@ import { useNavigate } from "react-router-dom";
 /** components */
 import { useSnackbar } from "notistack";
 import { DataGrid } from "@mui/x-data-grid";
-import { deleteItems, getItems } from "api/inv";
 import { Button, Card, Toolbar, Typography } from "@mui/material";
 import { AddButton, Spacer, TrashButton } from "components";
-import { itemDetailsRoute, newItemRoute } from "Router/routes/client";
+import { itemDetailsRoute } from "Router/routes/client";
 import { replaceWildcards } from "Router/routes";
 
 interface DataTableProps<T, E> {
@@ -37,7 +36,7 @@ const DataTable = <Item extends object, Id extends string>({
   deleteFailText = "Error while deleting item.",
 }: DataTableProps<Item, Id>) => {
   type RowItem = Omit<Item, "itemId"> & { id: Id };
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const [rows, setRows] = useState<RowItem[]>([]);
 
   const [selectionModel, setSelectionModel] = useState<Id[]>([]);
@@ -51,20 +50,12 @@ const DataTable = <Item extends object, Id extends string>({
   useEffect(() => {
     // Tell the grid to refresh
     onRefreshRequest && onRefreshRequest();
-  }, [__refresh]);
+  }, [__refresh, onRefreshRequest]);
 
   useEffect(() => {
     if (!items) return;
     setRows(items.map((i) => itemToRow(i, idKey)));
-  }, [items]);
-
-  const itemToRow = (item: Item, idKey: string): RowItem => {
-    return {
-      //@ts-ignore
-      id: item[idKey],
-      ...item,
-    };
-  };
+  }, [items, idKey]);
 
   const renderToolbar = () => {
     const handleDelete = async () => {
@@ -165,4 +156,12 @@ const ToolbarContentSelected = <Id extends string>({
       <TrashButton onClick={handleDelete} />
     </>
   );
+};
+
+const itemToRow = (item: any, idKey: string): any => {
+  return {
+    //@ts-ignore
+    id: item[idKey],
+    ...item,
+  };
 };

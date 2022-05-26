@@ -1,5 +1,3 @@
-import { StringDecoder } from "string_decoder";
-
 export type UserId = string;
 
 export enum Role {

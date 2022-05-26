@@ -3,12 +3,13 @@ import axios from "axios";
 import { Item, ItemId, MinItem } from "interfaces/item";
 import { LocationId, MinLocation, Location } from "interfaces/location";
 import { Tag, TagId } from "interfaces/tag";
-import { HttpStatus } from "lib/http";
 
 /** Locations */
 
 const locationApi = axios.create({
-  baseURL: `/api/v1/inv/locations`,
+  baseURL: `${
+    process.env.DOCKER ? "/api" : "http://localhost:8080"
+  }/v1/inv/locations`,
   withCredentials: true,
 });
 
@@ -26,7 +27,7 @@ export const getLocations = async (): Promise<MinLocation[]> => {
 
 export const getLocation = async (id: LocationId): Promise<Location | null> => {
   if (!id || typeof id !== "string") {
-    throw "getLocation expects a string locationId";
+    throw new Error("getLocation expects a string locationId");
   }
   const res = await locationApi.get(`/${id}`);
 
@@ -87,7 +88,9 @@ export const deleteLocations = async (ids: LocationId[]): Promise<boolean> => {
 /** Items */
 
 const itemApi = axios.create({
-  baseURL: `/api/v1/inv/items`,
+  baseURL: `${
+    process.env.DOCKER ? "/api" : "http://localhost:8080"
+  }/v1/inv/items`,
   withCredentials: true,
 });
 
@@ -104,7 +107,7 @@ export const getItems = async (): Promise<MinItem[]> => {
 
 export const getItem = async (id: ItemId): Promise<Item | null> => {
   if (!id || typeof id !== "string") {
-    throw "getItem expects a string locationId";
+    throw new Error("getItem expects a string locationId");
   }
   try {
     const res = await itemApi.get(`/${id}`);
@@ -173,7 +176,9 @@ export const deleteItems = async (ids: ItemId[]): Promise<boolean> => {
 /** Tags */
 
 const tagApi = axios.create({
-  baseURL: `/api/v1/inv/tags`,
+  baseURL: `${
+    process.env.DOCKER ? "/api" : "http://localhost:8080"
+  }/v1/inv/tags`,
   withCredentials: true,
 });
 

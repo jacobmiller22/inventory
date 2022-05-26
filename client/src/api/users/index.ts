@@ -5,12 +5,14 @@ import { MinUser, User, UserId } from "interfaces/user";
 /** Locations */
 
 const userApi = axios.create({
-  baseURL: `/api/v1/users`,
+  baseURL: `${process.env.DOCKER ? "/api" : "http://localhost:8080"}/v1/users`,
   withCredentials: true,
 });
 
 const adminUserApi = axios.create({
-  baseURL: `/api/v1/admin/users`,
+  baseURL: `${
+    process.env.DOCKER ? "/api" : "http://localhost:8080"
+  }/v1/admin/users`,
   withCredentials: true,
 });
 
@@ -30,7 +32,7 @@ export const getUsers = async (): Promise<MinUser[]> => {
 
 export const getUser = async (id: UserId): Promise<User | null> => {
   if (!id || typeof id !== "string") {
-    throw "getLocation expects a string locationId";
+    throw new Error("getLocation expects a string locationId");
   }
   const res = await userApi.get(`/${id}`);
 

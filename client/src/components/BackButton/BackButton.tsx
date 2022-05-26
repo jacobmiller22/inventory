@@ -22,7 +22,7 @@ const BackButton = ({
   const navigate = useNavigate();
 
   if ((asLink && !href) || (!asLink && href)) {
-    throw "BackButton: asLink and href must be used together";
+    throw new Error("BackButton: asLink and href must be used together");
   }
 
   if (!asLink) {

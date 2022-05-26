@@ -1,5 +1,5 @@
 import styles from "./ChipList.module.css";
-import { List, Chip, ChipProps, Typography } from "@mui/material";
+import { List, Chip, ChipProps } from "@mui/material";
 
 interface ChipListProps {
   items: string[];

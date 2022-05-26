@@ -3,7 +3,7 @@
 import { Avatar } from "@mui/material";
 import { getUsers as __getUsers, deleteUsers } from "api/users";
 import { DataTable, ChipList } from "components";
-import { MinUser, User, UserId } from "interfaces/user";
+import { MinUser, UserId } from "interfaces/user";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,9 +12,7 @@ import { newUserRoute, userDetailsRoute } from "Router/routes/client";
 
 /** components */
 
-interface IUsersViewProps {}
-
-const UsersView = ({}: IUsersViewProps) => {
+const UsersView = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState<MinUser[] | null>(null);
 

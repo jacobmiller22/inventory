@@ -9,9 +9,7 @@ import { useAuth } from "contexts/auth";
 
 /** components */
 
-interface SignupViewProps {}
-
-const SignupView = ({}: SignupViewProps) => {
+const SignupView = () => {
   const { checkAuth } = useAuth();
 
   const handleSubmit = async (values: any): Promise<boolean> => {

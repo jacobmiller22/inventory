@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { DataTable } from "components";
-import { deleteTag, deleteTags, getTags as __getTags } from "api/inv";
+import { deleteTags, getTags as __getTags } from "api/inv";
 import { Tag, TagId } from "interfaces/tag";
 import { useNavigate } from "react-router-dom";
 import { replaceWildcards } from "Router/routes";

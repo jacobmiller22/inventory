@@ -1,4 +1,4 @@
-import { CssBaseline, Snackbar, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import ProfileProvider from "contexts/auth";
 import "globals.css";
 import { SnackbarProvider } from "notistack";

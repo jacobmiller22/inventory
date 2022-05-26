@@ -23,7 +23,7 @@ const DetailsView = ({
   const navigate = useNavigate();
 
   if (item == null) {
-    throw "The provided item must not be null or undefined";
+    throw new Error("The provided item must not be null or undefined");
   }
 
   const handleEdit = () => {

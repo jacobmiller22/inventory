@@ -4,7 +4,7 @@
 
 import { FormType } from "interfaces/form";
 
-export default [
+const fields = [
   {
     name: "username",
     label: "Username",
@@ -24,3 +24,5 @@ export default [
     required: true,
   },
 ];
+
+export default fields;

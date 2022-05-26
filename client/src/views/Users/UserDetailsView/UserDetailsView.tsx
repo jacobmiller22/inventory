@@ -3,7 +3,7 @@
 import { Avatar, Typography } from "@mui/material";
 import { getUser } from "api/users";
 import { ChipList } from "components";
-import { Role, User } from "interfaces/user";
+import { User } from "interfaces/user";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { editUserRoute } from "Router/routes/client";
@@ -12,9 +12,7 @@ import styles from "./UserDetailsView.module.css";
 
 /** components */
 
-interface UserDetailsViewProps {}
-
-const UserDetailsView = ({}: UserDetailsViewProps) => {
+const UserDetailsView = () => {
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
   const query = useParams();

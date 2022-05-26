@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 /** Components */
 import { Location } from "interfaces/location";
 import { Typography } from "@mui/material";
-import styles from "./LocationDetailsView.module.css";
 import { editLocationRoute } from "Router/routes/client";
 import { DetailsView } from "views";
 

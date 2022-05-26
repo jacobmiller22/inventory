@@ -32,7 +32,9 @@ const AuthGuard = ({
       navigate(loginRoute.path);
       return;
     }
-  }, [auth]);
+  }, [auth, admin, checkAuth, isAdmin, navigate, reverse]);
+
+  // useEffect(() => {}, []);
 
   if (reverse && (auth || (admin && isAdmin()))) {
     return null;

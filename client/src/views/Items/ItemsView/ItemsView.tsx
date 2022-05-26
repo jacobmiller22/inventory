@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import styles from "./IndexView.module.css";
+
 import { ChipList, DataTable } from "components";
 import {
   deleteItems,

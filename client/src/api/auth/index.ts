@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const authApi = axios.create({
-  baseURL: `/api/auth`,
+  baseURL: `${process.env.DOCKER ? "/api" : "http://localhost:8080"}/auth`,
 });
 
 type LoginPayload = {

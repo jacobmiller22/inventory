@@ -6,7 +6,6 @@
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import clsx from "clsx";
 import styles from "./AuthButton.module.css";
 
 /** Auth */
@@ -22,7 +21,8 @@ interface AuthButtonProps {
 
 const AuthButton = ({ className }: AuthButtonProps) => {
   const { auth, logout } = useAuth();
-  const [status, setStatus] = useState<Status>(Status._);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, _] = useState<Status>(Status._);
 
   const renderButton = () => {
     if (auth) {

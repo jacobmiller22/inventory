@@ -6,7 +6,6 @@ import styles from "./SignupButton.module.css";
 
 /** components */
 import { Button } from "@mui/material";
-import { useEffect } from "react";
 import { signupRoute } from "Router/routes/client";
 
 interface ISignupButtonProps {

@@ -5,7 +5,7 @@
 import { FormType } from "interfaces/form";
 import { Role } from "interfaces/user";
 
-export default [
+const fields = [
   {
     name: "firstName",
     label: "First Name",
@@ -78,3 +78,5 @@ export default [
     required: true,
   },
 ];
+
+export default fields;

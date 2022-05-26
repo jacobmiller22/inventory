@@ -21,9 +21,7 @@ type Params = {
   itemId?: ItemId;
 };
 
-interface ItemFormViewProps {}
-
-const ItemFormView = ({}: ItemFormViewProps) => {
+const ItemFormView = () => {
   const params: Params = useParams();
 
   const [tags, setTags] = useState<Tag[] | null>(null);

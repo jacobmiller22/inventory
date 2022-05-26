@@ -23,7 +23,6 @@ import React from "react";
 import AddIcon from "@mui/icons-material/AddSharp";
 import RemoveIcon from "@mui/icons-material/RemoveSharp";
 import theme from "theme";
-import _ from "lodash";
 import { FormType } from "interfaces/form";
 
 interface IRecipeFormProps<V> {
@@ -203,6 +202,7 @@ const CustomInput = (
   formikField: any,
   { errors, touched, index }: { errors: any; touched: any; index: number }
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hookField, meta, hookHelpers] = useField(formikField.name);
 
   const errorMessage: string = meta.touched && meta.error ? meta.error! : "";
@@ -316,7 +316,6 @@ const CustomInput = (
     }
     case FormType.ARRAY: {
       throw new Error("Array type not supported. This should never happen");
-      return null;
     }
     default: {
       console.warn("Unsupported field type. Defaulting to short text field");

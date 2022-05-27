@@ -14,7 +14,7 @@ import { newUserRoute, userDetailsRoute } from "Router/routes/client";
 
 const UsersView = () => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState<MinUser[] | null>(null);
+  const [users, setUsers] = useState<MinUser[] | null | undefined>(undefined);
 
   const getUsers = async () => {
     setUsers(await __getUsers());

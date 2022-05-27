@@ -16,7 +16,6 @@ export const login = async ({
   try {
     const res = await authApi.post("/login", { username, password });
     window.localStorage.setItem("user", JSON.stringify(res.data));
-
     return res.data;
   } catch (err) {
     return null;
@@ -35,20 +34,19 @@ export const signup = async (payload: SignupPayload): Promise<any | null> => {
   try {
     const res = await authApi.post("/signup", payload);
     window.localStorage.setItem("user", JSON.stringify(res.data));
-
     return res.data;
   } catch (err) {
     return null;
   }
 };
 
-export const setAuthorizationHeader = (req: any) => {
+export const setAuthorizationHeader = (
+  req: any & { headers: { Authorization: string } }
+) => {
   const user: { token: string } | null = JSON.parse(
     localStorage.getItem("user") || "null"
   );
-
   if (user?.token) {
-    // @ts-ignore
     req.headers.Authorization = `Bearer ${user.token}`;
   }
   return req;

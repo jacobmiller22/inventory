@@ -20,41 +20,39 @@ userApi.interceptors.request.use(setAuthorizationHeader);
 
 adminUserApi.interceptors.request.use(setAuthorizationHeader);
 
-export const getUsers = async (): Promise<MinUser[]> => {
-  const res = await userApi.get("/");
-
-  console.log(res);
-
-  const locations: MinUser[] = res.data;
-
-  return locations;
+export const getUsers = async (): Promise<MinUser[] | null> => {
+  try {
+    const res = await userApi.get("/");
+    const locations: MinUser[] = res.data;
+    return locations;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
 
 export const getUser = async (id: UserId): Promise<User | null> => {
-  if (!id || typeof id !== "string") {
-    throw new Error("getLocation expects a string locationId");
+  try {
+    const res = await userApi.get(`/${id}`);
+    const location: User = res.data;
+    return location;
+  } catch (err) {
+    console.error(err);
+    return null;
   }
-  const res = await userApi.get(`/${id}`);
-
-  console.log(res);
-
-  const location: User = res.data;
-
-  return location;
 };
 
 export const createUser = async (
   user: Omit<User, "userId">
 ): Promise<UserId | null> => {
-  const res = await adminUserApi.post("/", user);
-
-  console.log(res);
-  const userId: UserId = res.data;
-
-  if (!userId) {
+  try {
+    const res = await adminUserApi.post("/", user);
+    const userId: UserId = res.data;
+    return userId;
+  } catch (err) {
+    console.error(err);
     return null;
   }
-  return userId;
 };
 
 export const updateUser = async (
@@ -63,7 +61,6 @@ export const updateUser = async (
 ): Promise<boolean> => {
   try {
     const res = await adminUserApi.put(`/${id}`, fields);
-
     return res.data;
   } catch (err) {
     return false;
@@ -73,10 +70,9 @@ export const updateUser = async (
 export const deleteUser = async (id: UserId): Promise<boolean> => {
   try {
     await adminUserApi.delete(`/${id}`);
-
     return true;
   } catch (err) {
-    console.log("error", err);
+    console.error(err);
     return false;
   }
 };
@@ -87,11 +83,6 @@ export const deleteUsers = async (ids: UserId[]): Promise<boolean> => {
     ids.map(async (id: UserId) => {
       return await deleteUser(id);
     })
-  );
-  console.log(
-    "deleteUsers",
-    successArr,
-    successArr.every((el) => el === true)
   );
 
   return successArr.every((el) => el === true);

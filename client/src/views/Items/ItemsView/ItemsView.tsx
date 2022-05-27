@@ -17,10 +17,11 @@ type Map<V> = { [key: string]: V };
 
 const ItemsView = () => {
   const navigate = useNavigate();
-  const [items, setItems] = useState<MinItem[] | null>(null);
+  const [items, setItems] = useState<MinItem[] | null | undefined>(undefined);
   const [locationMap, setLocationMap] = useState<Map<string> | null>(null);
 
   const getItems = async () => {
+    console.log("get items");
     setItems(await __getItems());
   };
 
@@ -47,16 +48,21 @@ const ItemsView = () => {
   const handleDelete = async (itemIds: ItemId[]): Promise<boolean> =>
     await deleteItems(itemIds);
 
-  const mappedItems = items?.map(
-    (item: Omit<MinItem, "locationId"> & { locationId?: LocationId }) => {
-      const newItem = {
-        ...item,
-        location: locationMap?.[item.locationId!] as string,
-      };
-      delete newItem.locationId;
-      return newItem;
+  const mappedItems = (() => {
+    if (items === undefined || items === null) {
+      return items;
     }
-  );
+    return items.map(
+      (item: Omit<MinItem, "locationId"> & { locationId?: LocationId }) => {
+        const newItem = {
+          ...item,
+          location: locationMap?.[item.locationId!] as string,
+        };
+        delete newItem.locationId;
+        return newItem;
+      }
+    );
+  })();
 
   const dataTableProps = {
     idKey: "itemId",
@@ -72,7 +78,6 @@ const ItemsView = () => {
   return (
     <div>
       <br />
-      {/* @ts-expect-error */}
       <DataTable {...dataTableProps} />
     </div>
   );

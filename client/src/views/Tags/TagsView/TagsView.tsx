@@ -9,7 +9,7 @@ import { newTagRoute, tagDetailsRoute } from "Router/routes/client";
 
 const TagsView = () => {
   const navigate = useNavigate();
-  const [tags, setTags] = useState<Tag[] | null>(null);
+  const [tags, setTags] = useState<Tag[] | null | undefined>(undefined);
 
   const getTags = async () => {
     setTags(await __getTags());

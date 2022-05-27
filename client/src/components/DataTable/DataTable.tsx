@@ -14,7 +14,7 @@ import { replaceWildcards } from "Router/routes";
 
 interface DataTableProps<T, E> {
   idKey: string;
-  items: T[] | null;
+  items: T[] | null | undefined;
   columns: any[];
   onCellDoubleClick?: (cell: any) => void;
   addLink: string;
@@ -56,14 +56,13 @@ const DataTable = <Item extends object, Id extends string>({
   }, [__refresh]);
 
   useEffect(() => {
-    if (!items) return;
-    setRows(items.map((i) => itemToRow(i, idKey)));
+    setRows((items ?? []).map((i) => itemToRow(i, idKey)));
   }, [items, idKey]);
 
   const renderToolbar = () => {
     const handleDelete = async () => {
       const success: boolean = await onDelete(selectionModel);
-      console.log("dataTable:onDelete", success);
+
       if (success) {
         setSelectionModel([]);
         toggleRefresh();
@@ -104,9 +103,10 @@ const DataTable = <Item extends object, Id extends string>({
         columns={columns}
         checkboxSelection
         disableSelectionOnClick
-        loading={!Boolean(rows)}
+        loading={Boolean(items === undefined)}
         autoHeight
         onCellDoubleClick={onCellDoubleClick}
+        error={items === null ? Boolean(true) : undefined}
       />
     </Card>
   );

@@ -10,9 +10,12 @@ import { useNavigate } from "react-router-dom";
 
 const LocationsView = () => {
   const navigate = useNavigate();
-  const [locations, setLocations] = useState<MinLocation[] | null>(null);
+  const [locations, setLocations] = useState<MinLocation[] | null | undefined>(
+    undefined
+  );
 
   const getLocations = async () => {
+    console.log("getLocations");
     setLocations(await __getLocations());
   };
 

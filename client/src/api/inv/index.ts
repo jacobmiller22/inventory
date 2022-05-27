@@ -15,41 +15,38 @@ const locationApi = axios.create({
 
 locationApi.interceptors.request.use(setAuthorizationHeader);
 
-export const getLocations = async (): Promise<MinLocation[]> => {
-  const res = await locationApi.get("/");
-
-  console.log(res);
-
-  const locations: MinLocation[] = res.data;
-
-  return locations;
+export const getLocations = async (): Promise<MinLocation[] | null> => {
+  try {
+    const res = await locationApi.get("/");
+    const locations: MinLocation[] = res.data;
+    return locations;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
 
 export const getLocation = async (id: LocationId): Promise<Location | null> => {
-  if (!id || typeof id !== "string") {
-    throw new Error("getLocation expects a string locationId");
+  try {
+    const res = await locationApi.get(`/${id}`);
+    const location: Location = res.data;
+    return location;
+  } catch (err) {
+    console.error(err);
+    return null;
   }
-  const res = await locationApi.get(`/${id}`);
-
-  console.log(res);
-
-  const location: Location = res.data;
-
-  return location;
 };
 
 export const createLocation = async (
   location: Omit<Location, "locationId">
 ): Promise<LocationId | null> => {
-  const res = await locationApi.post("/", location);
-
-  console.log(res);
-  const locationId: LocationId = res.data;
-
-  if (!locationId) {
+  try {
+    const res = await locationApi.post("/", location);
+    const locationId: LocationId = res.data;
+    return locationId;
+  } catch (error) {
     return null;
   }
-  return locationId;
 };
 
 export const updateLocation = async (
@@ -58,7 +55,6 @@ export const updateLocation = async (
 ): Promise<boolean> => {
   try {
     const res = await locationApi.put(`/${id}`, fields);
-
     return res.data;
   } catch (err) {
     return false;
@@ -68,7 +64,6 @@ export const updateLocation = async (
 export const deleteLocation = async (id: LocationId): Promise<boolean> => {
   try {
     await locationApi.delete(`/${id}`);
-
     return true;
   } catch (err) {
     return false;
@@ -96,13 +91,15 @@ const itemApi = axios.create({
 
 itemApi.interceptors.request.use(setAuthorizationHeader);
 
-export const getItems = async (): Promise<MinItem[]> => {
-  const res = await itemApi.get("/");
-  console.log(res);
-
-  const items: MinItem[] = res.data;
-
-  return items;
+export const getItems = async (): Promise<MinItem[] | null> => {
+  try {
+    const res = await itemApi.get("/");
+    const items: MinItem[] = res.data;
+    return items;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
 
 export const getItem = async (id: ItemId): Promise<Item | null> => {
@@ -111,14 +108,10 @@ export const getItem = async (id: ItemId): Promise<Item | null> => {
   }
   try {
     const res = await itemApi.get(`/${id}`);
-
-    console.log(res);
-
     const item: Item = res.data;
-
     return item;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return null;
   }
 };
@@ -126,15 +119,14 @@ export const getItem = async (id: ItemId): Promise<Item | null> => {
 export const createItem = async (
   item: Omit<MinItem & Item, "itemId" | "location" | "tags"> & { tags: TagId[] }
 ): Promise<ItemId | null> => {
-  const res = await itemApi.post("/", item);
-
-  console.log(res);
-  const itemId: ItemId = res.data;
-
-  if (!itemId) {
+  try {
+    const res = await itemApi.post("/", item);
+    const itemId: ItemId = res.data;
+    return itemId;
+  } catch (err) {
+    console.error(err);
     return null;
   }
-  return itemId;
 };
 
 export const updateItem = async (
@@ -145,7 +137,6 @@ export const updateItem = async (
 ): Promise<boolean> => {
   try {
     const res = await itemApi.put(`/${id}`, fields);
-
     return res.data;
   } catch (err) {
     return false;
@@ -155,7 +146,6 @@ export const updateItem = async (
 export const deleteItem = async (id: ItemId): Promise<boolean> => {
   try {
     await itemApi.delete(`/${id}`);
-
     return true;
   } catch (err) {
     return false;
@@ -169,7 +159,6 @@ export const deleteItems = async (ids: ItemId[]): Promise<boolean> => {
       return await deleteItem(id);
     })
   );
-
   return successArr.every((el) => el === true);
 };
 
@@ -184,36 +173,39 @@ const tagApi = axios.create({
 
 tagApi.interceptors.request.use(setAuthorizationHeader);
 
-export const getTags = async (): Promise<Tag[]> => {
-  const res = await tagApi.get("/");
-  console.log(res);
-
-  const items: Tag[] = res.data;
-
-  return items;
+export const getTags = async (): Promise<Tag[] | null> => {
+  try {
+    const res = await tagApi.get("/");
+    const items: Tag[] = res.data;
+    return items;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
 
-export const getTag = async (tagId: TagId): Promise<Tag> => {
-  const res = await tagApi.get(`/${tagId}`);
-  console.log(res);
-
-  const tag: Tag = res.data;
-
-  return tag;
+export const getTag = async (tagId: TagId): Promise<Tag | null> => {
+  try {
+    const res = await tagApi.get(`/${tagId}`);
+    const tag: Tag = res.data;
+    return tag;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
 
 export const createTag = async (
   tag: Omit<Tag, "tagId">
 ): Promise<TagId | null> => {
-  const res = await tagApi.post("/", tag);
-
-  console.log(res);
-  const tagId: TagId = res.data;
-
-  if (!tagId) {
+  try {
+    const res = await tagApi.post("/", tag);
+    const tagId: TagId = res.data;
+    return tagId;
+  } catch (err) {
+    console.error(err);
     return null;
   }
-  return tagId;
 };
 
 export const updateTag = async (
@@ -222,7 +214,6 @@ export const updateTag = async (
 ): Promise<boolean> => {
   try {
     const res = await tagApi.put(`/${id}`, fields);
-
     return res.data;
   } catch (err) {
     return false;
@@ -232,7 +223,6 @@ export const updateTag = async (
 export const deleteTag = async (id: TagId): Promise<boolean> => {
   try {
     await tagApi.delete(`/${id}`);
-
     return true;
   } catch (err) {
     return false;

@@ -1,7 +1,7 @@
 import { Role, User } from "interfaces/user";
 import _ from "lodash";
-import { createContext, useContext, useState } from "react";
-
+import { createContext, useContext, useState, useEffect } from "react";
+import { validateToken as __validateToken } from "api/auth";
 const ProfileContext = createContext<any>({});
 
 // export { userContext };
@@ -22,13 +22,24 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const isAdmin = (): boolean => {
+    return Boolean(auth?.roles.includes(Role.ADMIN));
+  };
+
+  const validateToken = async () => {
+    __validateToken();
+    checkAuth();
+  };
+
+  useEffect(() => {
+    console.log("Checking auth");
+
+    validateToken();
+  }, [auth, checkAuth, isAdmin]);
+
   const logout = () => {
     localStorage.removeItem("user");
     setAuth(null);
-  };
-
-  const isAdmin = (): boolean => {
-    return Boolean(auth?.roles.includes(Role.ADMIN));
   };
 
   return (

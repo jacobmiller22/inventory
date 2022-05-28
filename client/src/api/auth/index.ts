@@ -40,6 +40,18 @@ export const signup = async (payload: SignupPayload): Promise<any | null> => {
   }
 };
 
+export const validateToken = async (): Promise<boolean> => {
+  try {
+    const res = await authApi.post("/validate");
+    //
+    console.log(res);
+    return true;
+  } catch (err) {
+    window.localStorage.removeItem("user");
+    return false;
+  }
+};
+
 export const setAuthorizationHeader = (
   req: any & { headers: { Authorization: string } }
 ) => {
@@ -51,3 +63,5 @@ export const setAuthorizationHeader = (
   }
   return req;
 };
+
+authApi.interceptors.request.use(setAuthorizationHeader);

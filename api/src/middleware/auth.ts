@@ -156,3 +156,29 @@ export const hasRoleOrIsSubject = (roles: Role[]) => {
 
   return claimsWrapper(middleware);
 };
+
+export const validateToken = () => {
+  const middleware = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    //@ts-expect-error
+    if (!req?.auth) {
+      res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });
+      return;
+    }
+
+    //@ts-ignore
+    if (req.auth.exp * 1000 <= new Date().getTime()) {
+      // The token has expired
+      res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });
+      return;
+    }
+
+    res.status(HttpStatus.OK).end();
+    return;
+  };
+
+  return claimsWrapper(middleware);
+};

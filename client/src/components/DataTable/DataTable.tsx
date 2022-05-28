@@ -42,18 +42,20 @@ const DataTable = <Item extends object, Id extends string>({
   const [selectionModel, setSelectionModel] = useState<Id[]>([]);
   const [__refresh, __setRefresh] = useState<boolean>(false);
 
-  const toggleRefresh = () => __setRefresh(!__refresh);
+  const toggleRefresh = () => {
+    if (!onRefreshRequest) return;
+
+    onRefreshRequest();
+    // __setRefresh(!__refresh);
+  };
 
   const handleSelectionModelChange = (newSelectionModel: any[]) =>
     setSelectionModel(newSelectionModel);
 
-  useEffect(() => {
-    // Tell the grid to refresh
-    if (!onRefreshRequest) return;
-
-    onRefreshRequest();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [__refresh]);
+  // useEffect(() => {
+  //   // Tell the grid to refresh
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [__refresh]);
 
   useEffect(() => {
     setRows((items ?? []).map((i) => itemToRow(i, idKey)));

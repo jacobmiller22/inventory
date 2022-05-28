@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { replaceWildcards } from "Router/routes";
 import { newUserRoute, userDetailsRoute } from "Router/routes/client";
+import { useSnackbar } from "notistack";
 
 /** components */
 
@@ -16,8 +17,14 @@ const UsersView = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState<MinUser[] | null | undefined>(undefined);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const getUsers = async () => {
-    setUsers(await __getUsers());
+    const __users = await __getUsers();
+    if (__users === null) {
+      enqueueSnackbar("Error getting users", { variant: "error" });
+    }
+    setUsers(__users);
   };
 
   useEffect(() => {

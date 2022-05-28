@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const authApi = axios.create({
   baseURL: `${process.env.DOCKER ? "/api" : "http://localhost:8080"}/auth`,
@@ -46,8 +46,11 @@ export const validateToken = async (): Promise<boolean> => {
     //
     console.log(res);
     return true;
-  } catch (err) {
-    window.localStorage.removeItem("user");
+  } catch (err: any) {
+    console.log(err);
+    if (err.response.status === 401) {
+      window.localStorage.removeItem("user");
+    }
     return false;
   }
 };

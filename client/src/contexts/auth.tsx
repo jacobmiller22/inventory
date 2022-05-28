@@ -1,6 +1,7 @@
 import { Role, User } from "interfaces/user";
 import _ from "lodash";
 import { createContext, useContext, useState, useEffect } from "react";
+
 import { validateToken as __validateToken } from "api/auth";
 const ProfileContext = createContext<any>({});
 

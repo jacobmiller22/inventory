@@ -6,13 +6,21 @@ import { Tag, TagId } from "interfaces/tag";
 import { useNavigate } from "react-router-dom";
 import { replaceWildcards } from "Router/routes";
 import { newTagRoute, tagDetailsRoute } from "Router/routes/client";
+import { useSnackbar } from "notistack";
 
 const TagsView = () => {
   const navigate = useNavigate();
   const [tags, setTags] = useState<Tag[] | null | undefined>(undefined);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const getTags = async () => {
     setTags(await __getTags());
+    const __tags = await __getTags();
+    if (__tags === null) {
+      enqueueSnackbar("Error getting tags", { variant: "error" });
+    }
+    setTags(__tags);
   };
 
   useEffect(() => {

@@ -12,6 +12,7 @@ import { itemDetailsRoute, newItemRoute } from "Router/routes/client";
 import { replaceWildcards } from "Router/routes";
 import { useNavigate } from "react-router-dom";
 import { LocationId, MinLocation } from "interfaces/location";
+import { useSnackbar } from "notistack";
 
 type Map<V> = { [key: string]: V };
 
@@ -20,15 +21,24 @@ const ItemsView = () => {
   const [items, setItems] = useState<MinItem[] | null | undefined>(undefined);
   const [locationMap, setLocationMap] = useState<Map<string> | null>(null);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const getItems = async () => {
-    console.log("get items");
-    setItems(await __getItems());
+    const __items = await __getItems();
+    if (__items === null) {
+      enqueueSnackbar("Error getting items", { variant: "error" });
+    }
+    setItems(__items);
   };
 
   const getLocationMap = async () => {
-    const locations = (await __getLocations()) ?? [];
+    const locations = await __getLocations();
+
+    if (locations === null) {
+      enqueueSnackbar("Error getting locations", { variant: "error" });
+    }
     let _locationMap: Map<string> = {};
-    locations.forEach(
+    (locations ?? []).forEach(
       (location: MinLocation) =>
         (_locationMap[location.locationId] = location.name)
     );

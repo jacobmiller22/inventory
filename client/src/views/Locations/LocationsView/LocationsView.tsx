@@ -7,6 +7,7 @@ import { LocationId, MinLocation } from "interfaces/location";
 import { locationDetailsRoute, newLocationRoute } from "Router/routes/client";
 import { replaceWildcards } from "Router/routes";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 const LocationsView = () => {
   const navigate = useNavigate();
@@ -14,9 +15,14 @@ const LocationsView = () => {
     undefined
   );
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const getLocations = async () => {
-    console.log("getLocations");
-    setLocations(await __getLocations());
+    const __locations = await __getLocations();
+    if (__locations === null) {
+      enqueueSnackbar("Error getting locations", { variant: "error" });
+    }
+    setLocations(__locations);
   };
 
   useEffect(() => {

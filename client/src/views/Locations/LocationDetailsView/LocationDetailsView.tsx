@@ -7,6 +7,7 @@ import { Location } from "interfaces/location";
 import { Typography } from "@mui/material";
 import { editLocationRoute } from "Router/routes/client";
 import { DetailsView } from "views";
+import { FourOFour, Loader } from "components";
 
 const LocationDetailsView = () => {
   const [location, setLocation] = useState<Location | null | undefined>(
@@ -24,11 +25,11 @@ const LocationDetailsView = () => {
   }, [query]);
 
   if (location === undefined) {
-    return <div>loading</div>;
+    return <Loader />;
   }
 
   if (location === null) {
-    return <div>404 location not found</div>;
+    return <FourOFour article={`Location, ${query.locationId}`} />;
   }
 
   return (

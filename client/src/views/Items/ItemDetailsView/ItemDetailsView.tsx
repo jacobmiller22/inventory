@@ -9,7 +9,8 @@ import { ImageList, ImageListItem, Typography } from "@mui/material";
 import styles from "./ItemDetailsView.module.css";
 import { editItemRoute } from "Router/routes/client";
 import { DetailsView } from "views";
-import { ChipList } from "components";
+import { ChipList, FourOFour } from "components";
+import Loader from "components/Loader";
 
 const ItemDetailsView = () => {
   const [item, setItem] = useState<Item | null | undefined>(undefined);
@@ -25,11 +26,11 @@ const ItemDetailsView = () => {
   }, [query]);
 
   if (item === undefined) {
-    return <div>loading</div>;
+    return <Loader />;
   }
 
   if (item === null) {
-    return <div>404 item not found</div>;
+    return <FourOFour article={`Item, ${query.itemId}`} />;
   }
 
   const renderImages = (imgSrcs: string[]) => {

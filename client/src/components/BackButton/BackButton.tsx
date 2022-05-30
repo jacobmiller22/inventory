@@ -21,11 +21,13 @@ const BackButton = ({
 }: BackButtonProps) => {
   const navigate = useNavigate();
 
-  if ((asLink && !href) || (!asLink && href)) {
-    throw new Error("BackButton: asLink and href must be used together");
+  if (asLink && !href) {
+    throw new Error(
+      "BackButton: href must be provided when asLink is specified as true."
+    );
   }
 
-  if (!asLink) {
+  if (!asLink || !href) {
     return (
       <Tooltip title="Go back">
         <Button

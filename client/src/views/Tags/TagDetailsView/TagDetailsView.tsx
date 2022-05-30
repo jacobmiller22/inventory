@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { editTagRoute } from "Router/routes/client";
 import { Tag } from "interfaces/tag";
 import { DetailsView } from "views";
+import { FourOFour, Loader } from "components";
 
 const LocationDetailsView = () => {
   const [tag, setTag] = useState<Tag | null | undefined>(undefined);
@@ -21,11 +22,11 @@ const LocationDetailsView = () => {
   }, [query]);
 
   if (tag === undefined) {
-    return <div>loading</div>;
+    return <Loader />;
   }
 
   if (tag === null) {
-    return <div>404 tag not found</div>;
+    return <FourOFour article={`Tag, ${query.tagId}`} />;
   }
 
   return (

@@ -6,7 +6,7 @@ import { Status } from "interfaces";
 
 /** components */
 import { Button } from "@mui/material";
-import Loader from "components/Loader";
+import { Loader } from "components";
 
 interface SubmitButtonProps {
   isValid: boolean;

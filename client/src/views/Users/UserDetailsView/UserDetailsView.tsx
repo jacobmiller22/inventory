@@ -2,12 +2,12 @@
 
 import { Avatar, Typography } from "@mui/material";
 import { getUser } from "api/users";
-import { ChipList } from "components";
+import { ChipList, FourOFour, Loader } from "components";
 import { User } from "interfaces/user";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { editUserRoute } from "Router/routes/client";
-import DetailsView from "views/DetailsView";
+import { DetailsView } from "views";
 import styles from "./UserDetailsView.module.css";
 
 /** components */
@@ -26,11 +26,11 @@ const UserDetailsView = () => {
   }, [query]);
 
   if (user === undefined) {
-    return <div>loading</div>;
+    return <Loader />;
   }
 
   if (user === null) {
-    return <div>404 item not found</div>;
+    return <FourOFour article={`User, ${query.userId}`} />;
   }
 
   const item = {

@@ -7,8 +7,8 @@ import { FormType } from "interfaces/form";
 const fields = [
   {
     name: "name",
-    label: "Item name",
-    placeholder: "Enter item name",
+    label: "Tag name",
+    placeholder: "Enter tag name",
     initialValue: "",
     type: FormType.SHORT_TEXT,
     required: true,

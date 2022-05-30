@@ -42,6 +42,7 @@ const TagsView = () => {
     title: "Tags",
     addLink: newTagRoute.path,
     onDelete: handleDelete,
+    deleteFailText: "Error while deleting tag(s).",
     onRefreshRequest: () => getTags(),
   };
 

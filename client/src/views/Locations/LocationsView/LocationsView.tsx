@@ -43,6 +43,7 @@ const LocationsView = () => {
     title: "Locations",
     addLink: newLocationRoute.path,
     onDelete: handleDelete,
+    deleteFailText: "Error while deleting location(s).",
     onRefreshRequest: () => getLocations(),
   };
 

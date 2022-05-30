@@ -82,6 +82,7 @@ const ItemsView = () => {
     title: "Items",
     addLink: newItemRoute.path,
     onDelete: handleDelete,
+    deleteFailText: "Error while deleting item(s).",
     onRefreshRequest: () => getItems(),
   };
 

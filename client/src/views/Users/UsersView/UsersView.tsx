@@ -43,7 +43,7 @@ const UsersView = () => {
     items: users,
     columns,
     onCellDoubleClick: handleCellDoubleClick,
-    title: "Tags",
+    title: "Users",
     addLink: newUserRoute.path,
     onDelete: handleDelete,
     deleteFailText: "Error while deleting user(s).",

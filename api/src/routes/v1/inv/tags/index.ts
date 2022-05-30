@@ -1,16 +1,15 @@
 /**
+ * Tag routes for inventory v1 API
  *
- * The entry point to the route: 'server/v1/inventory/types/
- *
+ * @requires - verification middleware to ensure that the user is authenticated from upstream routes.
  */
 import express from "express";
 import invTypeController from "@/controllers/inv/tags";
 import { verifyExistence } from "@/middleware/existence";
-import { requireAuth } from "@/middleware/auth";
 
 const router = express();
 
-router.get("/", requireAuth(), invTypeController.getTags);
+router.get("/", invTypeController.getTags);
 
 router.get("/:tagId", invTypeController.getTag);
 

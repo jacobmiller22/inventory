@@ -1,7 +1,3 @@
-/**
- * Route: `/users/<path>`
- */
-
 import express from "express";
 const router = express();
 
@@ -11,20 +7,18 @@ import { Role } from "@/types/user";
 import { verifyExistence } from "@/middleware/existence";
 
 /**
- * Get a list of all users and their public information (This includes the user's won auctions)
+ * Get a list of all users and their public information
  */
-router.get("/", userController.getMinUsers);
+router.get("/", hasRole([Role.ADMIN]), userController.getMinUsers);
 
 /**
  * Information about user with the given id
  */
 router.get(
   "/:userId",
-  hasRoleOrIsSubject([Role.USER, Role.ADMIN]),
+  hasRoleOrIsSubject([Role.ADMIN]),
   userController.getUser
 );
-
-router.post("/", hasRole([Role.ADMIN]), userController.createUsers);
 
 router.put(
   "/:userId/email",

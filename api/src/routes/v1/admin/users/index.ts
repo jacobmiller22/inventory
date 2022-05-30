@@ -1,7 +1,7 @@
 /**
+ * Admin User routes for v1 API
  *
- * The entry point to the route: 'server/v1/inventory/item/
- *
+ * @requires - verification middleware to ensure that the user is an admin from upstream routes.
  */
 import express from "express";
 import userController from "@/controllers/users";

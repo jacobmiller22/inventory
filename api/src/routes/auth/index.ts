@@ -1,5 +1,5 @@
 /**
- * Route: `/auctions/<path>`
+ * Auth routes
  */
 import express from "express";
 import authController from "@/controllers/auth";
@@ -9,7 +9,7 @@ import { requireAuth, validateToken } from "@/middleware/auth";
 const router = express();
 
 /**
- * Login a user
+ * Login
  */
 router.post(
   "/login",
@@ -18,7 +18,7 @@ router.post(
 );
 
 /**
- * Signup a user
+ * Signup
  */
 router.post(
   "/signup",
@@ -26,6 +26,9 @@ router.post(
   authController.signup
 );
 
+/**
+ * Validate token
+ */
 router.post("/validate", validateToken());
 
 export default router;

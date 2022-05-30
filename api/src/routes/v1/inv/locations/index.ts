@@ -1,16 +1,15 @@
 /**
+ * Location routes for inventory v1 API
  *
- * The entry point to the route: 'server/v1/inventory/types/
- *
+ * @requires - verification middleware to ensure that the user is authenticated from upstream routes.
  */
 import express from "express";
 import invLocationsController from "@/controllers/inv/locations";
 import { verifyExistence } from "@/middleware/existence";
-import { requireAuth } from "@/middleware/auth";
 
 const router = express();
 
-router.get("/", requireAuth(), invLocationsController.getLocations);
+router.get("/", invLocationsController.getLocations);
 
 router.get("/:locationId", invLocationsController.getLocation);
 

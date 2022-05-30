@@ -9,11 +9,13 @@
   max-width: var(--content-width);
   margin: 0 auto;
   padding-inline: 24px;
+  height: 100%;
 }
 
 .content-full {
   width: 100%;
   margin: 0;
+  height: 100%;
 }
 
 .toolbar {

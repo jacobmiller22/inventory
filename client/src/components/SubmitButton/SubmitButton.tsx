@@ -5,7 +5,8 @@ import { DefaultComponentProps } from "@mui/material/OverridableComponent";
 import { Status } from "interfaces";
 
 /** components */
-import { Button, CircularProgress } from "@mui/material";
+import { Button } from "@mui/material";
+import Loader from "components/Loader";
 
 interface SubmitButtonProps {
   isValid: boolean;
@@ -32,7 +33,7 @@ const SubmitButton = ({
     }
 
     if (isSubmitting) {
-      return <CircularProgress size={24.5} />;
+      return <Loader size={24.5} />;
     }
 
     if (status === Status.SUCCESS) {

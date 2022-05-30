@@ -1,5 +1,6 @@
 /** Components */
 import { BackButton, BasicForm } from "components";
+import Loader from "components/Loader";
 
 interface FormViewProps<T> {
   fields: any;
@@ -15,7 +16,7 @@ const FormView = <V extends object>({
   resetOnSuccess,
 }: FormViewProps<V>) => {
   if (!fields) {
-    return <div>temploading</div>;
+    return <Loader size={24} />;
   }
 
   return (

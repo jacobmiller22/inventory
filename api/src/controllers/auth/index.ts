@@ -62,7 +62,23 @@ const signup: Middleware = async (req, res) => {
   return;
 };
 
+const requestPasswordChange: Middleware = async (req, res) => {
+  const { email } = req.body;
+  const success = await authService.requestPasswordChange(email);
+
+  if (!success) {
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: "Error while sending password change information" });
+    return;
+  }
+
+  res.status(HttpStatus.OK).end();
+  return;
+};
+
 export default {
   login,
   signup,
+  requestPasswordChange,
 };

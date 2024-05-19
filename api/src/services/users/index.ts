@@ -40,13 +40,15 @@ const getMinUser = async (userId: string): Promise<MinUser | null> => {
   return userDoc2MinUser(user.toObject());
 };
 
-const getUserByEmail = async (email: string): Promise<MinUser | null> => {
+const getUserByEmail = async (email: string): Promise<User | null> => {
   const user:
     | null
     | (UserDocument & {
         toObject: () => UserDocument;
       }) = await UserModel.findOne({ email }).select([
     "_id",
+    "firstName",
+    "lastName",
     "username",
     "profileSrc",
     "roles",
@@ -56,7 +58,7 @@ const getUserByEmail = async (email: string): Promise<MinUser | null> => {
     return null;
   }
 
-  return userDoc2MinUser(user.toObject());
+  return userDoc2User(user.toObject());
 };
 
 const getUserByUsername = async (username: string): Promise<MinUser | null> => {

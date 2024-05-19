@@ -1,8 +1,10 @@
 import usersService from "../users";
+import mailService from "../mail";
 import config from "@/../config.json";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { MinUser, User, ConfidentialUser, UserPending } from "../../types/user";
+import MailTemplateId from "../mail/templates";
 
 type LoginArgs = {
   username: string;
@@ -81,7 +83,30 @@ const createToken = (user: User): string => {
   return token;
 };
 
+/**
+ * Sends an email to the user with a link to reset their password.
+ * @param email - The email of the user to send the email to.
+ * @returns {Promise<boolean>} - Returns true if the email was queued successfully, false otherwise.
+ */
+const requestPasswordChange = async (email: string): Promise<boolean> => {
+  const user: User | null = await usersService.getUserByEmail(email);
+
+  if (!user) {
+    return false; // No user with that email
+  }
+
+  const recipient = { email, name: `${user.firstName} ${user.lastName}` };
+
+  return await mailService.send([
+    {
+      templateId: MailTemplateId.IDK,
+      recipients: [recipient],
+    },
+  ]);
+};
+
 export default {
   login,
   signup,
+  requestPasswordChange,
 };

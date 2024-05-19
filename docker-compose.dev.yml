@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   nginx:
+    container_name: nginx
     depends_on:
       - api
       - client
@@ -12,6 +13,7 @@ services:
     ports:
       - "${REVERSE_PROXY_PORT}:80"
   client:
+    container_name: client
     environment:
       - WDS_SOCKET_PORT=0
       - CHOKIDAR_USEPOLLING=true # For windows wsl support
@@ -31,6 +33,7 @@ services:
   api:
     # environment:
     #   - CHOKIDAR_USEPOLLING=true # For windows wsl support
+    container_name: api
     restart: unless-stopped
     build:
       context: ./api
@@ -61,3 +64,12 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+  mailer:
+    image: jacobmiller22/mailq:v1.0.1
+    container_name: mailer
+    restart: unless-stopped
+    ports:
+      - "${MAILER_PORT}:${MAILER_PORT}"
+    environment:
+      - PORT=${MAILER_PORT}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}

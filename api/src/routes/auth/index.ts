@@ -31,4 +31,6 @@ router.post(
  */
 router.post("/validate", validateToken());
 
+router.post("/request-password-change", authController.requestPasswordChange);
+
 export default router;
